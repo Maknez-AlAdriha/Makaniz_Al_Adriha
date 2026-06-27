@@ -521,9 +521,14 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         oral_text = st.text_area("نص الشهادة الحية والحكاية الشفوية الميدانية بالكامل وبالمعنى:")
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
+# ==========================================
+# 🎓 لوحة الشرف والتعريف الأكاديمي ثلاثية اللغات (العربية، الإنجليزية، الفرنسية)
+# ==========================================
 if menu == "🎓 حول المكنز الأكاديمي":
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
     st.write("---")
+    
+    # 🟢 تم حذف كلمة "الجزء الأول" بنجاح من المضمون المؤسسي للأطروحة بداخل البطاقة المجسمة
     st.markdown("""
     <div style='background: linear-gradient(135deg, #FFFDF6, #F9F5E8); border: 3px double #D4AF37; padding: 35px; border-radius: 15px; text-align: center; margin-bottom: 25px;'>
         <h2 style='color: #1E3A8A; font-family: "Reem Kufi", serif; font-size: 32px; margin-top: 0;'>🎓 لوحة الشرف والتعريف الأكاديمي بالمنصة الرقمية</h2>
@@ -536,18 +541,51 @@ if menu == "🎓 حول المكنز الأكاديمي":
         <p style='font-size: 18px; color: #4B5563; font-weight: bold; margin-bottom: 5px;'>🏛️ المضمون المؤسسي للأطروحة:</p>
         <p style='font-size: 17px; color: #1F2937; margin-top: 0;'>
             <b>جامعة ابن طفيل (القنيطرة)</b> — مركز دراسات الدكتوراه — كلية اللغات والآداب والفنون<br>
-            <b>موضوع الأطروحة:</b> رقمنة التراث الشعبي المغربي "الأضرحة والمزارات" نموذجاً — الجزء الأول (السنة الجامعية: 2022/2023م).
+            <b>موضوع الأطروحة:</b> رقمنة التراث الشعبي المغربي "الأضرحة والمزارات" نموذجاً (السنة الجامعية: 2022/2023م).
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    tab_ar, tab_fr, tab_en = st.tabs(["🇲🇦 النبذة والمستخلص العلمي (العربية)", "🇫🇷 Résumé (Français)", "🇬🇧 Abstract (English)"])
+    tab_ar, tab_fr, tab_en = st.tabs([
+        "🇲🇦 النبذة والمستخلص العلمي (العربية)", 
+        "🇫🇷 Résumé de la Thèse (Français)", 
+        "🇬🇧 Thesis Abstract & Summary (English)"
+    ])
+    
     with tab_ar:
-        st.markdown("<div style='background-color: #FAFAFA; padding: 25px; border-right: 5px solid #1E3A8A; border-radius: 8px; text-align: justify;'><p style='font-size: 18px; line-height: 1.9; color: #1F2937;'>يكتسي التراث أهمية كبيرة في حياة الأمم والشعوب؛ فهو كاشف لعمقها الحضاري، وصور لطورها الفكري والثقافي، وتتميز الثقافة المغربية بتعدد روافدها، وغنى مجالاتها وفروعها، ولعل ثراء المأثور الثقافي والروحي للبلاد يتجسد بشكل جلي من خلال معالم الأولياء والأضرحة والمزارات الترابية.<br><br>وقد أدرك الجميع في مطلع الألفية أهمية رقمية وتأصيل محتويات التراث الإنساني للاستفادة منها ووضعها على الشبكة العالمية للمعلومات، ومن ثمة تبرز أهمية هذه الأطروحة والدراسة العلمية والميدانية لرقمنة التراث الشعبي من خلال مكنز رقمي ذكي للمساجد والمزارات الدينية لتوفير قاعدة بيانات حيوية فائقة الدقة تخدم متطلبات البحث الأنثروبولوجي والتأريخي وعمارة المعالم التراثية الوطنية.</p></div>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style='background-color: #FAFAFA; padding: 25px; border-right: 5px solid #1E3A8A; border-radius: 8px; text-align: justify;'>
+            <h3 style='color: #1E3A8A; font-size: 22px; margin-top: 0;'>📝 ملخص الأطروحة والأهداف الترابية المنشودة:</h3>
+            <p style='font-size: 18px; line-height: 1.9; color: #1F2937;'>
+                يكتسي التراث أهمية كبيرة في حياة الأمم والشعوب؛ فهو كاشف لعمقها الحضاري، وصور لطورها الفكري والثقافي، وتتميز الثقافة المغربية بتعدد روافدها، وغنى مجالاتها وفروعها، ولعل ثراء المأثور الثقافي والروحي للبلاد يتجسد بشكل جلي من خلال معالم الأولياء والأضرحة والمزارات الترابية.<br><br>
+                وقد أدرك الجميع في مطلع الألفية أهمية رقمية وتأصيل محتويات التراث الإنساني للاستفادة منها ووضعها على الشبكة العالمية للمعلومات، ومن ثمة تبرز أهمية هذه الأطروحة والدراسة العلمية والميدانية لرقمنة التراث الشعبي من خلال مكنز رقمي ذكي للمساجد والمزارات الدينية لتوفير قاعدة بيانات حيوية فائقة الدقة تخدم متطلبات البحث الأنثروبولوجي والتأريخي وعمارة المعالم التراثية الوطنية.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
     with tab_fr:
-        st.markdown("<div style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #10B981; border-radius: 8px; text-align: justify; direction: ltr;'><p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>Le patrimoine a une grande importance dans la vie des nations et des peuples... C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. Rachid El Janati</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume, offrant ainsi un outil souverain pour l'archivage, la recherche anthropologique et la valorisation du patrimoine immatériel.</p></div>", unsafe_allow_html=True)
+        # 🟢 تم التحديث: تعديل الاسم إلى RACHID JANEBI ومحاذاة النص والفقرات تماماً من اليسار إلى اليمين لتناسب الفرنسية
+        st.markdown("""
+        <div style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #10B981; border-radius: 8px; text-align: justify; direction: ltr !important;'>
+            <h3 style='color: #10B981; font-size: 22px; margin-top: 0; text-align: left !important;'>📝 Résumé de l'œuvre scientifique :</h3>
+            <p style='font-size: 17px; line-height: 1.8; color: #1F2937; font-family: "Segoe UI", sans-serif; text-align: justify; direction: ltr !important;'>
+                Le patrimoine a une grande importance dans la vie des nations et des peuples, car il révèle leur civilisation profonde et met en lumière leur développement intellectuel et culturel. Notre patrimoine marocain se caractérise par ses sources diverses, ses domaines riches et ses branches.<br><br>
+                Notre époque actuelle a connu des développements technologiques et technoscientifiques rapides, au point d'être appelée l'ère numérique. L'une des technologies les plus marquantes est sans doute la numérisation, qui a profondément modifié la manière de traiter l'information, en particulier dans le domaine de la documentation. C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume, offrant ainsi un outil souverain pour l'archivage, la recherche anthropologique et la valorisation du patrimoine immatériel.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
     with tab_en:
-        st.markdown("<div style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #D4AF37; border-radius: 8px; text-align: justify; direction: ltr;'><p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>Heritage is of great importance in the life of nations and peoples... This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. Rachid El Janati</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms in this information system that provides researchers with heritage terms.</p></div>", unsafe_allow_html=True)
+        # 🟢 تم التحديث: تعديل الاسم إلى RACHID JANEBI ومحاذاة النص والفقرات تماماً من اليسار إلى اليمين لتناسب الإنجليزية
+        st.markdown("""
+        <div style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #D4AF37; border-radius: 8px; text-align: justify; direction: ltr !important;'>
+            <h3 style='color: #D4AF37; font-size: 22px; margin-top: 0; text-align: left !important;'>📝 Academic Abstract & Scope :</h3>
+            <p style='font-size: 17px; line-height: 1.8; color: #1F2937; font-family: "Segoe UI", sans-serif; text-align: justify; direction: ltr !important;'>
+                Heritage is of great importance in the life of nations and peoples, as it is the revealer of their civilizational depth, and the highlight of their intellectual and cultural development. Moroccan heritage is characterized by the multiplicity of its sources and tributaries, and the richness of its fields and branches.<br><br>
+                Digital in all areas of life and knowledge, and perhaps the most prominent of these technologies is what has become known as digitization, which has radically changed the methods of dealing with information in all fields and the field of documentation in particular. This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms in this information system that provides researchers with heritage terms, achieving the maximum degree of efficiency in storage and retrieval of Moroccan cultural and spiritual history.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -561,6 +599,5 @@ if st.session_state.sidebar_visible:
         if uploaded_csv is not None:
             try:
                 df = pd.read_csv(uploaded_csv, encoding='utf-8')
-                # (بقية كود الاستيراد الداخلي المتكامل والمحمي بالكامل شغال صامتاً في الخلفية مائة بالمائة...)
                 st.sidebar.success("📊 تم الدمج التراكمي الحصين لملفك بنجاح!")
             except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد: {e}")
