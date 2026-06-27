@@ -179,6 +179,9 @@ def generate_printable_html(name, s_type, region, province, loc, hist, daily, an
     </html>
     """
     return html_content
+# ==========================================
+# 🏛️ الجزء 3: محرك التموضع ونظام الجلسة الحية والبوابات الأكاديمية للمنظومة الشاملة
+# ==========================================
 PROVINCE_COORDINATES = {
     'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
     'إقليم تطوان': (35.5785, -5.3684), 'عمالة طنجة أصيلة': (35.7595, -5.8340),
@@ -230,7 +233,7 @@ def init_ultimate_db():
     
     provinces_data = [
         ('جهة بني ملال خنيفرة', 'إقليم خنيفرة'), ('جهة بني ملال خنيفرة', 'إقليم بني ملال'),
-        ('جهة بني ملال خنيفرة', 'إقليم أزيلال'), ('جهة بني ملال خنيفرة', 'إقليم khreibga'),
+        ('جهة بني ملال خنيفرة', 'إقليم أزيلال'), ('جهة بني ملال خنيفرة', 'إقليم خريبكة'),
         ('جهة بني ملال خنيفرة', 'إقليم الفقية بن صالح'), ('جهة مراكش أسفي', 'إقليم آسفي'),
         ('جهة مراكش أسفي', 'عمالة مراكش'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم تطوان'),
         ('جهة طنجة - تطوان - الحسيمة', 'عمالة طنجة أصيلة'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم شفشاون'),
@@ -245,25 +248,38 @@ def init_ultimate_db():
 
 init_ultimate_db()
 
-# الحصانة الموحدة والتحقق المنفصل السليم لمنع اللافتات الحمراء
 if "sidebar_visible" not in st.session_state:
     st.session_state.sidebar_visible = True
 
-# رسم الزر المركزي المستقل كلياً بلغة بايثون للتحكم الحر بالاختفاء والظهور المضمون لراحة الباحثين
-btn_label = "💥 إغلاق وإخفاء بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
-if st.button(btn_label):
-    st.session_state.sidebar_visible = not st.session_state.sidebar_visible
-    st.rerun()
+# صف الأزرار العلوية للتحكم بالبوابات الفهرسية وعرض البطاقة التعريفية للأطروحة
+btn_col1, btn_col2 = st.columns([3, 1])
+with btn_col1:
+    btn_label = "💥 إغلاق وإخفاء بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
+    if st.button(btn_label, key="toggle_sidebar_btn"):
+        st.session_state.sidebar_visible = not st.session_state.sidebar_visible
+        st.rerun()
+with btn_col2:
+    # 🟢 إضافة زر "حول المكنز الأكاديمي" في أعلى اليسار بمنتهى الاحترافية والبساطة
+    if st.button("🎓 حَول المَكْنِز الأكَادِيمِي", key="about_thesis_btn"):
+        st.session_state.sidebar_visible = False
+        menu = "🎓 حول المكنز الأكاديمي"
+        st.session_state.custom_menu = "about"
+        st.rerun()
 
-# استدعاء بوابات الراديو الجانبية فقط وحصرياً إذا كانت الحالة مفعلة ومكشوفة
-if st.session_state.sidebar_visible:
-    st.sidebar.markdown("<h2 style='text-align: center; color: #1E3A8A; font-weight:900;'>🏛️ بوابات المنظومة</h2>", unsafe_allow_html=True)
-    menu = st.sidebar.radio(
-        "اختر فصل المعطيات لتصفحه أو تغذيته:",
-        ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
-    )
+if "custom_menu" in st.session_state and st.session_state.custom_menu == "about":
+    menu = "🎓 حول المكنز الأكاديمي"
+    # تصفير الحالة لضمان التنقل السلس بين بقية فصول البحث العلمي مجدداً
+    del st.session_state.custom_menu 
 else:
-    menu = "🔍 محرك البحث العلمي الشامل"
+    if st.session_state.sidebar_visible:
+        st.sidebar.markdown("<h2 style='text-align: center; color: #1E3A8A; font-weight:900;'>🏛️ بوابات المنظومة</h2>", unsafe_allow_html=True)
+        menu = st.sidebar.radio(
+            "اختر فصل المعطيات لتصفحه أو تغذيته:",
+            ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
+        )
+    else:
+        menu = "🔍 محرك البحث العلمي الشامل"
+
 if menu == "🔍 محرك البحث العلمي الشامل":
     # 🇲🇦 التثبيت الرسمي للاسم السيادي المعتمد بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
