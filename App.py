@@ -7,147 +7,153 @@ import shutil
 import io
 import urllib.parse
 
-# إعدادات الصفحة لواجهة موسوعية تفاعلية شاملة بمعايير عالمية
-st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="expanded")
+# 🇲🇦 إعدادات الصفحة الشاملة: ضبط الشريط الجانبي لينطوي ويختفي تلقائياً على الموبايل لترك مساحة تصفح كاملة
+st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="auto")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 
-# حقن كود المحاذاة الصارمة وتكبير الخطوط واستدعاء الخط المغربي الأصيل للعنوان وحذف التشوهات
+# حقن كود المحاذاة الصارمة وتكبير الخطوط واستدعاء الخط المغربي الأصيل للعنوان وحفظ استجابة الهواتف الذكية
 st.markdown("""
     <style>
-    @import url('https://googleapis.com');
-    
-    /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
-        font-family: 'Tajawal', sans-serif !important;
-        font-size: 18px !important; 
-        line-height: 1.7 !important;
-        direction: rtl !important;
-        text-align: right !important;
-    }
-    
-    /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
-    .moroccan-title {
-        font-family: 'Reem Kufi', serif !important;
-        font-size: 40px !important;
-        font-weight: 900 !important;
-        color: #1E3A8A !important;
-        text-align: center !important;
-        line-height: 1.4 !important;
-        margin-bottom: 15px !important;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
-        width: 100% !important;
-        display: block !important;
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Tajawal', sans-serif !important;
-        direction: rtl !important;
-        text-align: right !important;
-        width: 100% !important;
-    }
-    
-    h1 { font-size: 30px !important; font-weight: 900 !important; text-align: center !important; }
-    h2 { font-size: 24px !important; font-weight: 700 !important; }
-    h3 { font-size: 20px !important; font-weight: 700 !important; }
-
-    /* تحسين وتكبير خطوط صناديق الإدخال */
-    div[data-testid="stTextInput"] input {
-        font-size: 20px !important;
-        font-weight: bold !important;
-        color: #1E3A8A !important;
-        height: 50px !important;
-    }
-
-    div[data-testid="stTextInput"] input::placeholder {
-        font-size: 16px !important;
-        font-weight: 500 !important;
-        color: #9CA3AF !important;
-        text-align: right !important;
-    }
-
-    /* 🧱 بطاقات عرض الأضرحة والتبويبات الفاخرة المتباينة */
-    div[style*="border:3px solid"] {
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-        background-color: #FFFFFF !important;
-        border-radius: 12px !important;
-        padding: 20px !important;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        background-color: #F3F4F6 !important;
-        border: 1px solid #E5E7EB !important;
-        padding: 6px 14px !important;
-        border-radius: 8px 8px 0px 0px !important;
-        font-weight: bold !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #1E3A8A !important;
-        color: white !important;
-        border-color: #1E3A8A !important;
-    }
-
-    /* 🛡️ حجب وتطهير النص المشوه لأيقونة النسخ والتعديل بداخل خانات الاقتباس الأكاديمي */
-    [data-testid="stCodeBlock"] button span, 
-    [data-testid="stCodeBlock"] button div,
-    div[class*="copyButton"] span,
-    .st-emotion-cache-158w92a span,
-    .st-emotion-cache-158w92a div {
-        display: none !important;
-        font-size: 0px !important;
-        color: transparent !important;
-    }
-
-    [data-testid="stCodeBlock"] button::after,
-    .st-emotion-cache-158w92a button::after {
-        content: "📋 اضغط هنا للنسخ الفوري" !important;
-        font-size: 14px !important;
-        font-family: 'Tajawal', sans-serif !important;
-        color: #1E3A8A !important;
-        font-weight: bold !important;
-    }
-
-    /* 🚨 التطهير المطلق للأيقونات النصية المشوهة */
-    [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"] {
-        color: transparent !important;
-        text-shadow: none !important;
-    }
-
-    /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) */
-    @media (max-width: 768px) {
-        .moroccan-title { font-size: 26px !important; }
-        h1 { font-size: 22px !important; }
-        h2 { font-size: 18px !important; }
-        h3 { font-size: 16px !important; }
+        @import url('https://googleapis.com');
         
-        /* جعل خط المدخلات أكثر ملاءمة للأصابع والشاشات الصغيرة */
+        /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
+        html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
+            font-family: 'Tajawal', sans-serif !important;
+            font-size: 19px !important; 
+            line-height: 1.8 !important;
+            direction: rtl !important;
+            text-align: right !important;
+        }
+        
+        /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
+        .moroccan-title {
+            font-family: 'Reem Kufi', serif !important;
+            font-size: 46px !important;
+            font-weight: 900 !important;
+            color: #1E3A8A !important;
+            text-align: center !important;
+            line-height: 1.5 !important;
+            margin-bottom: 15px !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+            width: 100% !important;
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Tajawal', sans-serif !important;
+            direction: rtl !important;
+            text-align: right !important;
+            width: 100% !important;
+        }
+        
+        h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
+        h2 { font-size: 26px !important; font-weight: 700 !important; }
+        h3 { font-size: 22px !important; font-weight: 700 !important; }
+        
+        /* تحسين وتكبير خطوط صناديق الإدخال بالمنتصف لراحة الباحثين */
         div[data-testid="stTextInput"] input {
-            font-size: 16px !important;
-            height: 45px !important;
+            font-size: 24px !important;
+            font-weight: bold !important;
+            color: #1E3A8A !important;
+            height: 55px !important;
         }
-        div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
+
+        div[data-testid="stTextInput"] input::placeholder {
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            color: #9CA3AF !important;
+            text-align: right !important;
+        }
         
-        /* جعل التبويبات تلتف بمرونة حتى لا تخرج عن حدود الهاتف */
+        /* تحسين مظهر التبويبات الفهرسية في الأسفل وجعلها جذابة ومفصولة */
         .stTabs [data-baseweb="tab"] {
-            padding: 4px 8px !important;
-            font-size: 13px !important;
+            background-color: #F3F4F6 !important;
+            border: 1px solid #E5E7EB !important;
+            padding: 8px 18px !important;
+            border-radius: 8px 8px 0px 0px !important;
+            font-weight: bold !important;
+        }
+        .stTabs [aria-selected="true"] {
+            background-color: #1E3A8A !important;
+            color: white !important;
+            border-color: #1E3A8A !important;
+        }
+
+        /* إضافة تباين وظل خفيف خلف بطاقات عرض الأضرحة لتظهر بشكل مجسم فاخر */
+        div[style*="border:3px solid"] {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+            background-color: #FFFFFF !important;
+            border-radius: 12px !important;
         }
         
-        /* تقليص الحواف والبطاقات لتعظيم مساحة القراءة على الهاتف */
-        div[style*="border:3px solid"] {
-            padding: 15px !important;
-            margin-bottom: 10px !important;
+        /* حجب وتطهير النص المشوه لأيقونة النسخ والتعديل بداخل خانات الاقتباس الأكاديمي */
+        [data-testid="stCodeBlock"] button span, 
+        [data-testid="stCodeBlock"] button div,
+        div[class*="copyButton"] span,
+        .st-emotion-cache-158w92a span,
+        .st-emotion-cache-158w92a div {
+            display: none !important;
+            font-size: 0px !important;
+            color: transparent !important;
         }
-    }
 
-    /* إخفاء عناصر التحكم المشوهة للمتصفحات */
-    [data-testid="collapsedControlButton"], [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"] {
-        display: none !important;
-    }
-</style>
+        /* تعويض الأيقونة المشوهة القديمة بزر عربي صريح وممتاز ومريح جداً لعين الباحث */
+        [data-testid="stCodeBlock"] button::after,
+        .st-emotion-cache-158w92a button::after {
+            content: "📋 اضغط هنا للنسخ الفوري" !important;
+            font-size: 14px !important;
+            font-family: 'Tajawal', sans-serif !important;
+            color: #1E3A8A !important;
+            font-weight: bold !important;
+        }
+        
+        /* الإبادة البرمجية لجميع التنبيهات والأيقونات النصية المقلوبة المرافقة للنسخ */
+        [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"] {
+            color: transparent !important;
+            text-shadow: none !important;
+        }
 
+        /* 📱 تلوين وإبراز أزرار فتح وإغلاق الشريط الجانبي باللون الأزرق الملكي لمنح تحكم كامل وحر على شاشات الموبايل */
+        [data-testid="collapsedControlButton"],
+        [data-testid="stSidebarCollapseButton"],
+        button[data-testid="sidebar-toggle"],
+        div[class*="StyledCollapsedControl"] {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            background-color: #F3F4F6 !important;
+            border: 2px solid #1E3A8A !important;
+            border-radius: 8px !important;
+            color: #1E3A8A !important;
+        }
+
+        /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) لعدم تداخل الحروف */
+        @media (max-width: 768px) {
+            .moroccan-title { font-size: 26px !important; }
+            h1 { font-size: 22px !important; }
+            h2 { font-size: 18px !important; }
+            h3 { font-size: 16px !important; }
+            
+            div[data-testid="stTextInput"] input {
+                font-size: 16px !important;
+                height: 45px !important;
+            }
+            div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
+            
+            .stTabs [data-baseweb="tab"] {
+                padding: 4px 8px !important;
+                font-size: 13px !important;
+            }
+            
+            div[style*="border:3px solid"] {
+                padding: 15px !important;
+                margin-bottom: 10px !important;
+            }
+        }
+    </style>
 """, unsafe_allow_html=True)
 def generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text):
     html_content = f"""
@@ -277,7 +283,7 @@ menu = st.sidebar.radio(
     ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
 )
 if menu == "🔍 محرك البحث العلمي الشامل":
-    # 🇲🇦 تثبيت الاسم السيادي الأول المعتمد بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
+    # 🇲🇦 التثبيت الرسمي للاسم السيادي الأول بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
@@ -321,7 +327,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
         regions_list = ["الكل"] + [row[0] for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
         selected_region = st.selectbox("الفلترة بجهات المملكة المغربية الـ 12:", regions_list)
     with col4:
-        era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
+        era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير مححدد"]
         selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
@@ -367,12 +373,12 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # نافذة المعاينة والطباعة الفاخرة للبطاقات
+                # نافذة المعاينة والطباعة الفاخرة للبطاقات ورق A4
                 html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text)
                 encoded_html = urllib.parse.quote(html_data)
                 st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=60)
                 
-                # أدوات التوثيق الأكاديمي الشامل
+                # أدوات التوثيق الأكاديمي الشامل للجامعيين والباحثين المغاربة والدوليين
                 c_col1, c_col2 = st.columns(2)
                 with c_col1:
                     dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage: {region}, {province}, {loc}\nTemporal: {era}\nDescription: {hist}"
@@ -487,7 +493,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
             
     with tab2:
         with st.form("add_term_form"):
-            new_term = st.text_input("المصطلح أو المفهوم الميداني كما هو متداول بالقبيلة:")
+            new_term = st.text_input("المصطلح أو Mفهوم الميداني كما هو متداول بالقبيلة:")
             term_cat = st.selectbox("تصنيف المفهوم وموقعه من خطة الفهرس للأولياء والأضرحة:", ['مصطلحات متعلقة بالأضرحة', 'مصطلحات متعلقة بالأولياء ومراتبهم', 'مصطلحات متعلقة باللباس والمظهر', 'مصطلحات متعلقة بالربيين ومزارات اليهود'])
             term_def = st.text_area("الشرح والتحديد المفاهيمي الدقيق للمصطلح الصوفي:")
             if st.form_submit_button("💾 إدراج المفهوم في القاموس الموسوعي الشامل") and new_term and term_def:
@@ -504,7 +510,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 st.sidebar.markdown("---")
 
-# 🔒 حقن نظام "مفتاح المطور السري" لحماية المنظومة عند نشرها مجاناً على الإنترنت
+# 🔒 حقن نظام "مفتاح المطور السري" لحماية المنظومة عند نشرها مجاناً على الإنترنت للعموم
 st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
 developer_key = st.sidebar.text_input("أدخل رمز العبور لتغذية وإدارة المكنز:", type="password", help="خاص بالمسؤول عن المنصة لفتح صلاحيات الاستيراد والنسخ الاحتياطي")
 
@@ -543,7 +549,7 @@ if developer_key == "MAROC_2026":
             # 🟢 الحصانة البرمجية الموحدة لعام 2026: خلق الخانات الناقصة تلقائياً صامتاً لتلافي أي توقف مفاجئ للمستكشف
             for col in required_cols:
                 if col not in df.columns:
-                    df[col] = "غير مححدد"
+                    df[col] = "غير محدد"
                     
             added_count = 0
             updated_count = 0
