@@ -16,145 +16,219 @@ cursor = conn.cursor()
 
 # حقن كود المحاذاة الصارمة وتكبير الخطوط واستدعاء الخط المغربي الأصيل للعنوان وحفظ استجابة الهواتف الذكية
 st.markdown("""
-    <style>
-        @import url('https://googleapis.com');
+<style>
+    @import url('https://googleapis.com');
+    
+    /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
+        font-family: 'Tajawal', sans-serif !important;
+        font-size: 19px !important; 
+        line-height: 1.8 !important;
+        direction: rtl !important;
+        text-align: right !important;
+    }
+    
+    /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
+    .moroccan-title {
+        font-family: 'Reem Kufi', serif !important;
+        font-size: 46px !important;
+        font-weight: 900 !important;
+        color: #1E3A8A !important;
+        text-align: center !important;
+        line-height: 1.5 !important;
+        margin-bottom: 15px !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+        width: 100% !important;
+        display: block !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Tajawal', sans-serif !important;
+        direction: rtl !important;
+        text-align: right !important;
+        width: 100% !important;
+    }
+    
+    h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
+    h2 { font-size: 26px !important; font-weight: 700 !important; }
+    h3 { font-size: 22px !important; font-weight: 700 !important; }
+    
+    /* تحسين وتكبير خطوط صناديق الإدخال بالمنتصف لراحة الباحثين */
+    div[data-testid="stTextInput"] input {
+        font-size: 24px !important;
+        font-weight: bold !important;
+        color: #1E3A8A !important;
+        height: 55px !important;
+    }
+
+    div[data-testid="stTextInput"] input::placeholder {
+        font-size: 18px !important;
+        font-weight: 500 !important;
+        color: #9CA3AF !important;
+        text-align: right !important;
+    }
+    
+    /* تحسين مظهر التبويبات الفهرسية في الأسفل وجعلها جذابة ومفصولة */
+    .stTabs [data-baseweb="tab"] {
+        background-color: #F3F4F6 !important;
+        border: 1px solid #E5E7EB !important;
+        padding: 8px 18px !important;
+        border-radius: 8px 8px 0px 0px !important;
+        font-weight: bold !important;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #1E3A8A !important;
+        color: white !important;
+        border-color: #1E3A8A !important;
+    }
+
+    /* إضافة تباين وظل خفيف خلف بطاقات عرض الأضرحة لتظهر بشكل مجسم فاخر */
+    div[style*="border:3px solid"] {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        background-color: #FFFFFF !important;
+        border-radius: 12px !important;
+    }
+    
+    /* 🔥 طمس وبتر جذري شامل لجميع الأيقونات اللغوية النصية المشوهة للمتصفح ومنع تجسدها بأي حال */
+    [data-testid="stCodeBlock"] button span, 
+    [data-testid="stCodeBlock"] button div,
+    [data-testid="stCodeBlock"] span,
+    [data-testid="stCodeBlock"] div,
+    button[data-testid="stSidebarCollapseButton"] span,
+    button[data-testid="sidebar-toggle"] span,
+    div[class*="copyButton"] span,
+    div[class*="StyledCollapsedControl"] span,
+    .st-emotion-cache-1wbqy5l,
+    .st-emotion-cache-6q9w0x {
+        display: none !important;
+        font-size: 0px !important;
+        color: transparent !important;
+        text-shadow: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0px !important;
+        height: 0px !important;
+    }
+
+    /* 🔥 الإبادة الكلية للنصوص الإنجليزية المقلوبة داخل أزرار النسخ والتحكم الجانبي */
+    [data-testid="stCodeBlock"] button, 
+    div[class*="copyButton"] button, 
+    button[class*="copyButton"],
+    [data-testid="stSidebarCollapseButton"],
+    button[data-testid="sidebar-toggle"],
+    div[class*="StyledCollapsedControl"] button {
+        color: transparent !important;
+        text-shadow: none !important;
+    }
+
+    /* ✨ وضع نص تجميلي بديل وثابت فوق زر النسخ بشكل نقي ومستقل */
+    [data-testid="stCodeBlock"] button::after,
+    div[class*="copyButton"] button::after {
+        content: "📋 اضغط هنا للنسخ الفوري" !important;
+        font-size: 14px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        color: #1E3A8A !important;
+        font-weight: bold !important;
+        display: block !important;
+        position: relative !important;
+    }
+
+    /* ✨ تصميم ملكي مجسم لزر التحكم الجانبي عند انطواء الشريط (البوابات مغلقة) */
+    div[data-testid="collapsedControlButton"] button::after,
+    div[class*="StyledCollapsedControl"] button::after {
+        content: "🏛️ بوابات المنظومة ⬅️" !important;
+        font-size: 15px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        display: block !important;
+    }
+
+    /* ✨ تصميم ملكي مجسم لزر التحكم الجانبي عند انبثاق الشريط (البوابات مفتوحة) */
+    [data-testid="stSidebarCollapseButton"] button::after {
+        content: "إغلاق البوابات ➡️" !important;
+        font-size: 15px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        display: block !important;
+    }
+
+    /* 🧱 ضبط الأبعاد الدقيقة للأزرار الجانبية الحرة */
+    [data-testid="stSidebarCollapseButton"],
+    button[data-testid="sidebar-toggle"],
+    div[class*="StyledCollapsedControl"] button {
+        display: flex !important;
+        background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
+        border: 2px solid #D4AF37 !important;
+        border-radius: 10px !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        cursor: pointer !important;
+        height: auto !important;
+        min-height: 42px !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* 🛡️ التطهير والإخفاء المطلق للبروز المتبقي والحروف العمودية المشوهة للشريط عند الانطواء */
+    div[data-testid="collapsedControlButton"],
+    section[data-testid="stSidebar"] {
+        transition: transform 0.3s ease, width 0.3s ease !important;
+    }
+    div[data-testid="collapsedControlButton"] {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: auto !important;
+    }
+
+    /* 📊 تخصيص أشرطة التمرير (Scrollbars) لتصبح عريضة وواضحة جداً للباحثين باللون الأزرق */
+    ::-webkit-scrollbar {
+        width: 14px !important;
+        height: 14px !important;
+        display: block !important;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important;
+        border-radius: 8px !important;
+        border: 2px solid #FFFFFF !important;
+    }
+    ::-webkit-scrollbar-track {
+        background: #F3F4F6 !important;
+        border-radius: 8px !important;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #1D4ED8 !important;
+    }
+
+    /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) */
+    @media (max-width: 768px) {
+        .moroccan-title { font-size: 26px !important; }
+        h1 { font-size: 22px !important; }
+        h2 { font-size: 18px !important; }
+        h3 { font-size: 16px !important; }
         
-        /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
-        html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
-            font-family: 'Tajawal', sans-serif !important;
-            font-size: 19px !important; 
-            line-height: 1.8 !important;
-            direction: rtl !important;
-            text-align: right !important;
-        }
-        
-        /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
-        .moroccan-title {
-            font-family: 'Reem Kufi', serif !important;
-            font-size: 46px !important;
-            font-weight: 900 !important;
-            color: #1E3A8A !important;
-            text-align: center !important;
-            line-height: 1.5 !important;
-            margin-bottom: 15px !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
-            width: 100% !important;
-            display: block !important;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Tajawal', sans-serif !important;
-            direction: rtl !important;
-            text-align: right !important;
-            width: 100% !important;
-        }
-        
-        h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
-        h2 { font-size: 26px !important; font-weight: 700 !important; }
-        h3 { font-size: 22px !important; font-weight: 700 !important; }
-        
-        /* تحسين وتكبير خطوط صناديق الإدخال بالمنتصف لراحة الباحثين */
         div[data-testid="stTextInput"] input {
-            font-size: 24px !important;
-            font-weight: bold !important;
-            color: #1E3A8A !important;
-            height: 55px !important;
+            font-size: 16px !important;
+            height: 45px !important;
         }
-
-        div[data-testid="stTextInput"] input::placeholder {
-            font-size: 18px !important;
-            font-weight: 500 !important;
-            color: #9CA3AF !important;
-            text-align: right !important;
-        }
+        div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
         
-        /* تحسين مظهر التبويبات الفهرسية في الأسفل وجعلها جذابة ومفصولة */
         .stTabs [data-baseweb="tab"] {
-            background-color: #F3F4F6 !important;
-            border: 1px solid #E5E7EB !important;
-            padding: 8px 18px !important;
-            border-radius: 8px 8px 0px 0px !important;
-            font-weight: bold !important;
+            padding: 4px 8px !important;
+            font-size: 13px !important;
         }
-        .stTabs [aria-selected="true"] {
-            background-color: #1E3A8A !important;
-            color: white !important;
-            border-color: #1E3A8A !important;
-        }
-
-        /* إضافة تباين وظل خفيف خلف بطاقات عرض الأضرحة لتظهر بشكل مجسم فاخر */
+        
         div[style*="border:3px solid"] {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
-            background-color: #FFFFFF !important;
-            border-radius: 12px !important;
+            padding: 15px !important;
+            margin-bottom: 10px !important;
         }
-        
-        /* حجب وتطهير النص المشوه لأيقونة النسخ والتعديل بداخل خانات الاقتباس الأكاديمي */
-        [data-testid="stCodeBlock"] button span, 
-        [data-testid="stCodeBlock"] button div,
-        div[class*="copyButton"] span,
-        .st-emotion-cache-158w92a span,
-        .st-emotion-cache-158w92a div {
-            display: none !important;
-            font-size: 0px !important;
-            color: transparent !important;
-        }
+    }
+</style>
 
-        /* تعويض الأيقونة المشوهة القديمة بزر عربي صريح وممتاز ومريح جداً لعين الباحث */
-        [data-testid="stCodeBlock"] button::after,
-        .st-emotion-cache-158w92a button::after {
-            content: "📋 اضغط هنا للنسخ الفوري" !important;
-            font-size: 14px !important;
-            font-family: 'Tajawal', sans-serif !important;
-            color: #1E3A8A !important;
-            font-weight: bold !important;
-        }
-        
-        /* الإبادة البرمجية لجميع التنبيهات والأيقونات النصية المقلوبة المرافقة للنسخ */
-        [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"] {
-            color: transparent !important;
-            text-shadow: none !important;
-        }
-
-        /* 📱 تلوين وإبراز أزرار فتح وإغلاق الشريط الجانبي باللون الأزرق الملكي لمنح تحكم كامل وحر على شاشات الموبايل */
-        [data-testid="collapsedControlButton"],
-        [data-testid="stSidebarCollapseButton"],
-        button[data-testid="sidebar-toggle"],
-        div[class*="StyledCollapsedControl"] {
-            display: flex !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            background-color: #F3F4F6 !important;
-            border: 2px solid #1E3A8A !important;
-            border-radius: 8px !important;
-            color: #1E3A8A !important;
-        }
-
-        /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) لعدم تداخل الحروف */
-        @media (max-width: 768px) {
-            .moroccan-title { font-size: 26px !important; }
-            h1 { font-size: 22px !important; }
-            h2 { font-size: 18px !important; }
-            h3 { font-size: 16px !important; }
-            
-            div[data-testid="stTextInput"] input {
-                font-size: 16px !important;
-                height: 45px !important;
-            }
-            div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
-            
-            .stTabs [data-baseweb="tab"] {
-                padding: 4px 8px !important;
-                font-size: 13px !important;
-            }
-            
-            div[style*="border:3px solid"] {
-                padding: 15px !important;
-                margin-bottom: 10px !important;
-            }
-        }
-    </style>
 """, unsafe_allow_html=True)
+
 def generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text):
     html_content = f"""
     <html dir="rtl" lang="ar">
