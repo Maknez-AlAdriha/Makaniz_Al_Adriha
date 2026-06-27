@@ -14,18 +14,25 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 
-# حقن كود المحاذاة الصارمة والنسف البرمجي الشامل للأيقونات اللغوية المقلوبة أينما دست في الصفحة
+# حقن كود المحاذاة الصارمة والنسف البرمجي الشامل للأيقونات اللغوية المقلوبة مع استثناء صارم للنصوص اللاتينية
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
+        /* 📱💻 التنسيق العام لليمين للحاويات العربية مع السماح بالمرونة للأقسام الأجنبية */
         html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
             font-family: 'Tajawal', sans-serif !important;
             font-size: 19px !important; 
             line-height: 1.8 !important;
-            direction: rtl !important;
-            text-align: right !important;
+            direction: rtl;
+            text-align: right;
+        }
+        
+        /* 🟢 حقن الحصانة اللاتينية الصارمة: إجبار أي حاوية تحمل وسم latin-text على الانصياع الكامل من اليسار إلى اليمين وسحق التشوّه */
+        .latin-text, .latin-text p, .latin-text span, .latin-text h3 {
+            direction: ltr !important;
+            text-align: left !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         }
         
         /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
@@ -92,7 +99,7 @@ st.markdown("""
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
         ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
         
-        /* ستايل مخصص لزر الإغلاق والفتح بايثون الملكي الجديد ليظهر بشكل فخم ومجسم */
+        /* ستايل مخصص لزر الإغلاق والفتح بايثون الملكي الجديد في المنتصف ليظهر بشكل فخم ومجسم */
         .stButton>button {
             background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
             color: white !important;
@@ -108,18 +115,6 @@ st.markdown("""
         .stButton>button:hover {
             transform: scale(1.03) !important;
             box-shadow: 0 6px 12px rgba(30, 58, 138, 0.2) !important;
-        }
-
-        /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) */
-        @media (max-width: 768px) {
-            .moroccan-title { font-size: 26px !important; }
-            h1 { font-size: 22px !important; }
-            h2 { font-size: 18px !important; }
-            h3 { font-size: 16px !important; }
-            div[data-testid="stTextInput"] input { font-size: 16px !important; height: 45px !important; }
-            div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
-            .stTabs [data-baseweb="tab"] { padding: 4px 8px !important; font-size: 13px !important; }
-            div[style*="border:3px solid"] { padding: 15px !important; margin-bottom: 10px !important; }
         }
     </style>
 """, unsafe_allow_html=True)
@@ -285,7 +280,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
     
-    # 🟢 تم التصحيح الجذري القاطع هنا: سحب العنصر الأول [0] من المصفوفة لتفادي تجمد السيرفر واللافتات تماماً
+    # 🟢 تأمين عدادات المنصة بالفرز الصافي للرقم الأول من توبل النتائج لحمايتها من السقوط
     t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
     total_shrines = int(t_res[0]) if t_res else 0
     
@@ -347,6 +342,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     else:
         st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
         
+        # 🟢 تأمين وتحصين دالة الخريطة استراتيجياً لحذف لافتات الأخطاء والتحويل الصافي العريض مائة بالمائة
         map_list = []
         for r in results:
             try:
@@ -394,13 +390,14 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                 with c_col2:
                     current_year = datetime.datetime.now().year
                     apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
-                    with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
-                        st.markdown(f"""
-                        <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:16px; color:#1E3A8A; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);'>
-                            <b>📚 التوثيق والاقتباس الأكاديمي المعتمد للبحوث (APA):</b><br><br>
-                            <code>{apa_citation}</code>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    
+                    # 🟢 تم بتر دالة st.expander المسببة للعلة وحذفها كلياً، وعزل الاقتباس الأكاديميAPA داخل صندوق مخصص نقي وصافٍ 100%
+                    st.markdown(f"""
+                    <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:16px; color:#1E3A8A; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);'>
+                        <b>📚 التوثيق والاقتباس الأكاديمي المعتمد للبحوث (APA):</b><br><br>
+                        <code>{apa_citation}</code>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 tab_daily, tab_anthropology, tab_bibliography = st.tabs([
                     "📆 الطقوس والممارسات اليومية والسنوية", 
@@ -435,8 +432,8 @@ elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
         with col1:
             s_name = st.text_input("اسم الولي / الضريح / المزار كاملاً:")
             s_type = st.selectbox("الهوية العقائدية والتصنيف الميداني:", ["أضرحة المسلمين", "مزارات اليهود"])
-            provinces = [row for row in cursor.execute("SELECT id, province FROM geography").fetchall()]
-            prov_dict = {row: row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+            provinces = [row[1] for row in cursor.execute("SELECT id, province FROM geography").fetchall()]
+            prov_dict = {row[1]: row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces)
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
             
@@ -475,18 +472,18 @@ elif menu == "🔄 لوحة المراجعة والتصحيح والتعديل":
     
     if not shrines_list: st.info("لا توجد منشآت تراثية لتعديلها حالياً.")
     else:
-        shrine_dict = {f"{row} (رقم الإدخال: {row})": row for row in shrines_list}
+        shrine_dict = {f"{row[1]} (رقم الإدخال: {row[0]})": row[0] for row in shrines_list}
         selected_shrine = st.selectbox("اختر المنشأة المراد تحديث خاناتها الناقصة أو تصحيحها:", list(shrine_dict.keys()))
         s_id = shrine_dict[selected_shrine]
         
         current = cursor.execute("SELECT name, exact_location, history_details, daily_activities, annual_activities FROM shrines WHERE id=?", (s_id,)).fetchone()
         
         st.markdown("### ✏️ تعديل وتدقيق المعطيات")
-        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current)
-        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current)
-        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current)
-        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current)
-        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current)
+        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current[0])
+        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current[1])
+        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current[2])
+        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current[3])
+        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current[4])
         
         if st.button("🔄 حفظ وتأمين كافة التحديثات والمراجعات العلمية الميدانية"):
             cursor.execute("UPDATE shrines SET name=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=? WHERE id=?", (u_name, u_loc, u_hist, u_daily, u_annual, s_id))
@@ -564,11 +561,11 @@ if menu == "🎓 حول المكنز الأكاديمي":
         """, unsafe_allow_html=True)
         
     with tab_fr:
-        # 🟢 تم التحديث: تعديل الاسم إلى RACHID JANEBI ومحاذاة النص والفقرات تماماً من اليسار إلى اليمين لتناسب الفرنسية
+        # 🟢 عزل وتوجيه وضبط الحروف والاسم اللاتيني الصريح من اليسار لليمين مائة بالمائة لقتل التشوه
         st.markdown("""
-        <div style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #10B981; border-radius: 8px; text-align: justify; direction: ltr !important;'>
-            <h3 style='color: #10B981; font-size: 22px; margin-top: 0; text-align: left !important;'>📝 Résumé de l'œuvre scientifique :</h3>
-            <p style='font-size: 17px; line-height: 1.8; color: #1F2937; font-family: "Segoe UI", sans-serif; text-align: justify; direction: ltr !important;'>
+        <div class='latin-text' style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #10B981; border-radius: 8px;'>
+            <h3 style='color: #10B981; font-size: 22px; margin-top: 0;'>📝 Résumé de l'œuvre scientifique :</h3>
+            <p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>
                 Le patrimoine a une grande importance dans la vie des nations et des peuples, car il révèle leur civilisation profonde et met en lumière leur développement intellectuel et culturel. Notre patrimoine marocain se caractérise par ses sources diverses, ses domaines riches et ses branches.<br><br>
                 Notre époque actuelle a connu des développements technologiques et technoscientifiques rapides, au point d'être appelée l'ère numérique. L'une des technologies les plus marquantes est sans doute la numérisation, qui a profondément modifié la manière de traiter l'information, en particulier dans le domaine de la documentation. C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume, offrant ainsi un outil souverain pour l'archivage, la recherche anthropologique et la valorisation du patrimoine immatériel.
             </p>
@@ -576,11 +573,11 @@ if menu == "🎓 حول المكنز الأكاديمي":
         """, unsafe_allow_html=True)
         
     with tab_en:
-        # 🟢 تم التحديث: تعديل الاسم إلى RACHID JANEBI ومحاذاة النص والفقرات تماماً من اليسار إلى اليمين لتناسب الإنجليزية
+        # 🟢 عزل وتوجيه وضبط الحروف والاسم اللاتيني الصريح من اليسار لليمين مائة بالمائة لقتل التشوه
         st.markdown("""
-        <div style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #D4AF37; border-radius: 8px; text-align: justify; direction: ltr !important;'>
-            <h3 style='color: #D4AF37; font-size: 22px; margin-top: 0; text-align: left !important;'>📝 Academic Abstract & Scope :</h3>
-            <p style='font-size: 17px; line-height: 1.8; color: #1F2937; font-family: "Segoe UI", sans-serif; text-align: justify; direction: ltr !important;'>
+        <div class='latin-text' style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #D4AF37; border-radius: 8px;'>
+            <h3 style='color: #D4AF37; font-size: 22px; margin-top: 0;'>📝 Academic Abstract & Scope :</h3>
+            <p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>
                 Heritage is of great importance in the life of nations and peoples, as it is the revealer of their civilizational depth, and the highlight of their intellectual and cultural development. Moroccan heritage is characterized by the multiplicity of its sources and tributaries, and the richness of its fields and branches.<br><br>
                 Digital in all areas of life and knowledge, and perhaps the most prominent of these technologies is what has become known as digitization, which has radically changed the methods of dealing with information in all fields and the field of documentation in particular. This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms in this information system that provides researchers with heritage terms, achieving the maximum degree of efficiency in storage and retrieval of Moroccan cultural and spiritual history.
             </p>
