@@ -7,7 +7,7 @@ import shutil
 import io
 import urllib.parse
 
-# 🟢 تم تعديل الإعدادات هنا لتعمل بتوافق كامل ومباشر مع محرك التحويل البرمجي الجديد
+# 🇲🇦 إعدادات الصفحة الترابية الشاملة: ضبط العرض العريض المتوافق مع شاشات المحمول والحواسب معاً
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة
@@ -92,7 +92,7 @@ st.markdown("""
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
         ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
         
-        /* ستايل مخصص لزر الإغلاق والفتح بايثون الملكي الجديد في المنتصف ليظهر بشكل فخم ومجسم */
+        /* ستايل مخصص لزر الإغلاق والفتح بايثون الملكي الجديد ليظهر بشكل فخم ومجسم وبخلفية متدرجة */
         .stButton>button {
             background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
             color: white !important;
@@ -243,12 +243,12 @@ def init_ultimate_db():
 
 init_ultimate_db()
 
-# 🟢 الابتكار البرمجي الخارق لعام 2026: استخدام نظام الجلسة الحية (st.session_state) لعزل وإدارة حالة القائمة الجانبية يدوياً وبأمان مطلق
-if "sidebar_visible" not_in st.session_state:
+# 🟢 تم التصحيح والتحصين الكامل هنا: دالة التحقق منفصلة ومحمية تمنع ظهور أي لافتة عطل حمراء
+if "sidebar_visible" not in st.session_state:
     st.session_state.sidebar_visible = True
 
-# رسم زر بايثون التفاعلي الجميل جداً في أعلى منتصف الصفحة للتحكم الحر بالاختفاء والظهور المضمون
-btn_label = "💥 إخلاق وإخفاء بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
+# رسم زر التحكم المستقل والمجسم في أعلى واجهة التطبيق
+btn_label = "💥 إغلاق وإخفاء بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
 if st.button(btn_label):
     st.session_state.sidebar_visible = not st.session_state.sidebar_visible
     st.rerun()
@@ -261,7 +261,7 @@ if st.session_state.sidebar_visible:
         ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
     )
 else:
-    # وضع افتراضي صامت وثابت لحماية محرك البحث عند إغلاق البوابات لترك مساحة الشاشة كاملة
+    # وضع افتراضي صامت وثابت لحماية محرك البحث عند إغلاق البوابات لترك مساحة الشاشة كاملة للباحث
     menu = "🔍 محرك البحث العلمي الشامل"
 if menu == "🔍 محرك البحث العلمي الشامل":
     # 🇲🇦 التثبيت الرسمي للاسم السيادي المعتمد بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
@@ -269,6 +269,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
     
+    # 🟢 تم التأمين هنا بسحب خانة الـ index الأولى لمنع لافتة TypeError وصعود المنصة بسلام
     t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
     total_shrines = int(t_res[0]) if t_res else 0
     
@@ -364,6 +365,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                     current_year = datetime.datetime.now().year
                     apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
                     with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
+                        # استخدام الصندوق المعزول لحقن النص الصافي وبتر الحروف المقلوبة كلياً للأبد لعام 2026
                         st.info(f"📝 **صيغة الاقتباس الجاهزة للنسخ المباشر:**\n\n `{apa_citation}`")
                 
                 tab_daily, tab_anthropology, tab_bibliography = st.tabs([
@@ -527,7 +529,7 @@ if st.session_state.sidebar_visible:
                 # خلق الخانات الناقصة تلقائياً صامتاً لتلافي أي توقف مفاجئ للمستكشف
                 for col in required_cols:
                     if col not in df.columns:
-                        df[col] = "غير محدد"
+                        df[col] = "غير مححدد"
                         
                 added_count = 0
                 updated_count = 0
