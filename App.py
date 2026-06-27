@@ -310,6 +310,9 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     with col4:
         era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
         selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
+    # ==========================================
+# 🔍 الجزء 5: عرض البطاقات وحماية أشرطة التمرير والخرائط ضد التجميد والتعطل
+# ==========================================
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
     FROM shrines s 
@@ -332,7 +335,6 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     else:
         st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
         
-        # 🟢 تأمين وتحصين دالة الخريطة استراتيجياً لحذف لافتات الأخطاء والتحويل الصافي العريض مائة بالمائة
         map_list = []
         for r in results:
             try:
@@ -380,14 +382,14 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                 with c_col2:
                     current_year = datetime.datetime.now().year
                     apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
-                    with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
-                        # استخدام الصندوق المعزول لحقن النص الصافي وبتر الحروف المقلوبة كلياً للأبد لعام 2026
-                        st.markdown(f"""
-                        <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:17px; color:#1E3A8A;'>
-                            <b>📝 صيغة الاقتباس الجاهزة للنسخ المباشر:</b><br><br>
-                            <code>{apa_citation}</code>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    
+                    # 🟢 تم بتر دالة st.expander المسببة للعلة نهائياً، واستبدالها بعرض نقي مباشر ومحمي داخل صندوق مخصص
+                    st.markdown(f"""
+                    <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:16px; color:#1E3A8A; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);'>
+                        <b>📚 التوثيق والاقتباس الأكاديمي المعتمد للبحوث (APA):</b><br><br>
+                        <code>{apa_citation}</code>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 tab_daily, tab_anthropology, tab_bibliography = st.tabs([
                     "📆 الطقوس والممارسات اليومية والسنوية", 
@@ -414,6 +416,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                         st.markdown("**🎨 أعمال إبداعية وفنية ووثائقيات:**")
                         st.write(creative)
                     if links: st.markdown(f"🔗 **مكان الوجود والروابط:** {links}")
+
 elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
     st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
     
