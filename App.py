@@ -180,6 +180,7 @@ def generate_printable_html(name, s_type, region, province, loc, hist, daily, an
     """
     return html_content
 # ==========================================
+# ==========================================
 # 🏛️ الجزء 3: محرك التموضع ونظام الجلسة الحية والبوابات الأكاديمية للمنظومة الشاملة
 # ==========================================
 PROVINCE_COORDINATES = {
@@ -248,53 +249,58 @@ def init_ultimate_db():
 
 init_ultimate_db()
 
+# إدارة ومراقبة وضعية حالة المتغير الجانبي بحصانة تامة
 if "sidebar_visible" not in st.session_state:
     st.session_state.sidebar_visible = True
 
-# صف الأزرار العلوية للتحكم بالبوابات الفهرسية وعرض البطاقة التعريفية للأطروحة
-btn_col1, btn_col2 = st.columns([3, 1])
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "search"
+
+# رسم صف الأزرار البرمجية العلوية المستقلة المتناسقة
+btn_col1, btn_col2 = st.columns(2)
 with btn_col1:
-    btn_label = "💥 إغلاق وإخفاء بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
+    btn_label = "💥 إغلاق بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
     if st.button(btn_label, key="toggle_sidebar_btn"):
         st.session_state.sidebar_visible = not st.session_state.sidebar_visible
+        st.session_state.current_page = "search"
         st.rerun()
 with btn_col2:
-    # 🟢 إضافة زر "حول المكنز الأكاديمي" في أعلى اليسار بمنتهى الاحترافية والبساطة
     if st.button("🎓 حَول المَكْنِز الأكَادِيمِي", key="about_thesis_btn"):
         st.session_state.sidebar_visible = False
-        menu = "🎓 حول المكنز الأكاديمي"
-        st.session_state.custom_menu = "about"
+        st.session_state.current_page = "about"
         st.rerun()
 
-if "custom_menu" in st.session_state and st.session_state.custom_menu == "about":
-    menu = "🎓 حول المكنز الأكاديمي"
-    # تصفير الحالة لضمان التنقل السلس بين بقية فصول البحث العلمي مجدداً
-    del st.session_state.custom_menu 
+# تحديد القائمة النشطة بناءً على ضغط الأزرار المستقلة
+if st.session_state.sidebar_visible:
+    st.sidebar.markdown("<h2 style='text-align: center; color: #1E3A8A; font-weight:900;'>🏛️ بوابات المنظومة</h2>", unsafe_allow_html=True)
+    menu = st.sidebar.radio(
+        "اختر فصل المعطيات لتصفحه أو تغذيته:",
+        ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
+    )
+    st.session_state.current_page = "sidebar"
 else:
-    if st.session_state.sidebar_visible:
-        st.sidebar.markdown("<h2 style='text-align: center; color: #1E3A8A; font-weight:900;'>🏛️ بوابات المنظومة</h2>", unsafe_allow_html=True)
-        menu = st.sidebar.radio(
-            "اختر فصل المعطيات لتصفحه أو تغذيته:",
-            ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
-        )
+    if st.session_state.current_page == "about":
+        menu = "🎓 حول المكنز الأكاديمي"
     else:
         menu = "🔍 محرك البحث العلمي الشامل"
 
+# ==========================================
+# 🏛️ الجزء 4: واجهة محرك البحث الشامل والمؤشرات الإحصائية المؤمنة والمساعد المفهومي السريع
+# ==========================================
 if menu == "🔍 محرك البحث العلمي الشامل":
     # 🇲🇦 التثبيت الرسمي للاسم السيادي المعتمد بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ, أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
     
-    # تأمين عدادات المنصة عبر تفكيك التوبل وقراءته كعنصر رقمي صافي لمنع لافتات التوقف
     t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-    total_shrines = int(t_res[0]) if t_res else 0
+    total_shrines = int(t_res) if t_res else 0
     
     m_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-    muslim_count = int(m_res[0]) if m_res else 0
+    muslim_count = int(m_res) if m_res else 0
     
     j_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-    jewish_count = int(j_res[0]) if j_res else 0
+    jewish_count = int(j_res) if j_res else 0
     
     stat_col1, stat_col2, stat_col3 = st.columns(3)
     with stat_col1: st.metric("📊 مجموع المعالم الروحية الموثقة", total_shrines)
@@ -308,11 +314,11 @@ if menu == "🔍 محرك البحث العلمي الشامل":
         if quick_word:
             term_fetch = cursor.execute("SELECT category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{quick_word}%",)).fetchone()
             if term_fetch:
-                st.info(f"📙 **التصنيف الفهرسي:** {term_fetch[0]} \n\n 📝 **التحديد المفاهيمي الدقيق:** {term_fetch[1]}")
+                st.info(f"📙 **التصنيف الفهرسي:** {term_fetch} \n\n 📝 **التحديد المفاهيمي الدقيق:** {term_fetch}")
             else:
                 shrine_fetch = cursor.execute("SELECT exact_location, history_details FROM shrines WHERE name LIKE ? OR tags LIKE ?", (f"%{quick_word}%", f"%{quick_word}%")).fetchone()
                 if shrine_fetch:
-                    st.info(f"📍 **الامتداد والموقع:** {shrine_fetch[0]} \n\n 📜 **المبحث التاريخي والسياق الأنثروبولوجي:** {shrine_fetch[1]}")
+                    st.info(f"📍 **الامتداد والموقع:** {shrine_fetch} \n\n 📜 **المبحث التاريخي والسياق الأنثروبولوجي:** {shrine_fetch}")
                 else:
                     st.caption("هذا المصطلح أو المزار غير مدرج في قاموسك حالياً.")
             
@@ -321,11 +327,12 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     with col1: search_query = st.text_input("🔍 ابحث باسم الولي، الضريح، أو الوسم (#):")
     with col2: filter_type = st.selectbox("تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"])
     with col3:
-        regions_list = ["الكل"] + [row[0] for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
+        regions_list = ["الكل"] + [row for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
         selected_region = st.selectbox("الفلترة بجهات المملكة المغربية الـ 12:", regions_list)
     with col4:
         era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
         selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
+          
     # ==========================================
 # 🔍 الجزء 5: عرض البطاقات وحماية أشرطة التمرير والخرائط ضد التجميد والتعطل
 # ==========================================
