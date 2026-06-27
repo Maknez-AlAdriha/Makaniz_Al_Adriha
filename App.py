@@ -601,6 +601,9 @@ if menu == "🎓 حول المكنز الأكاديمي":
             </p>
         </div>
         """, unsafe_allow_html=True)
+# ==========================================
+# 🛡️ الجزء 10 والاخير: بوابة المشرف السرية ومحرك الاستيراد والتراكم ونظام الرد الفوري على الباحثين
+# ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
     st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
@@ -609,21 +612,42 @@ if st.session_state.sidebar_visible:
     if developer_key == "MAROC_2026":
         st.sidebar.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز!")
         
-        with st.sidebar.expander("📬 صندوق قراءة ملاحظات الباحثين والزوار الحية"):
-            feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
-            if not feedbacks: st.caption("الصندوق فارغ حالياً، لا توجد ملاحظات جديدة.")
-            else:
-                for f_name, f_email, f_shrine, f_text, f_date in feedbacks:
-                    st.markdown(f"""
-                    <div style='background-color:#FFF; border-right:3px solid #D4AF37; padding:10px; margin-bottom:8px; border-radius:5px;'>
-                        <small style='color:#6B7280;'>📅 {f_date}</small><br>
-                        <b>👤 المرسل:</b> {f_name} ({f_email})<br>
-                        <b>🕌 خاص بـ:</b> {f_shrine}<br>
-                        <b>📝 الملاحظة:</b> {f_text}
+        # 🟢 تم نسف الـ expander المسببة للتشوه البصري واستبدالها بلوحة تحكم تفاعلية صافية
+        st.sidebar.markdown("<h5 style='color: #D4AF37; margin-bottom: 5px;'>📬 صندوق ملاحظات الباحثين والزوار الحية:</h5>", unsafe_allow_html=True)
+        
+        feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
+        
+        if not feedbacks:
+            st.sidebar.caption("الصندوق فارغ حالياً، لا توجد ملاحظات جديدة.")
+        else:
+            # عرض الرسائل داخل حاويات مخصصة مع زر تفاعلي للرد المباشر
+            for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
+                st.sidebar.markdown(f"""
+                <div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:15px; margin-bottom:10px; border-radius:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align:right;'>
+                    <small style='color:#9CA3AF;'>📅 {f_date}</small><br>
+                    <b>👤 المرسل:</b> {f_name}<br>
+                    <b>📧 البريد:</b> <span style='font-size:14px;'>{f_email}</span><br>
+                    <b>🕌 خاص بـ:</b> {f_shrine}<br>
+                    <b>📝 الملاحظة:</b> {f_text}
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # 🟢 محرك توليد الرد الفوري التلقائي عبر البريد الإلكتروني بضغطة زر واحدة
+                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: بخصوص ملاحظتكم حول ({f_shrine})")
+                body_reply = urllib.parse.quote(f"السلام عليكم ورحمة الله وبركاته الأخ الفاضل {f_name}،\n\nنشكركم جزيلاً على ملاحظتكم القيمة التي أرسلتموها عبر المنصة...\n\nتحياتنا،\nالدكتور رشيد الجانبي")
+                mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
+                
+                # زر تفاعلي مخصص لكل رسالة لفتح تطبيق البريد مباشرة وإرسال الجواب
+                st.sidebar.markdown(f"""
+                <a href="{mailto_link}" target="_blank" style="text-decoration: none; width: 100%;">
+                    <div style="background: linear-gradient(135deg, #15803D, #16A34A); color: white; text-align: center; padding: 6px; border-radius: 6px; font-size: 14px; font-weight: bold; margin-bottom: 20px; border: 1px solid #14532D; cursor: pointer;">
+                        ✉️ اضغط هنا للرد الفوري على {f_name}
                     </div>
-                    """, unsafe_allow_html=True)
-                    st.markdown("---")
+                </a>
+                """, unsafe_allow_html=True)
+                st.sidebar.markdown("<hr style='margin: 5px 0 15px 0; border-top: 1px dashed #D1D5DB;'>", unsafe_allow_html=True)
 
+        st.sidebar.markdown("---")
         uploaded_csv = st.sidebar.file_uploader("اختر ملف الأضرحة أو المصطلحات الشامل (.csv):", type=["csv"], key="final_uploader")
     
         if uploaded_csv is not None:
@@ -653,7 +677,7 @@ if st.session_state.sidebar_visible:
                         
                 added_shrine, updated_shrine = 0, 0
                 added_term, updated_term = 0, 0
-                p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                p_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                 
                 for index, row in df.iterrows():
                     s_name = str(row['shrine_name']).strip()
@@ -675,16 +699,16 @@ if st.session_state.sidebar_visible:
                         if prov_name not in p_dict and prov_name != "nan" and prov_name != "":
                             cursor.execute("INSERT INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                             conn.commit()
-                            p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                            p_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                         
                         if prov_name in p_dict:
                             prov_id = p_dict[prov_name]
                             era_val = str(row['historical_era']).strip() if 'historical_era' in df.columns and pd.notna(row['historical_era']) else 'غير محدد'
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                             if existing:
-                                cursor.execute("UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=? WHERE id=?", (s_type, str(row['exact_location']), hist_val, str(row['daily_activities']), str(row['annual_activities']), str(row['researchers_books']), str(row['creative_works']), str(row['web_links']), era_val, tags_val, existing[0]))
+                                cursor.execute("UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=? WHERE id=?", (s_type, str(row['exact_location']), hist_val, str(row['daily_activities']), str(row['annual_activities']), str(row['researchers_books']), str(row['creative_works']), str(row['web_links']), era_val, tags_val, existing))
                                 updated_shrine += 1
-                                shrine_id = existing[0]
+                                shrine_id = existing
                             else:
                                 cursor.execute("INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, researchers_books, creative_works, web_links) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, str(row['exact_location']), hist_val, str(row['daily_activities']), str(row['annual_activities']), era_val, tags_val, str(row['researchers_books']), str(row['creative_works']), str(row['web_links'])))
                                 added_shrine += 1
@@ -694,7 +718,19 @@ if st.session_state.sidebar_visible:
                             cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, str(row['belief_type']), str(row['belief_details'])))
                 
                 conn.commit()
-                if added_term > 0 or updated_term > 0: st.sidebar.success(f"📙 تم دمج المصطلحات: إضافة {added_term} وتحديث {updated_term} مفهوم بنجاح!")
-                if added_shrine > 0 or updated_shrine > 0: st.sidebar.success(f"🕌 تم دمج الأضرحة: إضافة {added_shrine} وتحديث {updated_shrine} معلم بنجاح!")
+                if added_term > 0 or updated_term > 0: st.sidebar.success(f"📙 تم دمج المصطلحات بنجاح!")
+                if added_shrine > 0 or updated_shrine > 0: st.sidebar.success(f"🕌 تم دمج الأضرحة بنجاح!")
                 st.rerun()
             except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
+
+
+
+
+
+
+
+
+
+
+
+
