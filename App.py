@@ -402,7 +402,116 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                         st.write(creative)
                     if links: st.markdown(f"🔗 **مكان الوجود والروابط:** {links}")
 
+            
+# ==========================================
+# 🔍 الجزء 5: عرض البطاقات وحماية أشرطة التمرير والخرائط ضد التجميد والتعطل
+# ==========================================
+    query = """
+    SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
+    FROM shrines s 
+    JOIN geography g ON s.province_id = g.id WHERE 1=1
+    """
+    params = []
+    if search_query:
+        if search_query.startswith("#"):
+            query += " AND s.tags LIKE ?"; params.append(f"%{search_query}%")
+        else:
+            query += " AND s.name LIKE ?"; params.append(f"%{search_query}%")
+    if filter_type != "الكل": query += " AND s.type = ?"; params.append(filter_type)
+    if selected_region != "الكل": query += " AND g.region = ?"; params.append(selected_region)
+    if selected_era != "الكل": query += " AND s.historical_era = ?"; params.append(selected_era)
         
+    results = cursor.execute(query, params).fetchall()
+    
+    if not results:
+        st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية.")
+    else:
+        st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
+        
+        # 🟢 تأمين وتحصين دالة الخريطة جذرياً ضد أعطال الإحداثيات والقيم الفارغة لضمان صفر عطل
+        map_list = []
+        for r in results:
+            try:
+                lat_val = float(r[12]) if r[12] is not None else 31.7917
+                lon_val = float(r[13]) if r[13] is not None else -7.0926
+                map_list.append({"latitude": lat_val, "longitude": lon_val})
+            except Exception:
+                map_list.append({"latitude": 31.7917, "longitude": -7.0926})
+        
+        if map_list:
+            map_data = pd.DataFrame(map_list)
+            # إجبار الخريطة على القراءة الصارمة لأسماء الأعمدة القياسية المؤمنة مائة بالمائة
+            st.map(map_data, zoom=5, use_container_width=True)
+        else:
+            # خريطة احتياطية ثابتة تتمركز فوق جغرافيا المغرب الشريف لحماية الواجهة من السقوط
+            st.map(pd.DataFrame([{"latitude": 31.7917, "longitude": -7.0926}]), zoom=5, use_container_width=True)
+            
+        st.write("---")
+        
+        for row in results:
+            s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags = row
+            badge_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#D4AF37"
+            
+            beliefs_fetch = cursor.execute("SELECT function_type, details FROM beliefs_and_functions WHERE shrine_id=?", (s_id,)).fetchall()
+            beliefs_text = ""
+            if beliefs_fetch:
+                for b_type, b_det in beliefs_fetch: beliefs_text += f"• {b_type}: {b_det}\n"
+            
+            with st.container():
+                st.markdown(f"""
+                <div style='border:3px solid {badge_color}; padding:25px; border-radius:15px; margin-bottom:15px; background-color:#FAFAFA; text-align:right;'>
+                    <h2 style='color:{badge_color}; margin-top:0; font-size:26px;'>🕌 {name} <span style='font-size:14px; background-color:{badge_color}; color:white; padding:5px 12px; border-radius:10px;'>{s_type}</span></h2>
+                    <p style='font-size:17px;'>📍 <b>الامتداد الترابي الجغرافي:</b> {region} ← {province} ({loc}) | ⏳ <b>العصر التاريخي:</b> {era}</p>
+                    <p style='font-size:15px; color:#1E3A8A; font-weight:bold;'>🏷️ <b>الوسوم والدلالات الأنثروبولوجية:</b> {tags if tags else '#غير_محدد'}</p>
+                    <p style='font-size:18px; line-height:1.8; color:#1F2937; text-align:justify;'>📜 <b>المبحث التاريخي والسيرة والترجمة النَّسبية:</b> {hist}</p>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text)
+                encoded_html = urllib.parse.quote(html_data)
+                st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=60)
+                
+                c_col1, c_col2 = st.columns(2)
+                with c_col1:
+                    dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage: {region}, {province}, {loc}\nTemporal: {era}\nDescription: {hist}"
+                    st.download_button(label=f"📥 تصدير بطاقة الفهرسة لـ {name}", data=dublin_core_text, file_name=f"Dublin_Core_{name}.txt", mime="text/plain", key=f"dc_export_{s_id}")
+                with c_col2:
+                    current_year = datetime.datetime.now().year
+                    apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
+                    with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
+                        st.markdown(f"""
+                        <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:17px; color:#1E3A8A;'>
+                            <b>📝 صيغة الاقتباس الجاهزة للنسخ المباشر:</b><br><br>
+                            <code>{apa_citation}</code>
+                        </div>
+                        """, unsafe_allow_html=True)
+                
+                tab_daily, tab_anthropology, tab_bibliography = st.tabs([
+                    "📆 الطقوس والممارسات اليومية والسنوية", 
+                    "💭 الأنثروبولوجيا والاعتقاد بالكرامات", 
+                    "📚 البيبليوغرافيا والمصادر والأعمال العلمية"
+                ])
+                
+                with tab_daily:
+                    st.markdown("<h4 style='color:#1E3A8A;'>🔄 الطقوس والممارسات الميدانية اليومية والسنوية:</h4>", unsafe_allow_html=True)
+                    st.write(daily if daily else "لا توجد معطيات مسجلة.")
+                    st.markdown("---")
+                    st.markdown("<h4 style='color:#1E3A8A;'>🎉 الاحتفالات والوفود والمواسم القبلية والسنوية:</h4>", unsafe_allow_html=True)
+                    st.write(annual if annual else "لا توجد معطيات مسجلة.")
+                    
+                with tab_anthropology:
+                    st.markdown("<h4 style='color:#1E3A8A;'>💭 المظاهر الأنثروبولوجية والوظائف الروحية والاجتماعية:</h4>", unsafe_allow_html=True)
+                    st.write(beliefs_text if beliefs_text else "لا توجد معطيات مسجلة.")
+                    
+                with tab_bibliography:
+                    st.markdown("<h4 style='color:#1E3A8A;'>📚 الخزانة العلمية والمصادر والمراجع والأعمال الإبداعية:</h4>", unsafe_allow_html=True)
+                    st.write(books if books else "لا توجد مراجع مسجلة.")
+                    if creative:
+                        st.markdown("---")
+                        st.markdown("**🎨 أعمال إبداعية وفنية ووثائقيات:**")
+                        st.write(creative)
+                    if links: st.markdown(f"🔗 **مكان الوجود والروابط:** {links}")
+
 elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
     st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
     
