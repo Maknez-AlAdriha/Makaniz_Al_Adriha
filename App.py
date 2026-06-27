@@ -92,7 +92,7 @@ st.markdown("""
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
         ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
         
-        /* ستايل مخصص لزر الإغلاق والفتح بايثون الملكي الجديد ليظهر بشكل فخم ومجسم وبخلفية متدرجة */
+        /* ستايل مخصص لزر الإغلاق والفتح بايثون الملكي الجديد في المنتصف ليظهر بشكل فخم ومجسم */
         .stButton>button {
             background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
             color: white !important;
@@ -102,6 +102,8 @@ st.markdown("""
             padding: 10px 24px !important;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
             transition: all 0.3s ease !important;
+            margin: 10px auto !important;
+            display: block !important;
         }
         .stButton>button:hover {
             transform: scale(1.03) !important;
@@ -228,7 +230,7 @@ def init_ultimate_db():
     
     provinces_data = [
         ('جهة بني ملال خنيفرة', 'إقليم خنيفرة'), ('جهة بني ملال خنيفرة', 'إقليم بني ملال'),
-        ('جهة بني ملال خنيفرة', 'إقليم أزيلال'), ('جهة بني ملال خنيفرة', 'إقليم خريبكة'),
+        ('جهة بني ملال خنيفرة', 'إقليم أزيلال'), ('جهة بني ملال خنيفرة', 'إقليم khreibga'),
         ('جهة بني ملال خنيفرة', 'إقليم الفقية بن صالح'), ('جهة مراكش أسفي', 'إقليم آسفي'),
         ('جهة مراكش أسفي', 'عمالة مراكش'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم تطوان'),
         ('جهة طنجة - تطوان - الحسيمة', 'عمالة طنجة أصيلة'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم شفشاون'),
@@ -243,11 +245,11 @@ def init_ultimate_db():
 
 init_ultimate_db()
 
-# 🟢 تم التصحيح والتحصين الكامل هنا: دالة التحقق منفصلة ومحمية تمنع ظهور أي لافتة عطل حمراء
+# الحصانة الموحدة والتحقق المنفصل السليم لمنع اللافتات الحمراء
 if "sidebar_visible" not in st.session_state:
     st.session_state.sidebar_visible = True
 
-# رسم زر التحكم المستقل والمجسم في أعلى واجهة التطبيق
+# رسم الزر المركزي المستقل كلياً بلغة بايثون للتحكم الحر بالاختفاء والظهور المضمون لراحة الباحثين
 btn_label = "💥 إغلاق وإخفاء بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
 if st.button(btn_label):
     st.session_state.sidebar_visible = not st.session_state.sidebar_visible
@@ -261,7 +263,6 @@ if st.session_state.sidebar_visible:
         ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
     )
 else:
-    # وضع افتراضي صامت وثابت لحماية محرك البحث عند إغلاق البوابات لترك مساحة الشاشة كاملة للباحث
     menu = "🔍 محرك البحث العلمي الشامل"
 if menu == "🔍 محرك البحث العلمي الشامل":
     # 🇲🇦 التثبيت الرسمي للاسم السيادي المعتمد بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
@@ -269,7 +270,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
     
-    # 🟢 تم التأمين هنا بسحب خانة الـ index الأولى لمنع لافتة TypeError وصعود المنصة بسلام
+    # تأمين عدادات المنصة عبر تفكيك التوبل وقراءته كعنصر رقمي صافي لمنع لافتات التوقف
     t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
     total_shrines = int(t_res[0]) if t_res else 0
     
@@ -309,103 +310,6 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     with col4:
         era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
         selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
-    # ==========================================
-# 🔍 الجزء 5: عرض البطاقات وحماية أزرار الاقتباس المعتمدة ضد التشوهات النصية
-# ==========================================
-    query = """
-    SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
-    FROM shrines s 
-    JOIN geography g ON s.province_id = g.id WHERE 1=1
-    """
-    params = []
-    if search_query:
-        if search_query.startswith("#"):
-            query += " AND s.tags LIKE ?"; params.append(f"%{search_query}%")
-        else:
-            query += " AND s.name LIKE ?"; params.append(f"%{search_query}%")
-    if filter_type != "الكل": query += " AND s.type = ?"; params.append(filter_type)
-    if selected_region != "الكل": query += " AND g.region = ?"; params.append(selected_region)
-    if selected_era != "الكل": query += " AND s.historical_era = ?"; params.append(selected_era)
-        
-    results = cursor.execute(query, params).fetchall()
-    
-    if not results:
-        st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية.")
-    else:
-        st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
-        map_data = pd.DataFrame([{"latitude": r, "longitude": r} for r in results])
-        st.map(map_data, zoom=5, width="stretch")
-        st.write("---")
-        
-        for row in results:
-            s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags = row
-            badge_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#D4AF37"
-            
-            beliefs_fetch = cursor.execute("SELECT function_type, details FROM beliefs_and_functions WHERE shrine_id=?", (s_id,)).fetchall()
-            beliefs_text = ""
-            if beliefs_fetch:
-                for b_type, b_det in beliefs_fetch: beliefs_text += f"• {b_type}: {b_det}\n"
-            
-            with st.container():
-                st.markdown(f"""
-                <div style='border:3px solid {badge_color}; padding:25px; border-radius:15px; margin-bottom:15px; background-color:#FAFAFA; text-align:right;'>
-                    <h2 style='color:{badge_color}; margin-top:0; font-size:26px;'>🕌 {name} <span style='font-size:14px; background-color:{badge_color}; color:white; padding:5px 12px; border-radius:10px;'>{s_type}</span></h2>
-                    <p style='font-size:17px;'>📍 <b>الامتداد الترابي الجغرافي:</b> {region} ← {province} ({loc}) | ⏳ <b>العصر التاريخي:</b> {era}</p>
-                    <p style='font-size:15px; color:#1E3A8A; font-weight:bold;'>🏷️ <b>الوسوم والدلالات الأنثروبولوجية:</b> {tags if tags else '#غير_محدد'}</p>
-                    <p style='font-size:18px; line-height:1.8; color:#1F2937; text-align:justify;'>📜 <b>المبحث التاريخي والسيرة والترجمة النَّسبية:</b> {hist}</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text)
-                encoded_html = urllib.parse.quote(html_data)
-                st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=60)
-                
-                c_col1, c_col2 = st.columns(2)
-                with c_col1:
-                    dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage: {region}, {province}, {loc}\nTemporal: {era}\nDescription: {hist}"
-                    st.download_button(label=f"📥 تصدير بطاقة الفهرسة لـ {name}", data=dublin_core_text, file_name=f"Dublin_Core_{name}.txt", mime="text/plain", key=f"dc_export_{s_id}")
-                with c_col2:
-                    current_year = datetime.datetime.now().year
-                    apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
-                    with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
-                        # 🟢 تم استبدال st.info بصندوق ماركداون محلي معزول وصافٍ 100% ليقضي على الكلمة المشوهة للأبد
-                        st.markdown(f"""
-                        <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:17px; color:#1E3A8A;'>
-                            <b>📝 صيغة الاقتباس الجاهزة للنسخ المباشر:</b><br><br>
-                            <code>{apa_citation}</code>
-                        </div>
-                        """, unsafe_allow_html=True)
-                
-                tab_daily, tab_anthropology, tab_bibliography = st.tabs([
-                    "📆 الطقوس والممارسات اليومية والسنوية", 
-                    "💭 الأنثروبولوجيا والاعتقاد بالكرامات", 
-                    "📚 البيبليوغرافيا والمصادر والأعمال العلمية"
-                ])
-                
-                with tab_daily:
-                    st.markdown("<h4 style='color:#1E3A8A;'>🔄 الطقوس والممارسات الميدانية اليومية والسنوية:</h4>", unsafe_allow_html=True)
-                    st.write(daily if daily else "لا توجد معطيات مسجلة.")
-                    st.markdown("---")
-                    st.markdown("<h4 style='color:#1E3A8A;'>🎉 الاحتفالات والوفود والمواسم القبلية والسنوية:</h4>", unsafe_allow_html=True)
-                    st.write(annual if annual else "لا توجد معطيات مسجلة.")
-                    
-                with tab_anthropology:
-                    st.markdown("<h4 style='color:#1E3A8A;'>💭 المظاهر الأنثروبولوجية والوظائف الروحية والاجتماعية:</h4>", unsafe_allow_html=True)
-                    st.write(beliefs_text if beliefs_text else "لا توجد معطيات مسجلة.")
-                    
-                with tab_bibliography:
-                    st.markdown("<h4 style='color:#1E3A8A;'>📚 الخزانة العلمية والمصادر والمراجع والأعمال الإبداعية:</h4>", unsafe_allow_html=True)
-                    st.write(books if books else "لا توجد مراجع مسجلة.")
-                    if creative:
-                        st.markdown("---")
-                        st.markdown("**🎨 أعمال إبداعية وفنية ووثائقيات:**")
-                        st.write(creative)
-                    if links: st.markdown(f"🔗 **مكان الوجود والروابط:** {links}")
-
-            
-# ==========================================
-# 🔍 الجزء 5: عرض البطاقات وحماية أشرطة التمرير والخرائط ضد التجميد والتعطل
-# ==========================================
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
     FROM shrines s 
@@ -428,7 +332,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     else:
         st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
         
-        # 🟢 تأمين وتحصين دالة الخريطة جذرياً ضد أعطال الإحداثيات والقيم الفارغة لضمان صفر عطل
+        # 🟢 تأمين وتحصين دالة الخريطة استراتيجياً لحذف لافتات الأخطاء والتحويل الصافي العريض مائة بالمائة
         map_list = []
         for r in results:
             try:
@@ -440,10 +344,8 @@ if menu == "🔍 محرك البحث العلمي الشامل":
         
         if map_list:
             map_data = pd.DataFrame(map_list)
-            # إجبار الخريطة على القراءة الصارمة لأسماء الأعمدة القياسية المؤمنة مائة بالمائة
             st.map(map_data, zoom=5, use_container_width=True)
         else:
-            # خريطة احتياطية ثابتة تتمركز فوق جغرافيا المغرب الشريف لحماية الواجهة من السقوط
             st.map(pd.DataFrame([{"latitude": 31.7917, "longitude": -7.0926}]), zoom=5, use_container_width=True)
             
         st.write("---")
@@ -479,6 +381,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                     current_year = datetime.datetime.now().year
                     apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
                     with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
+                        # استخدام الصندوق المعزول لحقن النص الصافي وبتر الحروف المقلوبة كلياً للأبد لعام 2026
                         st.markdown(f"""
                         <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:17px; color:#1E3A8A;'>
                             <b>📝 صيغة الاقتباس الجاهزة للنسخ المباشر:</b><br><br>
@@ -511,7 +414,6 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                         st.markdown("**🎨 أعمال إبداعية وفنية ووثائقيات:**")
                         st.write(creative)
                     if links: st.markdown(f"🔗 **مكان الوجود والروابط:** {links}")
-
 elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
     st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
     
@@ -623,7 +525,6 @@ if st.session_state.sidebar_visible:
             try:
                 df = pd.read_csv(uploaded_csv, encoding='utf-8')
                 
-                # إصلاح وتوحيد أسماء الأعمدة في الخلفية تلقائياً لو كانت مقطوعة بسبب محول الصور لضمان صفر عطل
                 rename_dict = {}
                 for col in df.columns:
                     clean_col = str(col).strip().replace('\n', '').replace(' ', '')
@@ -645,10 +546,9 @@ if st.session_state.sidebar_visible:
                 
                 required_cols = ['shrine_name', 'shrine_type', 'province', 'exact_location', 'history_details', 'daily_activities', 'annual_activities', 'researchers_books', 'creative_works', 'web_links', 'belief_type', 'belief_details']
                 
-                # خلق الخانات الناقصة تلقائياً صامتاً لتلافي أي توقف مفاجئ للمستكشف
                 for col in required_cols:
                     if col not in df.columns:
-                        df[col] = "غير مححدد"
+                        df[col] = "غير محدد"
                         
                 added_count = 0
                 updated_count = 0
