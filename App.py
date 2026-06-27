@@ -519,73 +519,12 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🎓 لوحة الشرف والتعريف الأكاديمي ثلاثية اللغات (العربية، الإنجليزية، الفرنسية)
+# 🛡️ الجزء 8: الإدارة الجانبية ومحرك الاستيراد التراكمي المطور فائق المرونة والحصانة الجغرافية
 # ==========================================
-if menu == "🎓 حول المكنز الأكاديمي":
-    st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
-    st.write("---")
-    
-    # 🟢 تم حذف كلمة "الجزء الأول" بنجاح من المضمون المؤسسي للأطروحة بداخل البطاقة المجسمة
-    st.markdown("""
-    <div style='background: linear-gradient(135deg, #FFFDF6, #F9F5E8); border: 3px double #D4AF37; padding: 35px; border-radius: 15px; text-align: center; margin-bottom: 25px;'>
-        <h2 style='color: #1E3A8A; font-family: "Reem Kufi", serif; font-size: 32px; margin-top: 0;'>🎓 لوحة الشرف والتعريف الأكاديمي بالمنصة الرقمية</h2>
-        <p style='font-size: 20px; color: #1F2937; line-height: 1.8; font-weight: 500;'>
-            إن هذا البرنامج التراثي السيادي المتقدم هو ثمرة حية وتحويل رقمي متكامل لأطروحة نُوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.
-        </p>
-        <div style='background-color: #1E3A8A; color: white; padding: 10px 25px; display: inline-block; border-radius: 8px; font-weight: bold; font-size: 20px; margin: 15px auto;'>
-            👨‍🎓 الباحث الدكتور: رشيد الجانبي
-        </div>
-        <p style='font-size: 18px; color: #4B5563; font-weight: bold; margin-bottom: 5px;'>🏛️ المضمون المؤسسي للأطروحة:</p>
-        <p style='font-size: 17px; color: #1F2937; margin-top: 0;'>
-            <b>جامعة ابن طفيل (القنيطرة)</b> — مركز دراسات الدكتوراه — كلية اللغات والآداب والفنون<br>
-            <b>موضوع الأطروحة:</b> رقمنة التراث الشعبي المغربي "الأضرحة والمزارات" نموذجاً (السنة الجامعية: 2022/2023م).
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    tab_ar, tab_fr, tab_en = st.tabs([
-        "🇲🇦 النبذة والمستخلص العلمي (العربية)", 
-        "🇫🇷 Résumé de la Thèse (Français)", 
-        "🇬🇧 Thesis Abstract & Summary (English)"
-    ])
-    
-    with tab_ar:
-        st.markdown("""
-        <div style='background-color: #FAFAFA; padding: 25px; border-right: 5px solid #1E3A8A; border-radius: 8px; text-align: justify;'>
-            <h3 style='color: #1E3A8A; font-size: 22px; margin-top: 0;'>📝 ملخص الأطروحة والأهداف الترابية المنشودة:</h3>
-            <p style='font-size: 18px; line-height: 1.9; color: #1F2937;'>
-                يكتسي التراث أهمية كبيرة في حياة الأمم والشعوب؛ فهو كاشف لعمقها الحضاري، وصور لطورها الفكري والثقافي، وتتميز الثقافة المغربية بتعدد روافدها، وغنى مجالاتها وفروعها، ولعل ثراء المأثور الثقافي والروحي للبلاد يتجسد بشكل جلي من خلال معالم الأولياء والأضرحة والمزارات الترابية.<br><br>
-                وقد أدرك الجميع في مطلع الألفية أهمية رقمية وتأصيل محتويات التراث الإنساني للاستفادة منها ووضعها على الشبكة العالمية للمعلومات، ومن ثمة تبرز أهمية هذه الأطروحة والدراسة العلمية والميدانية لرقمنة التراث الشعبي من خلال مكنز رقمي ذكي للمساجد والمزارات الدينية لتوفير قاعدة بيانات حيوية فائقة الدقة تخدم متطلبات البحث الأنثروبولوجي والتأريخي وعمارة المعالم التراثية الوطنية.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with tab_fr:
-        # 🟢 عزل وتوجيه وضبط الحروف والاسم اللاتيني الصريح من اليسار لليمين مائة بالمائة لقتل التشوه
-        st.markdown("""
-        <div class='latin-text' style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #10B981; border-radius: 8px;'>
-            <h3 style='color: #10B981; font-size: 22px; margin-top: 0;'>📝 Résumé de l'œuvre scientifique :</h3>
-            <p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>
-                Le patrimoine a une grande importance dans la vie des nations et des peuples, car il révèle leur civilisation profonde et met en lumière leur développement intellectuel et culturel. Notre patrimoine marocain se caractérise par ses sources diverses, ses domaines riches et ses branches.<br><br>
-                Notre époque actuelle a connu des développements technologiques et technoscientifiques rapides, au point d'être appelée l'ère numérique. L'une des technologies les plus marquantes est sans doute la numérisation, qui a profondément modifié la manière de traiter l'information, en particulier dans le domaine de la documentation. C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume, offrant ainsi un outil souverain pour l'archivage, la recherche anthropologique et la valorisation du patrimoine immatériel.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with tab_en:
-        # 🟢 عزل وتوجيه وضبط الحروف والاسم اللاتيني الصريح من اليسار لليمين مائة بالمائة لقتل التشوه
-        st.markdown("""
-        <div class='latin-text' style='background-color: #FAFAFA; padding: 25px; border-left: 5px solid #D4AF37; border-radius: 8px;'>
-            <h3 style='color: #D4AF37; font-size: 22px; margin-top: 0;'>📝 Academic Abstract & Scope :</h3>
-            <p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>
-                Heritage is of great importance in the life of nations and peoples, as it is the revealer of their civilizational depth, and the highlight of their intellectual and cultural development. Moroccan heritage is characterized by the multiplicity of its sources and tributaries, and the richness of its fields and branches.<br><br>
-                Digital in all areas of life and knowledge, and perhaps the most prominent of these technologies is what has become known as digitization, which has radically changed the methods of dealing with information in all fields and the field of documentation in particular. This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms in this information system that provides researchers with heritage terms, achieving the maximum degree of efficiency in storage and retrieval of Moroccan cultural and spiritual history.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
+    
+    # 🔒 حقن نظام "مفتاح المطور السري" لحماية المنظومة عند نشرها عالمياً
     st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
     developer_key = st.sidebar.text_input("أدخل رمز العبور لتغذية وإدارة المكنز:", type="password", key="dev_key_final")
     
@@ -596,5 +535,110 @@ if st.session_state.sidebar_visible:
         if uploaded_csv is not None:
             try:
                 df = pd.read_csv(uploaded_csv, encoding='utf-8')
-                st.sidebar.success("📊 تم الدمج التراكمي الحصين لملفك بنجاح!")
-            except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد: {e}")
+                
+                # إصلاح وتوحيد أسماء الأعمدة تلقائياً في الخلفية لو كانت مقطوعة بسبب محول الصور
+                rename_dict = {}
+                for col in df.columns:
+                    clean_col = str(col).strip().replace('\n', '').replace(' ', '')
+                    if 'shrine_name' in clean_col: rename_dict[col] = 'shrine_name'
+                    elif 'shrine_type' in clean_col: rename_dict[col] = 'shrine_type'
+                    elif 'province' in clean_col: rename_dict[col] = 'province'
+                    elif 'exact_location' in clean_col: rename_dict[col] = 'exact_location'
+                    elif 'history_details' in clean_col: rename_dict[col] = 'history_details'
+                    elif 'daily_activ' in clean_col: rename_dict[col] = 'daily_activities'
+                    elif 'daily_activities' in clean_col: rename_dict[col] = 'daily_activities'
+                    elif 'annual_activities' in clean_col: rename_dict[col] = 'annual_activities'
+                    elif 'researchers_books' in clean_col: rename_dict[col] = 'researchers_books'
+                    elif 'creative_works' in clean_col: rename_dict[col] = 'creative_works'
+                    elif 'web_links' in clean_col: rename_dict[col] = 'web_links'
+                    elif 'belief_type' in clean_col: rename_dict[col] = 'belief_type'
+                    elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
+                
+                df = df.rename(columns=rename_dict)
+                
+                required_cols = ['shrine_name', 'shrine_type', 'province', 'exact_location', 'history_details', 'daily_activities', 'annual_activities', 'researchers_books', 'creative_works', 'web_links', 'belief_type', 'belief_details']
+                
+                for col in required_cols:
+                    if col not in df.columns:
+                        df[col] = "غير محدد"
+                        
+                added_count = 0
+                updated_count = 0
+                
+                # قراءة الجغرافيا الحية من الذاكرة
+                p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                
+                for index, row in df.iterrows():
+                    s_name = str(row['shrine_name']).strip()
+                    if not s_name or s_name == "nan" or "shrine_name" in s_name:
+                        continue
+                        
+                    tags_val = str(row['tags']).strip() if 'tags' in df.columns and pd.notna(row['tags']) else ''
+                    s_type = str(row['shrine_type']).strip() if pd.notna(row['shrine_type']) else 'أضرحة المسلمين'
+                    hist_val = str(row['history_details']).strip() if pd.notna(row['history_details']) else 'غير محدد'
+                    
+                    if "#معجم" in tags_val or "#مصطلحات" in tags_val:
+                        cursor.execute("INSERT OR IGNORE INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                        cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                    else:
+                        prov_name = str(row['province']).strip()
+                        
+                        # 🟢 الحصانة الجغرافية الفائقة: خلق الإقليم أو الجماعة تلقائياً في جدول الجغرافيا لو كانت جديدة دون رفض السطر
+                        if prov_name not in p_dict and prov_name != "nan" and prov_name != "":
+                            cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
+                            conn.commit()
+                            # تحديث القاموس الجغرافي الحي فوراً
+                            p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                        
+                        if prov_name in p_dict:
+                            prov_id = p_dict[prov_name]
+                            era_val = str(row['historical_era']).strip() if 'historical_era' in df.columns and pd.notna(row['historical_era']) else 'غير محدد'
+                            auto_lat, auto_lon = get_auto_coords(prov_name)
+                            
+                            existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
+                            if existing:
+                                shrine_id = existing[0]
+                                cursor.execute("""
+                                    UPDATE shrines 
+                                    SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?
+                                    WHERE id=?""", (s_type, str(row['exact_location']), hist_val, str(row['daily_activities']), str(row['annual_activities']), str(row['researchers_books']), str(row['creative_works']), str(row['web_links']), era_val, tags_val, auto_lat, auto_lon, shrine_id))
+                                updated_count += 1
+                            else:
+                                cursor.execute("""
+                                    INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                                    (s_name, s_type, prov_id, str(row['exact_location']), hist_val, str(row['daily_activities']), str(row['annual_activities']), era_val, tags_val, auto_lat, auto_lon, str(row['researchers_books']), str(row['creative_works']), str(row['web_links'])))
+                                shrine_id = cursor.lastrowid
+                                added_count += 1
+                            
+                            cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
+                            cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, str(row['belief_type']), str(row['belief_details'])))
+                
+                conn.commit()
+                st.sidebar.success(f"📊 تم الدمج بنجاح: إضافة {added_count} وتحديث {updated_count} معلم!")
+                st.rerun()
+            except Exception as e: 
+                st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
+    
+        st.sidebar.markdown("---")
+        
+        if st.sidebar.button("💾 أخذ نسخة احتياطية حية للمنظومة الكبرى"):
+            try:
+                backup_dir = "backups_ultimate"
+                if not os.path.exists(backup_dir): os.makedirs(backup_dir)
+                c_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                b_file = f"ultimate_thesaurus_backup_{c_time}.db"
+                b_path = os.path.join(backup_dir, b_file)
+                b_conn = sqlite3.connect(b_path)
+                with b_conn: conn.backup(b_conn)
+                b_conn.close()
+                st.sidebar.success(f"✅ تم تأمين النسخة الاحتياطية الحية بنجاح داخل المجلد: {b_file}")
+            except Exception as e: st.sidebar.error(f"❌ فشل التأمين الفوري: {e}")
+    
+        st.sidebar.markdown("---")
+        ultimate_template = pd.DataFrame(columns=['shrine_name', 'shrine_type', 'province', 'exact_location', 'historical_era', 'tags', 'history_details', 'daily_activities', 'annual_activities', 'researchers_books', 'creative_works', 'web_links', 'belief_type', 'belief_details'])
+        csv_buffer = ultimate_template.to_csv(index=False, encoding='utf-8')
+        st.sidebar.download_button(label="📥 تنزيل قالب CSV الموسوعي المطور", data=csv_buffer, file_name="قالب_المكنز_الوطني_الشامل_المطور.csv", mime="text/csv")
+    
+    elif developer_key != "":
+        st.sidebar.error("⚠️ رمز العبور غير صحيح! تصفح المنصة متاح مجاناً للعموم.")
