@@ -17,124 +17,137 @@ cursor = conn.cursor()
 # حقن كود المحاذاة الصارمة والنسف البرمجي الشامل للأيقونات اللغوية المقلوبة أينما دست في الصفحة
 st.markdown("""
     <style>
-        @import url('https://googleapis.com');
-        
-        /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
-        html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
-            font-family: 'Tajawal', sans-serif !important;
-            font-size: 19px !important; 
-            line-height: 1.8 !important;
-            direction: rtl !important;
-            text-align: right !important;
-        }
-        
-        /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
-        .moroccan-title {
-            font-family: 'Reem Kufi', serif !important;
-            font-size: 46px !important;
-            font-weight: 900 !important;
-            color: #1E3A8A !important;
-            text-align: center !important;
-            line-height: 1.5 !important;
-            margin-bottom: 15px !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
-            width: 100% !important;
-            display: block !important;
-        }
-        
-        h1, h2, h3, h4, h5, h6 { font-family: 'Tajawal', sans-serif !important; direction: rtl !important; text-align: right !important; width: 100% !important; }
-        h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
-        h2 { font-size: 26px !important; font-weight: 700 !important; }
-        h3 { font-size: 22px !important; font-weight: 700 !important; }
-        
-        /* تحسين وتكبير خطوط صناديق الإدخال بالمنتصف لراحة الباحثين */
-        div[data-testid="stTextInput"] input { font-size: 24px !important; font-weight: bold !important; color: #1E3A8A !important; height: 55px !important; }
-        div[data-testid="stTextInput"] input::placeholder { font-size: 18px !important; font-weight: 500 !important; color: #9CA3AF !important; text-align: right !important; }
-        
-        /* تحسين مظهر التبويبات الفهرسية في الأسفل وجعلها جذابة ومفصولة */
-        .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 8px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
-        .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
-        div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
-        
-        /* 🔥 النسف والإخفاء المطلق والنهائي لجميع الكلمات الإنجليزية المشوهة والأيقونات النصية المقلوبة من المتصفح */
-        html[dir="rtl"] span, html[dir="rtl"] div, [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, 
-        [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div, button[data-testid="stSidebarCollapseButton"] span, 
-        button[data-testid="sidebar-toggle"] span, div[class*="copyButton"] span, div[class*="StyledCollapsedControl"] span,
-        .st-emotion-cache-1wbqy5l, .st-emotion-cache-6q9w0x, .st-emotion-cache-158w92a, p::-webkit-scrollbar, span::-webkit-scrollbar, 
-        div::-webkit-scrollbar, [data-testid="stSidebarCollapseButton"] div, [data-testid="collapsedControlButton"] div, button div, button span {
-            display: none !important;
-            font-size: 0px !important;
-            color: transparent !important;
-            text-shadow: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            width: 0px !important;
-            height: 0px !important;
-        }
+    @import url('https://googleapis.com');
+    
+    /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
+        font-family: 'Tajawal', sans-serif !important;
+        font-size: 19px !important; 
+        line-height: 1.8 !important;
+        direction: rtl !important;
+        text-align: right !important;
+    }
+    
+    /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
+    .moroccan-title {
+        font-family: 'Reem Kufi', serif !important;
+        font-size: 46px !important;
+        font-weight: 900 !important;
+        color: #1E3A8A !important;
+        text-align: center !important;
+        line-height: 1.5 !important;
+        margin-bottom: 15px !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+        width: 100% !important;
+        display: block !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6 { font-family: 'Tajawal', sans-serif !important; direction: rtl !important; text-align: right !important; width: 100% !important; }
+    h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
+    h2 { font-size: 26px !important; font-weight: 700 !important; }
+    h3 { font-size: 22px !important; font-weight: 700 !important; }
+    
+    div[data-testid="stTextInput"] input { font-size: 24px !important; font-weight: bold !important; color: #1E3A8A !important; height: 55px !important; }
+    div[data-testid="stTextInput"] input::placeholder { font-size: 18px !important; font-weight: 500 !important; color: #9CA3AF !important; text-align: right !important; }
+    
+    .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 8px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
+    .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
+    div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
+    
+    /* 🔥 النسف والإخفاء المطلق والنهائي لجميع الكلمات الإنجليزية المشوهة والأيقونات النصية المقلوبة من المتصفح */
+    [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div,
+    button[data-testid="stSidebarCollapseButton"] span, button[data-testid="sidebar-toggle"] span, div[class*="copyButton"] span, div[class*="StyledCollapsedControl"] span,
+    .st-emotion-cache-1wbqy5l, .st-emotion-cache-6q9w0x, .st-emotion-cache-158w92a, p::-webkit-scrollbar, span::-webkit-scrollbar, div::-webkit-scrollbar,
+    [data-testid="stSidebarCollapseButton"] div, [data-testid="collapsedControlButton"] div, button div, button span {
+        display: none !important;
+        font-size: 0px !important;
+        color: transparent !important;
+        text-shadow: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0px !important;
+        height: 0px !important;
+    }
 
-        /* طمس النصوص الأصلية للأزرار لمنع تسرب الكلمات المقلوبة */
-        [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"],
-        [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
-            color: transparent !important;
-            text-shadow: none !important;
-        }
+    [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"],
+    [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
+        color: transparent !important;
+        text-shadow: none !important;
+    }
 
-        /* ✨ تصميم فخم ومجسم لزر التحكم الجانبي عند انطواء الشريط (البوابات مغلقة) */
-        div[data-testid="collapsedControlButton"] button::after, div[class*="StyledCollapsedControl"] button::after {
-            content: "🏛️ بوابات المنظومة ⬅️" !important;
-            font-size: 15px !important;
-            font-family: 'Tajawal', sans-serif !important;
-            color: #FFFFFF !important;
-            font-weight: 900 !important;
-            display: block !important;
-        }
+    [data-testid="stCodeBlock"] button::after, div[class*="copyButton"] button::after {
+        content: "📋 اضغط هنا للنسخ الفوري" !important;
+        font-size: 14px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        color: #1E3A8A !important;
+        font-weight: bold !important;
+        display: block !important;
+    }
 
-        /* ✨ تصميم فخم ومجسم لزر التحكم الجانبي عند انبثاق الشريط (البوابات مفتوحة) */
-        [data-testid="stSidebarCollapseButton"] button::after {
-            content: "إغلاق البوابات ➡️" !important;
-            font-size: 15px !important;
-            font-family: 'Tajawal', sans-serif !important;
-            color: #FFFFFF !important;
-            font-weight: 900 !important;
-            display: block !important;
-        }
+    /* ✨ زر بوابات المنظومة الاحترافي (عند الإغلاق) */
+    div[data-testid="collapsedControlButton"] button::after, div[class*="StyledCollapsedControl"] button::after {
+        content: "🏛️ بوابات المنظومة ⬅️" !important;
+        font-size: 15px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        display: block !important;
+    }
 
-        /* هندسة وتلوين أزرار التحكم الجانبية بالتدرج الملكي البارز */
-        [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
-            display: flex !important;
-            background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
-            border: 2px solid #D4AF37 !important;
-            border-radius: 10px !important;
-            padding: 8px 16px !important;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
-            cursor: pointer !important;
-            height: auto !important;
-            min-height: 42px !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
+    /* ✨ زر بوابات المنظومة الاحترافي (عند الفتح) */
+    [data-testid="stSidebarCollapseButton"] button::after {
+        content: "إغلاق البوابات ➡️" !important;
+        font-size: 15px !important;
+        font-family: 'Tajawal', sans-serif !important;
+        color: #FFFFFF !important;
+        font-weight: 900 !important;
+        display: block !important;
+    }
 
-        /* 🛡️ التصفير الكامل والمطلق لخلفية الحاوية المتبقية للشريط عند الانطواء ليموت التداخل عمودياً */
-        div[data-testid="collapsedControlButton"] { background-color: transparent !important; border: none !important; box-shadow: none !important; width: auto !important; }
-        section[data-testid="stSidebar"] { background-color: #F8FAFC !important; }
+    /* هندسة وتلوين أزرار التحكم الجانبية */
+    [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
+        display: flex !important;
+        background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
+        border: 2px solid #D4AF37 !important;
+        border-radius: 10px !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+        cursor: pointer !important;
+        height: auto !important;
+        min-height: 42px !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
 
-        /* 📊 تخصيص أشرطة التمرير (Scrollbars) لتصبح عريضة وواضحة جداً للباحثين باللون الأزرق */
-        ::-webkit-scrollbar { width: 14px !important; height: 14px !important; display: block !important; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
-        ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
-        
-        /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) لعدم تداخل الخطوط */
-        @media (max-width: 768px) {
-            .moroccan-title { font-size: 26px !important; }
-            h1 { font-size: 22px !important; }
-            h2 { font-size: 18px !important; }
-            h3 { font-size: 16px !important; }
-            div[data-testid="stTextInput"] input { font-size: 16px !important; height: 45px !important; }
-            div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
-            .stTabs [data-baseweb="tab"] { padding: 4px 8px !important; font-size: 13px !important; }
-            div[style*="border:3px solid"] { padding: 15px !important; margin-bottom: 10px !important; }
-        }
-    </style>
+    /* 🛡️ التصفير الكامل والنفي الكلي للحاوية والخطوط العمودية المعلقة خلف زر الفتح لمنع التداخل نهائياً */
+    div[data-testid="collapsedControlButton"] {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: auto !important;
+        position: fixed !important;
+        right: 10px !important;
+        top: 10px !important;
+        z-index: 999999 !important;
+    }
+    
+    /* 🟢 إلغاء بروز حواف القائمة تماماً وطردها خارج حدود الشاشة المرئية عند الإغلاق */
+    section[data-testid="stSidebar"][aria-expanded="false"] {
+        transform: translateX(100%) !important;
+        display: none !important;
+        visibility: hidden !important;
+        width: 0px !important;
+    }
+    section[data-testid="stSidebar"] {
+        background-color: #F8FAFC !important;
+    }
+
+    /* 📊 تخصيص أشرطة التمرير (Scrollbars) لتصبح عريضة وبارزة جداً باللون الأزرق */
+    ::-webkit-scrollbar { width: 14px !important; height: 14px !important; display: block !important; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
+    ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
+</style>
+
 """, unsafe_allow_html=True)
 def generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text):
     html_content = f"""
