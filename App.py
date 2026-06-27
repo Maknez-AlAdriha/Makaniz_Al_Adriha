@@ -58,7 +58,7 @@ st.markdown("""
     [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div,
     button[data-testid="stSidebarCollapseButton"] span, button[data-testid="sidebar-toggle"] span, div[class*="copyButton"] span, div[class*="StyledCollapsedControl"] span,
     .st-emotion-cache-1wbqy5l, .st-emotion-cache-6q9w0x, .st-emotion-cache-158w92a, p::-webkit-scrollbar, span::-webkit-scrollbar, div::-webkit-scrollbar,
-    [data-testid="stSidebarCollapseButton"] div, [data-testid="collapsedControlButton"] div, button div, button span {
+    [data-testid="stSidebarCollapseButton"] div, button div, button span {
         display: none !important;
         font-size: 0px !important;
         color: transparent !important;
@@ -104,7 +104,7 @@ st.markdown("""
         display: block !important;
     }
 
-    /* هندسة وتلوين أزرار التحكم الجانبية */
+    /* هندسة وتلوين وتثبيت أزرار التحكم الجانبية */
     [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
         display: flex !important;
         background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
@@ -119,23 +119,28 @@ st.markdown("""
         justify-content: center !important;
     }
 
-    /* 🛡️ التصفير الكامل والنفي الكلي للحاوية والخطوط العمودية المعلقة خلف زر الفتح لمنع التداخل نهائياً */
+    /* 🛡️ تثبيت زر الفتح بشكل دائم ومطلق في أعلى اليمين ومنع اختفائه أو تداخله */
     div[data-testid="collapsedControlButton"] {
         background-color: transparent !important;
         border: none !important;
         box-shadow: none !important;
-        width: auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
         position: fixed !important;
-        right: 10px !important;
-        top: 10px !important;
+        right: 20px !important;
+        top: 15px !important;
         z-index: 999999 !important;
     }
+    div[data-testid="collapsedControlButton"] button {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
     
-    /* 🟢 إلغاء بروز حواف القائمة تماماً وطردها خارج حدود الشاشة المرئية عند الإغلاق */
+    /* 🟢 عزل حواف القائمة تماماً وطرد الحروف العمودية عند الإغلاق دون المساس بالزر */
     section[data-testid="stSidebar"][aria-expanded="false"] {
         transform: translateX(100%) !important;
-        display: none !important;
-        visibility: hidden !important;
         width: 0px !important;
     }
     section[data-testid="stSidebar"] {
