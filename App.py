@@ -183,7 +183,7 @@ PROVINCE_COORDINATES = {
     'إقليم شفشاون': (35.1687, -5.2636), 'إقليم العرائش': (35.1841, -6.1554),
     'إقليم الجديدة': (33.2333, -8.5000), 'إقليم السطات': (33.0010, -7.6166),
     'عمالة سلا': (34.0333, -6.8000), 'عمالة مكناس': (33.8930, -5.5473),
-    'عمالة فاس': (34.0333, -5.0000), 'إقليم taounat': (34.5364, -4.6401), 'إقليم تاونات': (34.5364, -4.6401),
+    'عمالة فاس': (34.0333, -5.0000), 'إقليم تاونات': (34.5364, -4.6401),
     'إقليم الفحص أنجرة': (35.6687, -5.4854)
 }
 
@@ -220,7 +220,7 @@ def init_ultimate_db():
     )""")
     
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS media_gallery (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, image_path TEXT NOT NULL, caption TEXT)")
     
     provinces_data = [
@@ -280,19 +280,18 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
     
-    # تأمين عدادات المنصة عبر تفكيك التوبل وقراءته كعنصر رقمي صافي لمنع لافتات التوقف الصفرية في السحابة
+    # 🟢 تم التطهير هنا بسحب العنصر الأول [0] من المصفوفة لمنع لافتة TypeError وصعود صفر عطل سحابي
     t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-    total_shrines = int(t_res) if t_res else 0
+    total_shrines = int(t_res[0]) if t_res else 0
     
     m_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-    muslim_count = int(m_res) if m_res else 0
+    muslim_count = int(m_res[0]) if m_res else 0
     
     j_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-    jewish_count = int(j_res) if j_res else 0
+    jewish_count = int(j_res[0]) if j_res else 0
     
-    # 🟢 إحياء عداد المصطلحات والمفاهيم الرابع من جدول المكنز اللغوي لـ الدكتور رشيد الجانبي
     term_res = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
-    total_terms = int(term_res) if term_res else 0
+    total_terms = int(term_res[0]) if term_res else 0
     
     # تقسيم الشاشة إلى 4 أعمدة متناسقة لإظهار العداد الجديد الفخم
     stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
@@ -308,11 +307,11 @@ if menu == "🔍 محرك البحث العلمي الشامل":
         if quick_word:
             term_fetch = cursor.execute("SELECT category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{quick_word}%",)).fetchone()
             if term_fetch:
-                st.info(f"📙 **التصنيف الفهرسي:** {term_fetch} \n\n 📝 **التحديد المفاهيمي الدقيق:** {term_fetch}")
+                st.info(f"📙 **التصنيف الفهرسي:** {term_fetch[0]} \n\n 📝 **التحديد المفاهيمي الدقيق:** {term_fetch[1]}")
             else:
                 shrine_fetch = cursor.execute("SELECT exact_location, history_details FROM shrines WHERE name LIKE ? OR tags LIKE ?", (f"%{quick_word}%", f"%{quick_word}%")).fetchone()
                 if shrine_fetch:
-                    st.info(f"📍 **الامتداد والموقع:** {shrine_fetch} \n\n 📜 **المبحث التاريخي والسياق الأنثروبولوجي:** {shrine_fetch}")
+                    st.info(f"📍 **الامتداد والموقع:** {shrine_fetch[0]} \n\n 📜 **المبحث التاريخي والسياق الأنثروبولوجي:** {shrine_fetch[1]}")
                 else:
                     st.caption("هذا المصطلح أو المزار غير مدرج في قاموسك حالياً.")
             
@@ -321,7 +320,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     with col1: search_query = st.text_input("🔍 ابحث باسم الولي، الضريح، أو الوسم (#):")
     with col2: filter_type = st.selectbox("تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"])
     with col3:
-        regions_list = ["الكل"] + [row for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
+        regions_list = ["الكل"] + [row[0] for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
         selected_region = st.selectbox("الفلترة بجهات المملكة المغربية الـ 12:", regions_list)
     with col4:
         era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
@@ -348,7 +347,6 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     else:
         st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
         
-        # تأمين وتحصين دالة الخريطة استراتيجياً لحذف لافتات الأخطاء والتحويل الصافي العريض مائة بالمائة
         map_list = []
         for r in results:
             try:
@@ -397,7 +395,6 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                     current_year = datetime.datetime.now().year
                     apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
                     
-                    # تم بتر دالة st.expander المسببة للعلة، وعزل الاقتباس الأكاديمي APA داخل صندوق مخصص نقي وصافٍ 100%
                     st.markdown(f"""
                     <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:16px; color:#1E3A8A; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);'>
                         <b>📚 التوثيق والاقتباس الأكاديمي المعتمد للبحوث (APA):</b><br><br>
@@ -438,12 +435,12 @@ elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
         with col1:
             s_name = st.text_input("اسم الولي / الضريح / المزار كاملاً:")
             s_type = st.selectbox("الهوية العقائدية والتصنيف الميداني:", ["أضرحة المسلمين", "مزارات اليهود"])
-            provinces = [row for row in cursor.execute("SELECT id, province FROM geography").fetchall()]
-            prov_dict = {row: row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+            provinces = [row[1] for row in cursor.execute("SELECT id, province FROM geography").fetchall()]
+            prov_dict = {row[1]: row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces)
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
             
-            s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير مححدد"])
+            s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"])
             s_tags = st.text_input("الوسوم والأنثروبولوجيا الدلالية مفصولة بفاصلة (مثال: #طلب_زواج, #استشفاء):")
         with col2:
             s_hist = st.text_area("📜 المبحث التاريخي، السيرة، والترجمة الكاملة ونسب صاحب المزار:")
@@ -471,25 +468,25 @@ elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
                     cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type, b_details))
                 conn.commit()
                 st.success(f"🎉 تم حفظ المعلم التراثي وتوليد تموضعه التلقائي على خريطة أطلس المغرب!")
-            except sqlite3.IntegrityError: st.error("⚠️ هذا الضريح مسجل مسبقاً في هذا الإقليم.")
+            except sqlite3.IntegrityError: st.error("⚠️ هذا الضريح مسجل مسبقاً in هذا الإقليم.")
 elif menu == "🔄 لوحة المراجعة والتصحيح والتعديل":
     st.header("🔄 لوحة التدقيق والمراجعة العلمية وتحديث الخانات الفارغة")
     shrines_list = cursor.execute("SELECT id, name FROM shrines").fetchall()
     
     if not shrines_list: st.info("لا توجد منشآت تراثية لتعديلها حالياً.")
     else:
-        shrine_dict = {f"{row} (رقم الإدخال: {row})": row for row in shrines_list}
+        shrine_dict = {f"{row[1]} (رقم الإدخال: {row[0]})": row[0] for row in shrines_list}
         selected_shrine = st.selectbox("اختر المنشأة المراد تحديث خاناتها الناقصة أو تصحيحها:", list(shrine_dict.keys()))
         s_id = shrine_dict[selected_shrine]
         
         current = cursor.execute("SELECT name, exact_location, history_details, daily_activities, annual_activities FROM shrines WHERE id=?", (s_id,)).fetchone()
         
         st.markdown("### ✏️ تعديل وتدقيق المعطيات")
-        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current)
-        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current)
-        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current)
-        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current)
-        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current)
+        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current[0])
+        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current[1])
+        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current[2])
+        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current[3])
+        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current[4])
         
         if st.button("🔄 حفظ وتأمين كافة التحديثات والمراجعات العلمية الميدانية"):
             cursor.execute("UPDATE shrines SET name=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=? WHERE id=?", (u_name, u_loc, u_hist, u_daily, u_annual, s_id))
@@ -559,7 +556,7 @@ if menu == "🎓 حول المكنز الأكاديمي":
         <div style='background-color: #FAFAFA; padding: 25px; border-right: 5px solid #1E3A8A; border-radius: 8px; text-align: justify;'>
             <h3 style='color: #1E3A8A; font-size: 22px; margin-top: 0;'>📝 ملخص الأطروحة والأهداف الترابية المنشودة:</h3>
             <p style='font-size: 18px; line-height: 1.9; color: #1F2937;'>
-                يكتسي التراث أهمية كبيرة in حياة الأمم والشعوب؛ فهو كاشف لعمقها الحضاري، وصور لطورها الفكري والثقافي، وتتميز الثقافة المغربية بتعدد روافدها، وغنى مجالاتها وفروعها، ولعل ثراء المأثور الثقافي والروحي للبلاد يتجسد بشكل جلي من خلال معالم الأولياء والأضرحة والمزارات الترابية.<br><br>
+                يكتسي التراث أهمية كبيرة في حياة الأمم والشعوب؛ فهو كاشف لعمقها الحضاري، وصور لطورها الفكري والثقافي، وتتميز الثقافة المغربية بتعدد روافدها، وغنى مجالاتها وفروعها، ولعل ثراء المأثور الثقافي والروحي للبلاد يتجسد بشكل جلي من خلال معالم الأولياء والأضرحة والمزارات الترابية.<br><br>
                 وقد أدرك الجميع في مطلع الألفية أهمية رقمية وتأصيل محتويات التراث الإنساني للاستفادة منها ووضعها على الشبكة العالمية للمعلومات، ومن ثمة تبرز أهمية هذه الأطروحة والدراسة العلمية والميدانية لرقمنة التراث الشعبي من خلال مكنز رقمي ذكي للمساجد والمزارات الدينية لتوفير قاعدة بيانات حيوية فائقة الدقة تخدم متطلبات البحث الأنثروبولوجي والتأريخي وعمارة المعالم التراثية الوطنية.
             </p>
         </div>
@@ -571,7 +568,7 @@ if menu == "🎓 حول المكنز الأكاديمي":
             <h3 style='color: #10B981; font-size: 22px; margin-top: 0;'>📝 Résumé de l'œuvre scientifique :</h3>
             <p style='font-size: 17px; line-height: 1.8; color: #1F2937;'>
                 Le patrimoine a une grande importance dans la vie des nations et des peuples, car il révèle leur civilisation profonde et met l'accent sur leur développement intellectuel et culturel. Notre patrimoine marocain se caractérise par ses sources diverses, ses domaines riches et ses branches.<br><br>
-                Notre époque actuelle a connu des développements technologiques et technoscientifiques rapides, au point d'être appelée l'ère numérique. L'une des technologies les plus marquantes est sans doute la numérisation, qui a profondément modifié la manière de traiter l'information, en particulier dans le domaine de la documentation. C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume, offrant ainsi un outil souverain pour l'archivage, la recherche anthropologique et la valorisation du patrimoine immatériel.
+                Notre époque actuelle a connu des développements technologiques et technoscientifiques rapides, au point d'être appelée l'ère numérique. L'une des technologies les plus marquantes is sans doute la numérisation, qui a profondément modifié la manière de traiter l'information, en particulier dans le domaine de la documentation. C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume, offrant ainsi un outil souverain pour l'archivage, la recherche anthropologique et la valorisation du patrimoine immatériel.
             </p>
         </div>
         """, unsafe_allow_html=True)
