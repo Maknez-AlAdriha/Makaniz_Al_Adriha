@@ -7,7 +7,7 @@ import shutil
 import io
 import urllib.parse
 
-# 🇲🇦 إعدادات الصفحة الشاملة: ضبط الشريط الجانبي لينطوي ويختفي تلقائياً على الموبايل لترك مساحة تصفح كاملة
+# 🇲🇦 إعدادات الصفحة الترابية الشاملة: ضبط الشريط الجانبي لينطوي ويختفي تلقائياً على الموبايل لترك مساحة تصفح كاملة
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="auto")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة
@@ -17,127 +17,124 @@ cursor = conn.cursor()
 # حقن كود المحاذاة الصارمة والنسف البرمجي الشامل للأيقونات اللغوية المقلوبة أينما دست في الصفحة
 st.markdown("""
     <style>
-    @import url('https://googleapis.com');
-    
-    /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
-        font-family: 'Tajawal', sans-serif !important;
-        font-size: 19px !important; 
-        line-height: 1.8 !important;
-        direction: rtl !important;
-        text-align: right !important;
-    }
-    
-    /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
-    .moroccan-title {
-        font-family: 'Reem Kufi', serif !important;
-        font-size: 46px !important;
-        font-weight: 900 !important;
-        color: #1E3A8A !important;
-        text-align: center !important;
-        line-height: 1.5 !important;
-        margin-bottom: 15px !important;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
-        width: 100% !important;
-        display: block !important;
-    }
-    
-    h1, h2, h3, h4, h5, h6 { font-family: 'Tajawal', sans-serif !important; direction: rtl !important; text-align: right !important; width: 100% !important; }
-    h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
-    h2 { font-size: 26px !important; font-weight: 700 !important; }
-    h3 { font-size: 22px !important; font-weight: 700 !important; }
-    
-    div[data-testid="stTextInput"] input { font-size: 24px !important; font-weight: bold !important; color: #1E3A8A !important; height: 55px !important; }
-    div[data-testid="stTextInput"] input::placeholder { font-size: 18px !important; font-weight: 500 !important; color: #9CA3AF !important; text-align: right !important; }
-    
-    .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 8px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
-    .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
-    div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
-    
-    /* 🔥 النسف والإخفاء المطلق والنهائي لجميع الكلمات الإنجليزية المشوهة والأيقونات النصية المقلوبة من المتصفح */
-    [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div,
-    button[data-testid="stSidebarCollapseButton"] span, button[data-testid="sidebar-toggle"] span, div[class*="copyButton"] span, div[class*="StyledCollapsedControl"] span,
-    .st-emotion-cache-1wbqy5l, .st-emotion-cache-6q9w0x, .st-emotion-cache-158w92a, p::-webkit-scrollbar, span::-webkit-scrollbar, div::-webkit-scrollbar,
-    [data-testid="stSidebarCollapseButton"] div, [data-testid="collapsedControlButton"] div, button div, button span {
-        display: none !important;
-        font-size: 0px !important;
-        color: transparent !important;
-        text-shadow: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        width: 0px !important;
-        height: 0px !important;
-    }
+        @import url('https://googleapis.com');
+        
+        /* 📱💻 التنسيق العام المرن والمحاذاة الشاملة لليمين لجميع الأجهزة */
+        html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
+            font-family: 'Tajawal', sans-serif !important;
+            font-size: 19px !important; 
+            line-height: 1.8 !important;
+            direction: rtl !important;
+            text-align: right !important;
+        }
+        
+        /* 🇲🇦 ستايل الخط المغربي الفاخر للعنوان الرئيسي للمنظومة */
+        .moroccan-title {
+            font-family: 'Reem Kufi', serif !important;
+            font-size: 46px !important;
+            font-weight: 900 !important;
+            color: #1E3A8A !important;
+            text-align: center !important;
+            line-height: 1.5 !important;
+            margin-bottom: 15px !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+            width: 100% !important;
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 { font-family: 'Tajawal', sans-serif !important; direction: rtl !important; text-align: right !important; width: 100% !important; }
+        h1 { font-size: 34px !important; font-weight: 900 !important; text-align: center !important; }
+        h2 { font-size: 26px !important; font-weight: 700 !important; }
+        h3 { font-size: 22px !important; font-weight: 700 !important; }
+        
+        /* تحسين وتكبير خطوط صناديق الإدخال بالمنتصف لراحة الباحثين */
+        div[data-testid="stTextInput"] input { font-size: 24px !important; font-weight: bold !important; color: #1E3A8A !important; height: 55px !important; }
+        div[data-testid="stTextInput"] input::placeholder { font-size: 18px !important; font-weight: 500 !important; color: #9CA3AF !important; text-align: right !important; }
+        
+        /* تحسين مظهر التبويبات الفهرسية في الأسفل وجعلها جذابة ومفصولة */
+        .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 8px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
+        .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
+        div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
+        
+        /* 🔥 النسف والإخفاء المطلق والنهائي لجميع الكلمات الإنجليزية المشوهة والأيقونات النصية المقلوبة من المتصفح */
+        html[dir="rtl"] span, html[dir="rtl"] div, [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, 
+        [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div, button[data-testid="stSidebarCollapseButton"] span, 
+        button[data-testid="sidebar-toggle"] span, div[class*="copyButton"] span, div[class*="StyledCollapsedControl"] span,
+        .st-emotion-cache-1wbqy5l, .st-emotion-cache-6q9w0x, .st-emotion-cache-158w92a, p::-webkit-scrollbar, span::-webkit-scrollbar, 
+        div::-webkit-scrollbar, [data-testid="stSidebarCollapseButton"] div, [data-testid="collapsedControlButton"] div, button div, button span {
+            display: none !important;
+            font-size: 0px !important;
+            color: transparent !important;
+            text-shadow: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            width: 0px !important;
+            height: 0px !important;
+        }
 
-    /* طمس النصوص الأصلية للأزرار لمنع تسرب الكلمات المقلوبة */
-    [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"],
-    [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
-        color: transparent !important;
-        text-shadow: none !important;
-    }
+        /* طمس النصوص الأصلية للأزرار لمنع تسرب الكلمات المقلوبة */
+        [data-testid="stCodeBlock"] button, div[class*="copyButton"] button, button[class*="copyButton"],
+        [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
+            color: transparent !important;
+            text-shadow: none !important;
+        }
 
-    /* ✨ تصميم زر الاقتباس الأكاديمي الصافي */
-    [data-testid="stCodeBlock"] button::after, div[class*="copyButton"] button::after {
-        content: "📋 اضغط هنا للنسخ الفوري" !important;
-        font-size: 14px !important;
-        font-family: 'Tajawal', sans-serif !important;
-        color: #1E3A8A !important;
-        font-weight: bold !important;
-        display: block !important;
-    }
+        /* ✨ تصميم فخم ومجسم لزر التحكم الجانبي عند انطواء الشريط (البوابات مغلقة) */
+        div[data-testid="collapsedControlButton"] button::after, div[class*="StyledCollapsedControl"] button::after {
+            content: "🏛️ بوابات المنظومة ⬅️" !important;
+            font-size: 15px !important;
+            font-family: 'Tajawal', sans-serif !important;
+            color: #FFFFFF !important;
+            font-weight: 900 !important;
+            display: block !important;
+        }
 
-    /* ✨ زر بوابات المنظومة الاحترافي (عند الإغلاق) */
-    div[data-testid="collapsedControlButton"] button::after, div[class*="StyledCollapsedControl"] button::after {
-        content: "🏛️ بوابات المنظومة ⬅️" !important;
-        font-size: 15px !important;
-        font-family: 'Tajawal', sans-serif !important;
-        color: #FFFFFF !important;
-        font-weight: 900 !important;
-        display: block !important;
-    }
+        /* ✨ تصميم فخم ومجسم لزر التحكم الجانبي عند انبثاق الشريط (البوابات مفتوحة) */
+        [data-testid="stSidebarCollapseButton"] button::after {
+            content: "إغلاق البوابات ➡️" !important;
+            font-size: 15px !important;
+            font-family: 'Tajawal', sans-serif !important;
+            color: #FFFFFF !important;
+            font-weight: 900 !important;
+            display: block !important;
+        }
 
-    /* ✨ زر بوابات المنظومة الاحترافي (عند الفتح) */
-    [data-testid="stSidebarCollapseButton"] button::after {
-        content: "إغلاق البوابات ➡️" !important;
-        font-size: 15px !important;
-        font-family: 'Tajawal', sans-serif !important;
-        color: #FFFFFF !important;
-        font-weight: 900 !important;
-        display: block !important;
-    }
+        /* هندسة وتلوين أزرار التحكم الجانبية بالتدرج الملكي البارز */
+        [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
+            display: flex !important;
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
+            border: 2px solid #D4AF37 !important;
+            border-radius: 10px !important;
+            padding: 8px 16px !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+            cursor: pointer !important;
+            height: auto !important;
+            min-height: 42px !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
 
-    /* هندسة وتلوين أزرار التحكم الجانبية */
-    [data-testid="stSidebarCollapseButton"], button[data-testid="sidebar-toggle"], div[class*="StyledCollapsedControl"] button {
-        display: flex !important;
-        background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
-        border: 2px solid #D4AF37 !important;
-        border-radius: 10px !important;
-        padding: 8px 16px !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
-        cursor: pointer !important;
-        height: auto !important;
-        min-height: 42px !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
+        /* 🛡️ التصفير الكامل والمطلق لخلفية الحاوية المتبقية للشريط عند الانطواء ليموت التداخل عمودياً */
+        div[data-testid="collapsedControlButton"] { background-color: transparent !important; border: none !important; box-shadow: none !important; width: auto !important; }
+        section[data-testid="stSidebar"] { background-color: #F8FAFC !important; }
 
-    /* 🛡️ التصفير الكامل والمطلق لخلفية الحاوية المتبقية للشريط عند الانطواء ليموت التداخل نهائياً */
-    div[data-testid="collapsedControlButton"] {
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        width: auto !important;
-    }
-    section[data-testid="stSidebar"] {
-        background-color: #F8FAFC !important;
-    }
-
-    /* 📊 تخصيص أشرطة التمرير (Scrollbars) لتصبح عريضة وبارزة جداً باللون الأزرق */
-    ::-webkit-scrollbar { width: 14px !important; height: 14px !important; display: block !important; }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
-    ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
-</style>
-
+        /* 📊 تخصيص أشرطة التمرير (Scrollbars) لتصبح عريضة وواضحة جداً للباحثين باللون الأزرق */
+        ::-webkit-scrollbar { width: 14px !important; height: 14px !important; display: block !important; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
+        ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
+        
+        /* 📡 الاستجابة الذكية للشاشات الصغيرة (الهواتف الذكية) لعدم تداخل الخطوط */
+        @media (max-width: 768px) {
+            .moroccan-title { font-size: 26px !important; }
+            h1 { font-size: 22px !important; }
+            h2 { font-size: 18px !important; }
+            h3 { font-size: 16px !important; }
+            div[data-testid="stTextInput"] input { font-size: 16px !important; height: 45px !important; }
+            div[data-testid="stTextInput"] input::placeholder { font-size: 13px !important; }
+            .stTabs [data-baseweb="tab"] { padding: 4px 8px !important; font-size: 13px !important; }
+            div[style*="border:3px solid"] { padding: 15px !important; margin-bottom: 10px !important; }
+        }
+    </style>
 """, unsafe_allow_html=True)
 def generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text):
     html_content = f"""
@@ -196,7 +193,7 @@ def generate_printable_html(name, s_type, region, province, loc, hist, daily, an
     """
     return html_content
 PROVINCE_COORDINATES = {
-    'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
+    'إقليم khnefra': (32.9358, -5.6644), 'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
     'إقليم تطوان': (35.5785, -5.3684), 'عمالة طنجة أصيلة': (35.7595, -5.8340),
     'إقليم آسفي': (32.2994, -9.2372), 'إقليم الحوز': (31.3483, -7.9542),
     'إقليم الصويرة': (31.5085, -9.7595), 'عمالة مراكش': (31.6295, -7.9811),
@@ -266,21 +263,24 @@ menu = st.sidebar.radio(
     "اختر فصل المعطيات لتصفحه أو تغذيته:",
     ["🔍 محرك البحث العلمي الشامل", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
 )
+# ==========================================
+# 🏛️ الجزء 4: بوابة البحث والمؤشرات الحية والمساعد المفاهيمي السريع النقي والمطهر بالكامل
+# ==========================================
 if menu == "🔍 محرك البحث العلمي الشامل":
-    # 🇲🇦 التثبيت الرسمي للاسم السيادي الأول بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
+    # 🇲🇦 التثبيت الرسمي للاسم السيادي المعتمد بالخط المغربي الفخم والكبير جداً بدون تشوهات بصريّة
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
     st.write("---")
     
-    # تفكيك التوبل لضمان سحب الأرقام الصافية وحماية عدادات المنصة من التجمد
+    # 🟢 تم التصحيح الحصين هنا: سحب العنصر الأول [0] من المصفوفة لمنع لافتة TypeError وصعود المنصة بسلام
     t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-    total_shrines = int(t_res) if t_res else 0
+    total_shrines = int(t_res[0]) if t_res else 0
     
     m_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-    muslim_count = int(m_res) if m_res else 0
+    muslim_count = int(m_res[0]) if m_res else 0
     
     j_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-    jewish_count = int(j_res) if j_res else 0
+    jewish_count = int(j_res[0]) if j_res else 0
     
     stat_col1, stat_col2, stat_col3 = st.columns(3)
     with stat_col1: st.metric("📊 مجموع المعالم الروحية الموثقة", total_shrines)
@@ -294,12 +294,11 @@ if menu == "🔍 محرك البحث العلمي الشامل":
         if quick_word:
             term_fetch = cursor.execute("SELECT category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{quick_word}%",)).fetchone()
             if term_fetch:
-                # استخدام الماركداون الصافي لإظهار الشروح عريضة ونقية 100% ومنع أي حروف زائدة
-                st.info(f"📙 **التصنيف الفهرسي:** {term_fetch} \n\n 📝 **التحديد المفاهيمي الدقيق:** {term_fetch}")
+                st.info(f"📙 **التصنيف الفهرسي:** {term_fetch[0]} \n\n 📝 **التحديد المفاهيمي الدقيق:** {term_fetch[1]}")
             else:
                 shrine_fetch = cursor.execute("SELECT exact_location, history_details FROM shrines WHERE name LIKE ? OR tags LIKE ?", (f"%{quick_word}%", f"%{quick_word}%")).fetchone()
                 if shrine_fetch:
-                    st.info(f"📍 **الامتداد والموقع:** {shrine_fetch} \n\n 📜 **المبحث التاريخي والسياق الأنثروبولوجي:** {shrine_fetch}")
+                    st.info(f"📍 **الامتداد والموقع:** {shrine_fetch[0]} \n\n 📜 **المبحث التاريخي والسياق الأنثروبولوجي:** {shrine_fetch[1]}")
                 else:
                     st.caption("هذا المصطلح أو المزار غير مدرج في قاموسك حالياً.")
             
@@ -308,11 +307,15 @@ if menu == "🔍 محرك البحث العلمي الشامل":
     with col1: search_query = st.text_input("🔍 ابحث باسم الولي، الضريح، أو الوسم (#):")
     with col2: filter_type = st.selectbox("تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"])
     with col3:
-        regions_list = ["الكل"] + [row for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
+        regions_list = ["الكل"] + [row[0] for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
         selected_region = st.selectbox("الفلترة بجهات المملكة المغربية الـ 12:", regions_list)
     with col4:
         era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
         selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
+
+# ==========================================
+# 🔍 الجزء 5: عرض بطاقات المزارات وحماية أزرار الاقتباس الأكاديمي الحصينة ضد التشوهات النصية
+# ==========================================
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
     FROM shrines s 
@@ -334,7 +337,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
         st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية.")
     else:
         st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
-        map_data = pd.DataFrame([{"latitude": r, "longitude": r} for r in results])
+        map_data = pd.DataFrame([{"latitude": r[12], "longitude": r[13]} for r in results])
         st.map(map_data, zoom=5, width="stretch")
         st.write("---")
         
@@ -357,12 +360,10 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # نافذة المعاينة والطباعة الفاخرة للبطاقات ورق A4
                 html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text)
                 encoded_html = urllib.parse.quote(html_data)
                 st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=60)
                 
-                # أدوات التوثيق الأكاديمي الشامل للجامعيين والباحثين
                 c_col1, c_col2 = st.columns(2)
                 with c_col1:
                     dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage: {region}, {province}, {loc}\nTemporal: {era}\nDescription: {hist}"
@@ -371,7 +372,7 @@ if menu == "🔍 محرك البحث العلمي الشامل":
                     current_year = datetime.datetime.now().year
                     apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية. تم التصفح عبر المكنز الوطني السيادي."
                     with st.expander("📚 اضغط لمعاينة ونسخ الاقتباس والتوثيق الأكاديمي المعتمد للبحوث (APA)"):
-                        # 🟢 الخطة البرمجية الصاعقة: استخدام الماركداون الصافي لحقن الاقتباس داخل صندوق معزول، مما يبتر تماماً الحروف المقلوبة لـ keyboard_ar للأبد
+                        # استخدام الصندوق المعزول لحقن النص الصافي وبتر الحروف المقلوبة كلياً للأبد
                         st.info(f"📝 **صيغة الاقتباس الجاهزة للنسخ المباشر:**\n\n `{apa_citation}`")
                 
                 tab_daily, tab_anthropology, tab_bibliography = st.tabs([
@@ -407,8 +408,8 @@ elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
         with col1:
             s_name = st.text_input("اسم الولي / الضريح / المزار كاملاً:")
             s_type = st.selectbox("الهوية العقائدية والتصنيف الميداني:", ["أضرحة المسلمين", "مزارات اليهود"])
-            provinces = [row for row in cursor.execute("SELECT id, province FROM geography").fetchall()]
-            prov_dict = {row: row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+            provinces = [row[1] for row in cursor.execute("SELECT id, province FROM geography").fetchall()]
+            prov_dict = {row[1]: row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces)
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
             
@@ -447,18 +448,18 @@ elif menu == "🔄 لوحة المراجعة والتصحيح والتعديل":
     
     if not shrines_list: st.info("لا توجد منشآت تراثية لتعديلها حالياً.")
     else:
-        shrine_dict = {f"{row} (رقم الإدخال: {row})": row for row in shrines_list}
+        shrine_dict = {f"{row[1]} (رقم الإدخال: {row[0]})": row[0] for row in shrines_list}
         selected_shrine = st.selectbox("اختر المنشأة المراد تحديث خاناتها الناقصة أو تصحيحها:", list(shrine_dict.keys()))
         s_id = shrine_dict[selected_shrine]
         
         current = cursor.execute("SELECT name, exact_location, history_details, daily_activities, annual_activities FROM shrines WHERE id=?", (s_id,)).fetchone()
         
         st.markdown("### ✏️ تعديل وتدقيق المعطيات")
-        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current)
-        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current)
-        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current)
-        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current)
-        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current)
+        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current[0])
+        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current[1])
+        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current[2])
+        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current[3])
+        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current[4])
         
         if st.button("🔄 حفظ وتأمين كافة التحديثات والمراجعات العلمية الميدانية"):
             cursor.execute("UPDATE shrines SET name=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=? WHERE id=?", (u_name, u_loc, u_hist, u_daily, u_annual, s_id))
@@ -531,16 +532,16 @@ if developer_key == "MAROC_2026":
             
             required_cols = ['shrine_name', 'shrine_type', 'province', 'exact_location', 'history_details', 'daily_activities', 'annual_activities', 'researchers_books', 'creative_works', 'web_links', 'belief_type', 'belief_details']
             
-            # 🟢 الحصانة البرمجية الموحدة لعام 2026: خلق الخانات الناقصة تلقائياً صامتاً لتلافي أي توقف مفاجئ للمستكشف
+            # خلق الخانات الناقصة تلقائياً صامتاً لتلافي أي توقف مفاجئ للمستكشف
             for col in required_cols:
                 if col not in df.columns:
-                    df[col] = "غير مححدد"
+                    df[col] = "غير محدد"
                     
             added_count = 0
             updated_count = 0
             
             # قراءة الأقاليم الحالية من الذاكرة
-            p_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+            p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             
             for index, row in df.iterrows():
                 s_name = str(row['shrine_name']).strip()
@@ -561,7 +562,7 @@ if developer_key == "MAROC_2026":
                     if prov_name not in p_dict and prov_name != "nan" and prov_name != "":
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         conn.commit()
-                        p_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                        p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                     
                     if prov_name in p_dict:
                         prov_id = p_dict[prov_name]
@@ -570,7 +571,7 @@ if developer_key == "MAROC_2026":
                         
                         existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                         if existing:
-                            shrine_id = existing
+                            shrine_id = existing[0]
                             cursor.execute("""
                                 UPDATE shrines 
                                 SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?
