@@ -14,22 +14,36 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 # حقن كود المحاذاة الصارمة وتصفيف الواجهات لتعمل بمرونة وحركة فائقة السرعة بدون تشنج أو تداخل للقمة
+# ==========================================
+# 🎨 الجزء 2: قالب التنسيق السيادي الحركي وتثبيت محرك البحث في قمة الواجهة دوماً (CSS الشامل)
+# ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. إجبار نافذة المتصفح الخارجية على إخفاء الشريط النحيف العاصي */
+        /* 1. 🟢 تثبيت محرك البحث والفلاتر في قمة الشاشة دوماً أثناء تصفح المكنز صلب الموضوع */
+        div[data-testid="stVerticalBlock"] > div:has(div[class*="stTextInput"]) {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0px !important;
+            z-index: 999 !important;
+            background-color: #FFFFFF !important;
+            padding-top: 15px !important;
+            padding-bottom: 15px !important;
+            border-bottom: 3px solid #D4AF37 !important;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05) !important;
+        }
+
+        /* نسف أشرطة المتصفح الافتراضية العاصية وبناء شريط تصفح داخلي عريض جداً بالخلفية */
         html {
             overflow: hidden !important;
         }
-        
-        /* 2. تحويل جسم المنصة بالكامل إلى حاوية مستقلة بشريط تصفح داخلي عريض جداً وسهل الإمساك */
         body, [data-testid="stAppViewContainer"] {
             overflow-y: auto !important;
             height: 100vh !important;
         }
         
-        /* 3. فرض سُمك ضخم وعريض جداً (30 بكسل) للمقبض الجديد أقصى يسار الشاشة بصياغة بارزة ومجسمة */
+        /* تضخيم شريط ومقبض التصفح أقصى يسار الشاشة ليكون واضحاً وسهل الإمساك */
         ::-webkit-scrollbar {
             width: 30px !important;
             height: 30px !important;
@@ -50,7 +64,7 @@ st.markdown("""
             background: linear-gradient(180deg, #3B82F6, #1E3A8A) !important;
         }
 
-        /* تصحيح جراحي: توسيع الحاوية الوسطى فقط مع حماية الشريط الجانبي الأيمن من الانضغاط أو التبعثر البصري */
+        /* توسيع الحاوية الوسطى الشاملة وحماية الشريط الجانبي من الانضغاط */
         div[data-testid="stAppViewBlockContainer"] {
             max-width: 100% !important;
             width: 100% !important;
@@ -60,7 +74,6 @@ st.markdown("""
             padding-bottom: 2rem !important;
         }
         
-        /* إعادة تثبيت أبعاد الشريط الجانبي الأيمن لمنع انقلاب الحروف العربية عمودياً وعودة بوابات الإدارة */
         section[data-testid="stSidebar"] {
             width: 340px !important;
             min-width: 340px !important;
@@ -70,7 +83,7 @@ st.markdown("""
             display: block !important;
         }
         
-        /* التمدد الملكي للتبويبات: إجبار أزرار التبويبات الثلاثة على التمدد بالتساوي وبكامل عرض بطاقة الأولياء */
+        /* التمدد الملكي للتبويبات لملء عرض بطاقة الأولياء */
         div[data-baseweb="tab-list"] {
             width: 100% !important;
             display: flex !important;
@@ -101,7 +114,6 @@ st.markdown("""
             visibility: hidden !important;
         }
         
-        /* تنسيق وتثبيت نصوص الـ Placeholder بلون خفيف يمنع أي تداخل بصري خلف الكتابة */
         ::placeholder {
             text-align: right !important;
             direction: rtl !important;
@@ -116,7 +128,7 @@ st.markdown("""
         .latin-text, .latin-text p, .latin-text span, .latin-text h3 {
             direction: ltr !important;
             text-align: left !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            font-family: 'Segoe UI', sans-serif !important;
         }
         
         .moroccan-title {
@@ -148,6 +160,22 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # إحكام تموضع القاموس الإحداثي الجغرافي لـ أولياء المغرب ليعمل صعوداً ونزولاً دون أي تجميد
 PROVINCE_COORDINATES = {
     'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
