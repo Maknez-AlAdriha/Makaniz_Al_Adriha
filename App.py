@@ -311,243 +311,89 @@ else:
     if st.session_state.current_page == "about": menu = "🎓 حول المكنز الأكاديمي"
     elif st.session_state.current_page == "contact": menu = "📬 دفتر التواصل"
     else: menu = "🔍 محرك البحث العلمي الشامل"
+
+
+# ==========================================
+# 🔍 الجزء 4: واجهة محرك البحث الشامل، المؤشرات الأربعة، وحقن البانر الأفقي الملكي الجديد
+# ==========================================
 if menu == "🔍 محرك البحث العلمي الشامل":
-    with st.container():
-        st.markdown("<b style='color:#1E3A8A;'>💡 المساعد المفاهيمي السريع للتحقيق العلمي (فحص فوري للمصطلحات والأعراف):</b>", unsafe_allow_html=True)
-        quick_word = st.text_input("اكتب الكلمة المراد فك معناها الأنثروبولوجي (مثال: مريد، هيلولة...):", label_visibility="collapsed")
-        if quick_word:
-            term_fetch = cursor.execute("SELECT category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{quick_word}%",)).fetchone()
-            if term_fetch: st.info(f"📙 **التصنيف:** {term_fetch[0]} \n\n 📝 **الشرح:** {term_fetch[1]}")
-            else:
-                shrine_fetch = cursor.execute("SELECT exact_location, history_details FROM shrines WHERE name LIKE ?", (f"%{quick_word}%",)).fetchone()
-                if shrine_fetch: st.info(f"📍 **الموقع:** {shrine_fetch[0]} \n\n 📜 **المبحث التاريخي:** {shrine_fetch[1]}")
-                else: st.caption("المصطلح غير مدرج حالياً.")
-                
+    banner_path = "banner.png" # 🟢 تم التحديث: الصورة المفتوحة لديك بصيغة png، تأكد من مطابقة الاسم بدقة بداخل المجلد
+    if os.path.exists(banner_path):
+        # تفعيل قراءة البانر الأفقي العريض بكامل امتداده الطبيعي الفخم ليغطي قمة المنصة الرقمية بنقاء
+        st.image(banner_path, use_container_width=True)
+    else:
+        st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; font-size:18px; color:#4B5563; font-weight:500;'>منصة علمية شاملة لتوثيق جغرافيا، تاريخ، أنثروبولوجيا، وبيبليوغرافيا التراث الروحي للمملكة المغربية</p>", unsafe_allow_html=True)
+        
     st.write("---")
-    col1, col2, col3, col4 = st.columns(4)
-    with col1: search_query = st.text_input("🔍 ابحث باسم الولي، الضريح، أو الوسم (#):")
-    with col2: filter_type = st.selectbox("تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"])
-    with col3:
-        regions_list = ["الكل"] + [row[0] for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
-        selected_region = st.selectbox("الفلترة بجهات المملكة المغربية الـ 12:", regions_list)
-    with col4:
-        era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
-        selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
-    query = """
-    SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags 
-    FROM shrines s 
-    JOIN geography g ON s.province_id = g.id WHERE 1=1
-    """
-    params = []
-    if search_query:
-        if search_query.startswith("#"):
-            query += " AND s.tags LIKE ?"; params.append(f"%{search_query}%")
-        else:
-            query += " AND s.name LIKE ?"; params.append(f"%{search_query}%")
-    if filter_type != "الكل": query += " AND s.type = ?"; params.append(filter_type)
-    if selected_region != "الكل": query += " AND g.region = ?"; params.append(selected_region)
-    if selected_era != "الكل": query += " AND s.historical_era = ?"; params.append(selected_era)
-        
-    results = cursor.execute(query, params).fetchall()
     
-    if not results:
-        st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية.")
-    else:
-        st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية متحركة)")
-        map_list = []
-        for r in results:
-            try:
-                lat_val = float(r[12]) if r[12] is not None else 31.7917
-                lon_val = float(r[13]) if r[13] is not None else -7.0926
-                map_list.append({"latitude": lat_val, "longitude": lon_val})
-            except Exception:
-                map_list.append({"latitude": 31.7917, "longitude": -7.0926})
-        
-        if map_list: st.map(pd.DataFrame(map_list), zoom=5, use_container_width=True)
-        st.write("---")
-        
-        for row in results:
-            s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags = row
-            badge_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#D4AF37"
-            
-            beliefs_fetch = cursor.execute("SELECT function_type, details FROM beliefs_and_functions WHERE shrine_id=?", (s_id,)).fetchall()
-            beliefs_text = ""
-            if beliefs_fetch:
-                for b_type, b_det in beliefs_fetch: beliefs_text += f"• {b_type}: {b_det}\n"
-            
-            st.markdown(f"""
-            <div style='border:3px solid {badge_color}; padding:25px; border-radius:15px; margin-bottom:15px; background-color:#FAFAFA; text-align:right;'>
-                <h2 style='color:{badge_color}; margin-top:0; font-size:26px;'>🕌 {name} <span style='font-size:14px; background-color:{badge_color}; color:white; padding:5px 12px; border-radius:10px;'>{s_type}</span></h2>
-                <p style='font-size:17px;'>📍 <b>الامتداد الجغرافي:</b> {region} ← {province} ({loc}) | ⏳ <b>العصر:</b> {era}</p>
-                <p style='font-size:15px; color:#1E3A8A; font-weight:bold;'>🏷️ <b>الوسوم:</b> {tags if tags else '#غير_محدد'}</p>
-                <p style='font-size:18px; line-height:1.8; color:#1F2937; text-align:justify;'>📜 <b>المبحث التاريخي والسيرة:</b> {hist}</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text)
-            encoded_html = urllib.parse.quote(html_data)
-            st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=60)
-            
-            c_col1, c_col2 = st.columns(2)
-            with c_col1:
-                dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage: {region}, {province}, {loc}"
-                st.download_button(label=f"📥 تصدير بطاقة لـ {name}", data=dublin_core_text, file_name=f"Dublin_{name}.txt", mime="text/plain", key=f"dc_export_{s_id}")
-            with c_col2:
-                current_year = datetime.datetime.now().year
-                apa_citation = f"المكنز الرقمي للأضرحة. ({current_year}). بطاقة توثيق: {name}، {province}، المملكة المغربية."
-                st.markdown(f"""
-                <div style='background-color:#EFF6FF; border-right:4px solid #1E3A8A; padding:15px; border-radius:8px; text-align:right; font-size:16px; color:#1E3A8A;'>
-                    <b>📚 التوثيق والاقتباس (APA):</b> <code>{apa_citation}</code>
-                </div>
-                """, unsafe_allow_html=True)
-            
-            tab_daily, tab_anthropology, tab_bibliography = st.tabs(["📆 الطقوس والممارسات", "💭 الأنثروبولوجيا والكرامات", "📚 الخزانة والمصادر"])
-            with tab_daily:
-                st.write(daily if daily else "لا توجد معطيات مسجلة.")
-                st.markdown("---")
-                st.write(annual if annual else "لا توجد معطيات مسجلة.")
-            with tab_anthropology: st.write(beliefs_text if beliefs_text else "لا توجد معطيات مسجلة.")
-            with tab_bibliography:
-                st.write(books if books else "لا توجد مراجع مسجلة.")
-                if creative: st.write(creative)
-                if links: st.markdown(f"🔗 **الروابط:** {links}")
-elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
-    st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
+    # تفكيك توبل العدادات لمنع لافتات التوقف في السيرفر السحابي
+    t_res = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
+    total_shrines = int(t_res) if t_res else 0
     
-    with st.form("add_shrine_ultimate_form"):
-        col1, col2 = st.columns(2)
-        with col1:
-            s_name = st.text_input("اسم الولي / الضريح / المزار كاملاً:")
-            s_type = st.selectbox("الهوية العقائدية والتصنيف الميداني:", ["أضرحة المسلمين", "مزارات اليهود"])
-            provinces = [row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()]
-            prov_dict = {row[1]: row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
-            s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces) if provinces else st.selectbox("إقليم / عمالة المملكة المغربية:", ["إقليم شفشاون"])
-            s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
-            s_era = st.selectbox("العصر التاريخي والسياسي:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"])
-            s_tags = st.text_input("الوسوم والأنثروبولوجيا الدلالية مفصولة بفاصلة:")
-        with col2:
-            s_hist = st.text_area("📜 المبحث التاريخي والسيرة والنسب الشريف:")
-            s_daily = st.text_area("🔄 الأنشطة والممارسات والطقوس اليومية:")
-            s_annual = st.text_area("🎉 الأنشطة والمواسم السنوية:")
-            
-        st.subheader("📚 المبحث البيبليوغرافي والمصادر والمستندات العلمية")
-        s_books = st.text_area("✍️ الكتب والمراجع والرسائل والأطاريح الجامعية:")
-        s_creative = st.text_area("🎨 الأعمال الإبداعية المرتبطة بالمعلم:")
-        s_links = st.text_area("🔗 روابط رقمية، مراجع إلكترونية:")
-        
-        st.subheader("💭 المبحث الأنثروبولوجي (الوظائف والاعتقاد بالكرامات)")
-        b_type = st.selectbox("صنف الوظيفة والمعتقد السائد:", ['الاعتقاد بالكرامات', 'الشفاء من الأمراض', 'قضاء الحوائج وطلب الزواج', 'القداسة و الشرف', 'القداسة و الطبيعة', 'تبادل القداسة', 'وظائف اجتماعية وقبلية'])
-        b_details = st.text_area("تفاصيل وحكايات الكرامة أو الوظائف القروية الحية:")
-        
-        if st.form_submit_button("💾 تثبيت وحفظ المعلم التراثي") and s_name:
-            auto_lat, auto_lon = get_auto_coords(s_prov)
-            prov_id_val = prov_dict.get(s_prov, 1)
-            try:
-                cursor.execute("""
-                    INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
-                    (s_name, s_type, prov_id_val, s_loc, s_hist, s_daily, s_annual, s_era, s_tags, auto_lat, auto_lon, s_books, s_creative, s_links))
-                shrine_id = cursor.lastrowid
-                if b_details:
-                    cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type, b_details))
-                conn.commit()
-                st.success(f"🎉 تم حفظ المعلم التراثي بنجاح بكافة مباحثه!")
-                st.rerun()
-            except sqlite3.IntegrityError: st.error("⚠️ هذا الضريح مسجل مسبقاً في هذا الإقليم.")
-elif menu == "🔄 لوحة المراجعة والتصحيح والتعديل":
-    st.header("🔄 لوحة التدقيق والمراجعة العلمية وتحديث الخانات الفارغة")
-    shrines_list = cursor.execute("SELECT id, name FROM shrines").fetchall()
+    m_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
+    muslim_count = int(m_res) if m_res else 0
     
-    if not shrines_list: st.info("لا توجد منشآت تراثية لتعديلها حالياً.")
-    else:
-        shrine_dict = {f"{row[1]} (رقم: {row[0]})": row[0] for row in shrines_list}
-        selected_shrine = st.selectbox("اختر المنشأة المراد تحديث خاناتها:", list(shrine_dict.keys()))
-        s_id = shrine_dict[selected_shrine]
-        current = cursor.execute("SELECT name, exact_location, history_details, daily_activities, annual_activities FROM shrines WHERE id=?", (s_id,)).fetchone()
-        
-        st.markdown("### ✏️ تعديل وتدقيق المعطيات")
-        u_name = st.text_input("الاسم العلمي المصحح والنهائي للضريح/الولي:", value=current[0])
-        u_loc = st.text_input("الموقع الجغرافي المحلي المعدل للضريح:", value=current[1])
-        u_hist = st.text_area("المبحث التاريخي المصحح والمحقق علمياً وثائقياً:", value=current[2])
-        u_daily = st.text_area("الأنشطة اليومية المصححة للزوار:", value=current[3])
-        u_annual = st.text_area("الأنشطة السنوية والاحتفالات المصححة للموسم السنوي:", value=current[4])
-        
-        if st.button("🔄 حفظ وتأمين كافة التحديثات والمراجعات العلمية الميدانية"):
-            cursor.execute("UPDATE shrines SET name=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=? WHERE id=?", (u_name, u_loc, u_hist, u_daily, u_annual, s_id))
-            conn.commit()
-            st.success("✅ تم تحديث وتصحيح كامل معطيات المنشأة التراثية بنجاح تام!")
-
-elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية":
-    st.header("📖 المعجم والمكنز المفاهيمي المتداول بالمغرب (مراتب، لباس، مفاهيم عبرية)")
-    tab1, tab2, tab3 = st.tabs(["🔍 استعراض المكنز اللغوي وقراءة الشروح", "➕ إضافة وتوثيق مصطلح جديد", "🎙️ دفتر تدوين وتسجيل الروايات الشفوية"])
+    j_res = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
+    jewish_count = int(j_res) if j_res else 0
     
-    with tab1:
-        term_search = st.text_input("🔎 ابحث عن شرح أي مصطلح متداول (مريد، فقير، هيلولة...):")
-        results = cursor.execute("SELECT term, category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{term_search}%",)).fetchall()
-        for t_name, t_cat, t_def in results:
-            st.markdown(f"**📙 المصطلح العلمي المتداول:** `{t_name}` | *المبحث الفهرسي:* _{t_cat}_")
-            st.info(f"📝 **التحديد المفاهيمي الأنثروبولوجي التراثي:** {t_def}")
-            
-    with tab2:
-        with st.form("add_term_form"):
-            new_term = st.text_input("المصطلح أو المفهوم الميداني كما هو متداول بالقبيلة:")
-            term_cat = st.selectbox("تصنيف المفهوم وموقعه من خطة الفهرس للصلحاء والأضرحة:", ['مصطلحات متعلقة بالأضرحة', 'مصطلحات متعلقة بالأولياء ومراتبهم', 'مصطلحات متعلقة باللباس والمظهر', 'مصطلحات متعلقة بالربيين ومزارات اليهود'])
-            term_def = st.text_area("الشرح والتحديد المفاهيمي الدقيق للمصطلح الصوفي:")
-            if st.form_submit_button("💾 إدراج المفهوم في القاموس الموسوعي الشامل") and new_term and term_def:
-                try:
-                    cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (new_term, term_cat, term_def))
-                    conn.commit(); st.success(f"👍 تم دمج المصطلح بنجاح وتأمينه في المعجم!")
-                    st.rerun()
-                except sqlite3.IntegrityError: st.error("⚠️ هذا المصطلح موثق سابقاً.")
+    term_res = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
+    total_terms = int(term_res) if term_res else 0
+    
+    # تقسيم الشاشة إلى 4 مؤشرات متناسقة لتأمين العداد الجديد الفخم للمصطلحات
+    stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
+    with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
+    with stat_col2: st.metric("🕌 صلحاء المسلمين", muslim_count)
+    with stat_col3: st.metric("🕍 مزارات اليهود", jewish_count)
+    with stat_col4: st.metric("📖 المصطلحات والمفاهيم الموثقة", total_terms)
+    st.write("---")
+    
+    # دمج الملاحظات في التبويب العلوي الرئيسي لسهولة تواصل زوار الأطروحة دون نزول
+    main_tab_search, main_tab_contact = st.tabs(["🔍 استكشاف الأطلس ومحرك البحث العلمي", "📬 دفتر التواصل وإرسال الملاحظات والتحقيق"])
+    
+    with main_tab_search:
+        with st.container():
+            st.markdown("<b style='color:#1E3A8A;'>💡 المساعد المفاهيمي السريع للتحقيق العلمي (فحص فوري للمصطلحات والأعراف):</b>", unsafe_allow_html=True)
+            quick_word = st.text_input("اكتب الكلمة المراد فك معناها الأنثروبولوجي (مثال: مريد، هيلولة...):", label_visibility="collapsed")
+            if quick_word:
+                term_fetch = cursor.execute("SELECT category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{quick_word}%",)).fetchone()
+                if term_fetch: st.info(f"📙 **التصنيف:** {term_fetch} \n\n 📝 **الشرح:** {term_fetch}")
+                else:
+                    shrine_fetch = cursor.execute("SELECT exact_location, history_details FROM shrines WHERE name LIKE ?", (f"%{quick_word}%",)).fetchone()
+                    if shrine_fetch: st.info(f"📍 **الموقع:** {shrine_fetch} \n\n 📜 **المبحث التاريخي:** {shrine_fetch}")
+                    else: st.caption("المصطلح غير مدرج حالياً.")
                 
-    with tab3:
-        st.subheader("🎙️ الحفظ الرقمي للرواية الشفوية والذاكرة التراثية القروية")
-        informant = st.text_input("اسم الراوي / الراوية الشفوية أو مقدم الضريح المعني بالشهادة:")
-        oral_text = st.text_area("نص الشهادة الحية والحكاية الشفوية الميدانية بالكامل وبالمعنى:")
-        if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
-            if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
-if menu == "🎓 حول المكنز الأكاديمي":
-    st.markdown("""
-    <div style='background: linear-gradient(135deg, #FFFDF6, #F9F5E8); border: 3px double #D4AF37; padding: 35px; border-radius: 15px; text-align: center; margin-bottom: 25px;'>
-        <h2 style='color: #1E3A8A; font-family: "Reem Kufi", serif; font-size: 32px; margin-top: 0;'>🎓 لوحة الشرف والتعريف الأكاديمي بالمنصة الرقمية</h2>
-        <p style='font-size: 20px; color: #1F2937; line-height: 1.8; font-weight: 500;'>
-            إن هذا البرنامج التراثي السيادي المتقدم هو ثمرة حية وتحويل رقمي متكامل لأطروحة نُوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.
-        </p>
-        <div style='background-color: #1E3A8A; color: white; padding: 10px 25px; display: inline-block; border-radius: 8px; font-weight: bold; font-size: 20px; margin: 15px auto;'>
-            👨‍🎓 الباحث الدكتور: رشيد الجانبي
-        </div>
-        <p style='font-size: 18px; color: #4B5563; font-weight: bold; margin-bottom: 5px;'>🏛️ المضمون المؤسسي للأطروحة:</p>
-        <p style='font-size: 17px; color: #1F2937; margin-top: 0;'>
-            <b>جامعة ابن طفيل (القنيطرة)</b> — مركز دراسات الدكتوراه — كلية اللغات والآداب والفنون<br>
-            <b>موضوع الأطروحة:</b> رقمنة التراث الشعبي المغربي "الأضرحة والمزارات" نموذجاً (السنة الجامعية: 2022/2023م).
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    tab_ar, tab_fr, tab_en = st.tabs(["🇲🇦 النبذة (العربية)", "🇫🇷 Résumé (Français)", "🇬🇧 Abstract (English)"])
-    with tab_ar:
-        st.markdown("<div style='background-color:#FAFAFA; padding:25px; border-right:5px solid #1E3A8A; border-radius:8px; text-align:justify;'><p style='font-size:18px; color:#1F2937;'>يكتسي التراث أهمية كبيرة في حياة الأمم والشعوب؛ فهو كاشف لعمقها الحضاري... تبرز أهمية هذه الأطروحة والدراسة العلمية والميدانية لرقمنة التراث الشعبي من خلال مكنز رقمي ذكي للمساجد والمزارات الدينية لتوفير قاعدة بيانات حيوية فائقة الدقة تخدم متطلبات البحث الأنثروبولوجي والتأريخي وعمارة المعالم التراثية الوطنية.</p></div>", unsafe_allow_html=True)
-    with tab_fr:
-        st.markdown("<div class='latin-text' style='background-color:#FAFAFA; padding:25px; border-left:5px solid #10B981; border-radius:8px;'><h3 style='color:#10B981;'>📝 Résumé de l'œuvre :</h3><p style='font-size:17px; color:#1F2937;'>Le patrimoine a une grande importance... C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>, visant à bâtir le premier Thésaurus Numérique National dédié aux mausolées et sanctuaires du Royaume.</p></div>", unsafe_allow_html=True)
-    with tab_en:
-        st.markdown("<div class='latin-text' style='background-color:#FAFAFA; padding:25px; border-left:5px solid #D4AF37; border-radius:8px;'><h3 style='color:#D4AF37;'>📝 Academic Abstract :</h3><p style='font-size:17px; color:#1F2937;'>Heritage is of great importance... This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms.</p></div>", unsafe_allow_html=True)
+        st.write("---")
+        col1, col2, col3, col4 = st.columns(4)
+        with col1: search_query = st.text_input("🔍 ابحث باسم الولي، الضريح، أو الوسم (#):")
+        with col2: filter_type = st.selectbox("تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"])
+        with col3:
+            regions_list = ["الكل"] + [row for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall()]
+            selected_region = st.selectbox("الفلترة بجهات المملكة المغربية الـ 12:", regions_list)
+        with col4:
+            era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
+            selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي:", era_list)
+            
+    with main_tab_contact:
+        st.markdown("<p style='font-size:16px; color:#4B5563; text-align:right;'>هل تملك تصحيحاً، رواية شفوية، أو مراجع إضافية لإغناء هذا المعلم التراثي؟ أرسل ملاحظتك سراً إلى المشرف على المنصة.</p>", unsafe_allow_html=True)
+        with st.form("visitor_feedback_public_form", clear_on_submit=True):
+            f_col1, f_col2, f_col3 = st.columns(3)
+            with f_col1: v_name = st.text_input("اسم الباحث / الزائر الكريم:")
+            with f_col2: v_email = st.text_input("البريد الإلكتروني للتواصل:")
+            with f_col3: v_shrine = st.text_input("اسم الضريح أو المصطلح المعني بالملاحظة:")
+            v_text = st.text_area("نص الملاحظة، التصويب العلمي، أو الإغناء البيبليوغرافي المقترح:")
+            if st.form_submit_button("🚀 إرسال الملاحظة سراً إلى إدارة المكنز"):
+                if v_text:
+                    now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+                    cursor.execute("INSERT INTO visitor_feedback (visitor_name, visitor_email, shrine_related, feedback_text, submission_date) VALUES (?, ?, ?, ?, ?)", (v_name, v_email, v_shrine, v_text, now_str))
+                    conn.commit()
+                    st.success("🙏 تم إرسال ملاحظتكم بنجاح وسرية تامة إلى الدكتور رشيد الجانبي للعمل بها.")
+                else: st.error("⚠️ من فضلك اكتب نص الملاحظة أولاً قبل الإرسال.")
 
-elif menu == "📬 دفتر التواصل":
-    st.header("📬 دفتر التواصل وإرسال الملاحظات والتحقيق العلمي الميداني")
-    st.markdown("<p style='font-size:16px; color:#4B5563;'>هل تملك تصحيحاً، رواية شفوية، أو مراجع إضافية لإغناء هذا المعلم التراثي؟ أرسل ملاحظتك سراً إلى الدكتور رشيد الجانبي للعمل بها.</p>", unsafe_allow_html=True)
-    with st.form("visitor_feedback_fixed_top_form", clear_on_submit=True):
-        f_col1, f_col2, f_col3 = st.columns(3)
-        with f_col1: v_name = st.text_input("اسم الباحث / الزائر الكريم:")
-        with f_col2: v_email = st.text_input("البريد الإلكتروني للتواصل:")
-        with f_col3: v_shrine = st.text_input("اسم الضريح أو المصطلح المعني بالملاحظة:")
-        v_text = st.text_area("نص الملاحظة، التصويب العلمي، أو الإغناء البيبليوغرافي المقترح:")
-        if st.form_submit_button("🚀 إرسال الملاحظة سراً إلى إدارة المكنز"):
-            if v_text:
-                now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-                cursor.execute("INSERT INTO visitor_feedback (visitor_name, visitor_email, shrine_related, feedback_text, submission_date) VALUES (?, ?, ?, ?, ?)", (v_name, v_email, v_shrine, v_text, now_str))
-                conn.commit()
-                st.success("🙏 تم إرسال ملاحظتكم بنجاح وسرية تامة إلى الدكتور رشيد الجانبي للعمل بها.")
-            else: st.error("⚠️ من فضلك اكتب نص الملاحظة أولاً قبل الإرسال.")
+
+
+
+
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
     st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
