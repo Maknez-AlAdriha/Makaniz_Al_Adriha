@@ -526,7 +526,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🔐 الجزء 14 والاخير: بوابات التحكم وصنع محرك الدمج التراكمي الشامل للـ CSV
+# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي الفولاذي المطور لضخ معطيات الأنثروبولوجيا والكرامات فوراً
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -537,7 +537,8 @@ if st.session_state.sidebar_visible:
         st.sidebar.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز!")
         st.sidebar.markdown("<h5 style='color: #D4AF37; margin-bottom: 5px;'>📬 صندوق ملاحظات الباحثين والزوار الحية:</h5>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
-        if not feedbacks: st.sidebar.caption("الصندوق فارغ حالياً.")
+        if not feedbacks: 
+            st.sidebar.caption("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
                 st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
@@ -546,7 +547,12 @@ if st.session_state.sidebar_visible:
                 st.sidebar.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px;">✉️ رد سريع</div></a>', unsafe_allow_html=True)
 
         st.sidebar.markdown("---")
-        uploaded_csv = st.sidebar.file_uploader("اختر ملف الأضرحة أو المصطلحات الشامل (.csv):", type=["csv"], key="final_uploader")
+        
+        if "uploader_counter" not in st.session_state:
+            st.session_state.uploader_counter = 0
+            
+        uploaded_csv = st.sidebar.file_uploader("اختر ملف الأضرحة أو المصطلحات الشامل (.csv):", type=["csv"], key=f"dynamic_csv_uploader_{st.session_state.uploader_counter}")
+        
         if uploaded_csv is not None:
             try:
                 df = pd.read_csv(uploaded_csv, encoding='utf-8')
@@ -567,20 +573,27 @@ if st.session_state.sidebar_visible:
                     elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
                     elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
                 df = df.rename(columns=rename_dict)
-                p_dict = {str(row[0]).strip(): row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()}
                 
                 for index, row in df.iterrows():
                     s_name = str(row.get('shrine_name', '')).strip()
-                    if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
+                    if not s_name or s_name == "nan" or "shrine_name" in s_name: 
+                        continue
+                    
                     tags_val = str(row.get('tags', '')).strip()
                     s_type = str(row.get('shrine_type', 'أضرحة المسلمين')).strip()
                     hist_val = str(row.get('history_details', 'غير محدد')).strip()
                     sc_src = str(row.get('scientific_source', 'رواية شفوية ميدانية مأثورة')).strip()
                     
+                    # استخلاص وتطهير معطيات الكرامات والاعتقادات والوظائف القروية صراحة من سياق السطر الحالي
+                    b_type_val = str(row.get('belief_type', 'وظائف اجتماعية وقبلية')).strip()
+                    b_details_val = str(row.get('belief_details', 'موثق بالتحقيق الميداني للأطروحة')).strip()
+                    
                     if "#معجم" in tags_val or "#مصطلحات" in tags_val:
                         existing_term = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
-                        if existing_term: cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
-                        else: cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                        if existing_term: 
+                            cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                        else: 
+                            cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
                     else:
                         prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
@@ -591,17 +604,26 @@ if st.session_state.sidebar_visible:
                             prov_id = prov_id_row[0]
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             auto_lat, auto_lon = get_auto_coords(prov_name)
+                            
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                             if existing:
+                                shrine_id = existing[0]
                                 cursor.execute("""
                                     UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
-                                    (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing[0]))
+                                    (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
                             else:
                                 cursor.execute("""
                                     INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
                                     (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
                                 shrine_id = cursor.lastrowid
-                                cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
-                                cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, str(row.get('belief_type', 'وظائف اجتماعية وقبلية')), str(row.get('belief_details', 'غير محدد'))))
-                conn.commit(); st.sidebar.success("📊 تم الدمج التراكمي الشامل لكافة المكتسبات والتحسينات بنجاح!"); st.rerun()
-            except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
+                            
+                            # 🟢 التحصين واللحام الجراحي الفوري: مسح وحقن نوع الكرامة والوظيفة وربطها برقم الضريح تلقائياً لملء الرسم البياني
+                            cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
+                            cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
+                
+                conn.commit()
+                st.session_state.uploader_counter += 1
+                st.sidebar.success("📊 تم دمج وضخ كافة المنشآت والكرامات وتنشيط الرسوم بنجاح!")
+                st.rerun()
+            except Exception as e: 
+                st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
