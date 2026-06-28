@@ -273,24 +273,29 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
 # ==========================================
 # 📦 الجزء 9: واجهة محرك البحث الميداني المطور بنظام السهم والطي التفاعلي لمنع التكدس (نسخة مطهرة)
 # ==========================================
+# ==========================================
+# 🕌 الجزء 9: محرك البحث الميداني البارز والمكشوف دوماً (خلفية مصمتة مانعة للتداخل)
+# ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # حقن لوحة الفلاتر بداخل حاوية السهم الذكية لتختفي وتظهر بمرونة مطلقة دون أخذ مساحة الصفحة
-    with st.expander("🔍 اضغط هنا لإظهار / إخفاء محرك البحث الميداني وفلاتر الفرز الطبقي", expanded=False):
-        st.markdown("""
-        <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 10px 20px; border-radius: 8px; color: white; text-align: right; font-weight: bold; font-size: 19px; font-family: "Reem Kufi", serif; margin-bottom: 15px;'>
-            🕌 فلاتر الفرز الجغرافي والزمني للأولياء والمعالم الروحية بالمملكة
-        </div>
-        """, unsafe_allow_html=True)
+    # 🟢 الحل الحاسم: بناء لوحة الفلاتر مكشوفة وثابتة 100% بدون سهم أو انكماش، ومحصنة بخلفية بيضاء سميكة
+    st.markdown("""
+    <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 12px 25px; border-radius: 12px 12px 0 0; color: white; text-align: right; font-weight: bold; font-size: 22px; font-family: "Reem Kufi", serif;'>
+        🔍 محـرك البحـث العلمي الشـامـل للأضرحـة والمزارات بالمملكة المغربية
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # استخدام حاوية بحدود رسمية مصمتة تمنع تداخل بطاقات الأولياء خلف خانات الإدخال
+    with st.container(border=True):
+        st.markdown("<p style='font-size:16px; color:#4B5563; font-weight:bold; margin-bottom:10px;'>⚙️ فلاتر الفرز الجغرافي والزمني للأولياء والمعالم الروحية:</p>", unsafe_allow_html=True)
         
-        # توزيع الفلاتر الميدانية الأربعة الشاملة والمنسقة هندسياً
+        # توزيع الفلاتر الميدانية الأربعة الشاملة والمنسقة هندسياً لتظهر واضحة كالشمس
         filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
         with filter_col1:
-            # 🟢 تصحيح جراحي: تغيير المفتاح لمنع تداخل النصوص والرموز البرمجية العشوائية بالواجهة
             search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="shrine_main_search_final_fixed")
         with filter_col2:
             filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky_fixed")
         with filter_col3:
-            regions_list = ["الكل"] + [str(row[0]) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row and row[0]]
+            regions_list = ["الكل"] + [str(row) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
             selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky_fixed")
         with filter_col4:
             era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
@@ -303,13 +308,6 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         with action_col2:
             st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف في نتائج الفرز مباشرة.</p>", unsafe_allow_html=True)
     st.write("---")
-
-
-
-
-
-
-
 
 
 
