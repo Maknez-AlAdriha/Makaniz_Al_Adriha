@@ -98,7 +98,7 @@ PROVINCE_COORDINATES = {
     'عمالة طنجة أصيلة': (35.7595, -5.8340), 'إقليم العرائش': (35.1841, -6.1554),
     'إقليم الفحص أنجرة': (35.6687, -5.4854), 'إقليم آسفي': (32.2994, -9.2372),
     'عمالة مراكش': (31.6295, -7.9811), 'عمالة سلا': (34.0333, -6.8000),
-    'إقليم khنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
+    'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
     'إقليم السطات': (33.0010, -7.6166), 'إقليم الجديدة': (33.2333, -8.5000),
     'عمالة مكناس': (33.8930, -5.5473), 'عمالة فاس': (34.0333, -5.0000), 
     'إقليم الرشيدية': (31.9315, -4.4244), 'إقليم تارودانت': (30.4703, -8.8770)
@@ -172,7 +172,7 @@ def init_ultimate_db():
         UNIQUE (name, province_id)
     )""")
     
-    # ترقية تلقائية آمنة لحقن عمود المرجعية العلمية والنقدية للأطروحة في السيرفر السحابي منعا للأخطاء الميدانية
+    # ترقية تلقائية لحقن عمود المرجعية العلمية والنقدية للأطروحة في السيرفر السحابي دون فقد الجداول القديمة
     try:
         cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
     except sqlite3.OperationalError:
@@ -200,7 +200,7 @@ init_ultimate_db()
 if "sidebar_visible" not in st.session_state: st.session_state.sidebar_visible = True
 if "current_page" not in st.session_state: st.session_state.current_page = "search"
 
-# استدعاء البانر الملكي العريض بالتحديث المطابق العريض المتناسق 100%
+# استدعاء وعرض البانر الأفقي المعتمد بالتحديث المطابق العريض المتناسق 100%
 banner_path = "banner.png"
 if os.path.exists(banner_path):
     st.image(banner_path, use_container_width="stretch")
@@ -225,7 +225,7 @@ with btn_col3:
         st.session_state.sidebar_visible = False
         st.session_state.current_page = "contact"
         st.rerun()
-# 🟢 التطهير المجهري الفعال: سحب عناصر التوبل عبر الفهرس [0] لإبطال خطأ المربعات الحمراء وتأمين حساب الفهارس للأبد
+# التطهير القاطع: سحب عناصر التوبل بـ صراحة عبر الفهرس لإبطال خطأ المربعات الحمراء وتثبيت المنظومة للأبد
 t_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
 total_shrines = int(t_res_raw[0]) if t_res_raw else 0
 
@@ -238,7 +238,7 @@ jewish_count = int(j_res_raw[0]) if j_res_raw else 0
 term_res_raw = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
 total_terms = int(term_res_raw[0]) if term_res_raw else 0
 
-# تفريغ مربعات اللوحة الإحصائية التراكمية في صدر المتصفح لزوار المنصة الرقمية
+# تفريغ مربعات اللوحة الإحصائية التراكمية في صدر المتصفح
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
 with stat_col2: st.metric("🕌 صلحاء المسلمين", muslim_count)
@@ -258,7 +258,6 @@ else:
     elif st.session_state.current_page == "contact": menu = "📬 دفتر التواصل"
     else: menu = "🔍 محرك البحث الشامل والتحليلات"
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # 🟢 التحسين 1: دمج رسومات بيانية ميدانية وفورية لتحليل نسب توزيع الوظائف التراثية بالقبائل المغربية دون بتر
     st.markdown("### 📊 لوحة التحليلات والمؤشرات الأنثروبولوجية لصلحاء المملكة المغربية")
     analysis_col1, analysis_col2 = st.columns(2)
     with analysis_col1:
@@ -272,7 +271,6 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         else: st.caption("سيرتفع الرسم البياني فور ضخ جداول الكرامات الشفوية.")
         
     with analysis_col2:
-        # 🟢 التحسين 4: المكنز التصنيفي الهرمي المتفرع لربط المفاهيم الصوفية تلقائياً للباحثين
         st.markdown("<b style='color:#1E3A8A;'>🌿 المكنز التصنيفي الهرمي المتفرع (روابط المفاهيم الصوفية):</b>", unsafe_allow_html=True)
         quick_word = st.text_input("ابحث عن مفهوم صوفي لفك رابطته الهرمية (مثال: مريد):")
         if quick_word:
@@ -281,38 +279,49 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # 🟢 التطوير الحاسم: بناء لوحة الفلاتر مكشوفة وثابتة ومحكومة بخلفية بيضاء سميكة تمنع التداخل البصري
-    st.markdown("""
-    <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 12px 25px; border-radius: 12px 12px 0 0; color: white; text-align: right; font-weight: bold; font-size: 22px; font-family: "Reem Kufi", serif;'>
-        🔍 محـرك البحـث العلمي الشـامـل للأضرحـة والمزارات بالمملكة المغربية
-    </div>
-    """, unsafe_allow_html=True)
-    
-    with st.container(border=True):
-        st.markdown("<p style='font-size:16px; color:#4B5563; font-weight:bold; margin-bottom:10px;'>⚙️ فلاتر الفرز الجغرافي والزمني للأولياء والمعالم الروحية:</p>", unsafe_allow_html=True)
+    if "search_visible" not in st.session_state: 
+        st.session_state.search_visible = True
+
+    # ابتكار زر سهم تفاعلي مستقل: يتيح للمتصفح طي وإظهار محرك البحث في أي ثانية صلب الموضوع لمنع حجب الشاشة
+    arrow_label = "🔼 اضغط هنا لطـي وإخفـاء محرك البحث وتوسيع القراءة" if st.session_state.search_visible else "🔽 اضغط هنا لإظهـار محرك البحث الشامل وفلاتر الفرز"
+    if st.button(arrow_label, key="toggle_sticky_search_arrow_btn"):
+        st.session_state.search_visible = not st.session_state.search_visible
+        st.rerun()
+
+    if st.session_state.search_visible:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 12px 25px; border-radius: 12px 12px 0 0; color: white; text-align: right; font-weight: bold; font-size: 22px; font-family: "Reem Kufi", serif;'>
+            🔍 محـرك البحـث العلمي الشـامـل للأضرحـة والمزارات بالمملكة المغربية
+        </div>
+        """, unsafe_allow_html=True)
         
-        # توزيع الفلاتر الميدانية الأربعة الشاملة والمنسقة هندسياً لتظهر واضحة كالشمس
-        filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
-        with filter_col1:
-            search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="shrine_main_search_final_fixed")
-        with filter_col2:
-            filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky_fixed")
-        with filter_col3:
-            # 🟢 التطهير الجغرافي الحاسم: استخراج الاسم الصافي الفردي من التوبل عبر الفهرس [0] لنسف الأقواس والفاصلة من قائمة الفرز الجانبية
-            raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
-            regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
-            selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky_fixed")
-        with filter_col4:
-            era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
-            selected_era = st.selectbox("⏳ الفلترة بالعصر السياسي والتاريخي للمزار:", era_list, key="main_selected_era_sticky_fixed")
+        with st.container(border=True):
+            st.markdown("<p style='font-size:16px; color:#4B5563; font-weight:bold; margin-bottom:10px;'>⚙️ فلاتر الفرز الجغرافي والزمني للأولياء والمعالم الروحية:</p>", unsafe_allow_html=True)
             
-        action_col1, action_col2 = st.columns(2)
-        with action_col1:
-            if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn_fixed"):
-                st.rerun()
-        with action_col2:
-            st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف في نتائج الفرز مباشرة.</p>", unsafe_allow_html=True)
-    st.write("---")
+            filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
+            with filter_col1:
+                search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="shrine_main_search_final_fixed")
+            with filter_col2:
+                filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky_fixed")
+            with filter_col3:
+                # التطهير الجراحي: استخراج الاسم الصافي من التوبل عبر الفهرس لنسف الأقواس والفاصلة من القائمة المنبثقة للجهات
+                raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
+                regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
+                selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky_fixed")
+            with filter_col4:
+                era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
+                selected_era = st.selectbox("⏳ الفلترة بالعصر السياسي والتاريخي للمزار:", era_list, key="main_selected_era_sticky_fixed")
+                
+            action_col1, action_col2 = st.columns(2)
+            with action_col1:
+                if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn_fixed"):
+                    st.rerun()
+            with action_col2:
+                st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف في نتائج الفرز مباشرة.</p>", unsafe_allow_html=True)
+        st.write("---")
+    else:
+        # إبقاء قيم فلاتر البحث مستقرة وخالية من الانقطاع
+        search_query, filter_type, selected_region, selected_era = "", "الكل", "الكل", "الكل"
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags, s.scientific_source
@@ -341,7 +350,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             r_name = str(r[1]).replace("'", "\\'")
             r_lat = float(r[12]) if r[12] else 31.7917
             r_lon = float(r[13]) if r[13] else -7.0926
-            markers_js += f"L.marker([{r_lat}, {r_lon}]).addTo(map).bindPopup('<b>{r_name}</b>');\n"
+            markers_js += f"L.marker([{r_lat}, r_lon]).addTo(map).bindPopup('<b>{r_name}</b>');\n"
 
         html_map_code = f"""
         <html>
@@ -362,14 +371,10 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         </body>
         </html>
         """
-        # 🟢 سحق اليافطة الحمراء نهائياً: استدعاء الإطار المستقل المتناسق وحجب المتغير use_container_width لاستقرار السيرفر
+        # سحق اليافطة الحمراء نهائياً: استدعاء دالة المكونات التفاعلية مستقلة بنسبة مائة بالمائة
         st.components.v1.html(html_map_code, height=460)
         st.write("---")
-# ==========================================
-# 🕌 الجزء 11: محرك التحكم الصارم في شجرة الصفحات وتفريغ المباحث والبطاقات للصلحاء
-# ==========================================
-
-# 1. عرض صفحة "حول المكنز الأكاديمي" عند الضغط على زرها العلوي الخاص بكامل لوحة الشرف
+# 1. عرض صفحة "حول المكنز الأكاديمي" المحدث باسم الأستاذة المشرفة د. فاطنة الغزي عند الضغط على زرها العلوي الخاص
 if st.session_state.current_page == "about":
     st.markdown("""
     <div style='background: linear-gradient(135deg, #FFFDF6, #F9F5E8); border: 3px double #D4AF37; padding: 35px; border-radius: 15px; text-align: center; margin-bottom: 25px;'>
@@ -388,11 +393,11 @@ if st.session_state.current_page == "about":
     with tab_en:
         st.markdown("<div class='latin-text' style='background-color:#FAFAFA; padding:25px; border-left:5px solid #D4AF37; border-radius:8px;'><h3 style='color:#D4AF37;'>📝 Academic Abstract :</h3><p style='font-size:17px; color:#1F2937;'>Heritage is of great importance... This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b> supervised by <b>Prof. FATNA EL GHREZZI</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms.</p></div>", unsafe_allow_html=True)
 
-# 2. عرض صفحة "دفتر التواصل والملاحظات" عند الضغط على زرها العلوي الخاص بكامل الحقول
+# 2. عرض صفحة "دفتر التواصل والملاحظات والرد السريع" عند الضغط على زرها العلوي الخاص
 elif st.session_state.current_page == "contact":
     st.header("📬 دفتر التواصل وإرسال الملاحظات والتحقيق العلمي الميداني")
     st.markdown("<p style='font-size:16px; color:#4B5563; text-align:right;'>هل تملك تصحيحاً، رواية شفوية، أو مراجع إضافية لإغناء هذا المعلم التراثي؟ أرسل ملاحظتك سراً إلى الدكتور رشيد الجانبي للعمل بها.</p>", unsafe_allow_html=True)
-    with st.form("visitor_feedback_fixed_top_form_new", clear_on_submit=True):
+    with st.form("visitor_feedback_fixed_top_form_new_final_ultimate", clear_on_submit=True):
         f_col1, f_col2, f_col3 = st.columns(3)
         with f_col1: v_name = st.text_input("اسم الباحث / الزائر الكريم:")
         with f_col2: v_email = st.text_input("البريد الإلكتروني للتواصل:")
@@ -406,7 +411,7 @@ elif st.session_state.current_page == "contact":
                 st.success("🙏 تم إرسال ملاحظتكم بنجاح وسرية تامة إلى الدكتور رشيد الجانبي للعمل بها.")
             else: st.error("⚠️ من فضلك اكتب نص الملاحظة أولاً قبل الإرسال.")
 
-# 3. عرض نتائج البحث الرئيسي صلب المعطيات التراثية الكبرى للمملكة المغربية الشريفة
+# 3. عرض النتائج وبطاقات صلحاء المملكة والـ A4 الممتد الفسيح بارتفاع 480 بكسل في وضع البحث الافتراضي
 elif menu == "🔍 محرك البحث الشامل والتحليلات" and results:
     for row in results:
         s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags, sc_source = row
@@ -426,7 +431,7 @@ elif menu == "🔍 محرك البحث الشامل والتحليلات" and re
         </div>
         """, unsafe_allow_html=True)
         
-        # عرض وثيقة الـ A4 بـ مرونة كاملة ليمتد التقرير بوضوح كالشمس دون انضغاط
+        # 🟢 تثبيت المكتسب المسترجّع الحصين: واجهة طبع ورق الـ A4 ممتدة بالكامل وبارزة جداً بارتفاع 480 بكسل دون أي انضغاط
         html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
         encoded_html = urllib.parse.quote(html_data)
         st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
@@ -459,11 +464,11 @@ if menu == "✍️ التوثيق الميداني (إدخال يدوي)":
         with col1:
             s_name = st.text_input("اسم الولي / الضريح / المزار كاملاً:")
             s_type = st.selectbox("الهوية العقائدية والتصنيف الميداني:", ["أضرحة المسلمين", "مزارات اليهود"])
-            provinces = [str(row[0]) for row in cursor.execute("SELECT province FROM geography").fetchall()]
+            provinces = [str(row[0]) for row in cursor.execute("SELECT province FROM geography").fetchall() if row]
             prov_dict = {str(row[1]): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces) if provinces else st.selectbox("إقليم / عمالة المملكة المغربية:", ["إقليم شفشاون"])
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
-            s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير حدد"])
+            s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"])
             s_tags = st.text_input("الوسوم والأنثروبولوجيا الدلالية مفصولة بفاصلة:")
             s_source = st.text_input("مصدر التوثيق المرجعي العلمي (اسم الشهادة الشفوية أو رقم ورقة المخطوط المحقق):", value="رواية شفوية ميدانية مأثورة")
         with col2:
@@ -514,7 +519,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
     st.header("📖 المعجم والمكنز المفاهيمي المتداول بالمغرب (مراتب، لباس، مفاهيم عبرية)")
     tab1, tab2, tab3 = st.tabs(["🔍 استعراض المكنز اللغوي وقراءة الشروح", "➕ إضافة وتوثيق مصطلح جديد", "🎙️ دفتر تدوين وتسجيل الروايات الشفوية"])
     with tab1:
-        term_search = st.text_input("🔎 ابحث عن شرح أي مصطلح متداول (مريد، فقير، هيلولة...):")
+        term_search = st.text_input("🔎 ابحث عن شرح أي مصطلح متداول (مريد، فقير...):")
         results_t = cursor.execute("SELECT term, category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{term_search}%",)).fetchall()
         for t_name, t_cat, t_def in results_t:
             st.markdown(f"**📙 المصطلح العلمي المتداول:** `{t_name}` | *المبحث الفهرسي:* _{t_cat}_")
@@ -522,7 +527,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
     with tab2:
         with st.form("add_term_form"):
             new_term = st.text_input("المصطلح أو المفهوم الميداني كما هو متداول بالقبيلة:")
-            term_cat = st.selectbox("تصنيف Mفهوم وموقعه من خطة الفهرس للصلحاء والأضرحة:", ['مصطلحات متعلقة بالأضرحة', 'مصطلحات متعلقة بالأولياء ومراتبهم', 'مصطلحات متعلقة باللباس والمظهر', 'مصطلحات متعلقة بالربيين ومزارات اليهود'])
+            term_cat = st.selectbox("تصنيف المفهوم وموقعه من خطة الفهرس للصلحاء والأضرحة:", ['مصطلحات متعلقة بالأضرحة', 'مصطلحات متعلقة بالأولياء ومراتبهم', 'مصطلحات متعلقة باللباس والمظهر', 'مصطلحات متعلقة بالربيين ومزارات اليهود'])
             term_def = st.text_area("الشرح والتحديد المفاهيمي الدقيق للمصطلح الصوفي:")
             if st.form_submit_button("💾 إدراج المفهوم في القاموس الموسوعي الشامل") and new_term and term_def:
                 try:
@@ -536,7 +541,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🔐 الجزء 14 والاخير: بوابات التحكم السيادية ومحرك الدمج التراكمي الشامل للـ CSV
+# 🔐 الجزء 14 والاخير: بوابات التحكم السيادية ومحرك الدمج التراكمي الشامل للـ CSV لصلحاء المملكة
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
