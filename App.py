@@ -274,28 +274,27 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
 # 📦 الجزء 9: واجهة محرك البحث الميداني المطور بنظام السهم والطي التفاعلي لمنع التكدس (نسخة مطهرة)
 # ==========================================
 # ==========================================
-# 🕌 الجزء 9: محرك البحث الميداني البارز والمكشوف دوماً (خلفية مصمتة مانعة للتداخل)
+# 🕌 الجزء 9: محرك البحث الميداني البارز والمكشوف (نسخة مطهرة من الأقواس والعلامات)
 # ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # 🟢 الحل الحاسم: بناء لوحة الفلاتر مكشوفة وثابتة 100% بدون سهم أو انكماش، ومحصنة بخلفية بيضاء سميكة
     st.markdown("""
     <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 12px 25px; border-radius: 12px 12px 0 0; color: white; text-align: right; font-weight: bold; font-size: 22px; font-family: "Reem Kufi", serif;'>
         🔍 محـرك البحـث العلمي الشـامـل للأضرحـة والمزارات بالمملكة المغربية
     </div>
     """, unsafe_allow_html=True)
     
-    # استخدام حاوية بحدود رسمية مصمتة تمنع تداخل بطاقات الأولياء خلف خانات الإدخال
     with st.container(border=True):
         st.markdown("<p style='font-size:16px; color:#4B5563; font-weight:bold; margin-bottom:10px;'>⚙️ فلاتر الفرز الجغرافي والزمني للأولياء والمعالم الروحية:</p>", unsafe_allow_html=True)
         
-        # توزيع الفلاتر الميدانية الأربعة الشاملة والمنسقة هندسياً لتظهر واضحة كالشمس
         filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
         with filter_col1:
             search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="shrine_main_search_final_fixed")
         with filter_col2:
             filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky_fixed")
         with filter_col3:
-            regions_list = ["الكل"] + [str(row) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
+            # 🟢 تصحيح جراحي: استخراج الاسم الصافي من التوبل عبر الفهرس [0] لنسف الأقواس والفاصلة من القائمة
+            raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
+            regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
             selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky_fixed")
         with filter_col4:
             era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
