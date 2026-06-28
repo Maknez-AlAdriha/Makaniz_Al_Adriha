@@ -14,27 +14,33 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 # ==========================================
-# 🎨 الجزء 2: قالب التنسيق السيادي الحركي وتوسيع مساحة المنصة والتبويبات 100% (CSS الشامل)
+# 🎨 الجزء 2: قالب التنسيق السيادي الحركي المطور - إصلاح انضغاط الشريط الجانبي (CSS الشامل)
 # ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* تدمير وتوسيع حاويات العرض الكبرى والفرعية لتجبر المنصة على التمدد البانورامي بكامل الشاشة */
-        [data-testid="stAppViewContainer"], 
-        [data-testid="stAppViewBlockContainer"], 
-        .main, 
-        .block-container,
-        div[class*="st-emotion-cache"] {
+        /* 🟢 تصحيح جراحي: توسيع الحاوية الوسطى فقط مع حماية الشريط الجانبي الأيمن من الانضغاط أو التبعثر */
+        div[data-testid="stAppViewBlockContainer"] {
             max-width: 100% !important;
             width: 100% !important;
-            padding-left: 1.5rem !important;
-            padding-right: 1.5rem !important;
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
             padding-top: 2rem !important;
             padding-bottom: 2rem !important;
         }
         
-        /* 🟢 حقن التمدد الملكي للتبويبات: إجبار أزرار التبويبات الثلاثة على التمدد بالتساوي وبكامل عرض البطاقة */
+        /* 🟢 إعادة تثبيت أبعاد الشريط الجانبي لمنع انقلاب الحروف العربية عمودياً */
+        section[data-testid="stSidebar"] {
+            width: 340px !important;
+            min-width: 340px !important;
+        }
+        section[data-testid="stSidebar"] div[class*="st-emotion-cache"] {
+            width: auto !important;
+            display: block !important;
+        }
+        
+        /* التمدد الملكي للتبويبات: إجبار أزرار التبويبات الثلاثة على التمدد بالتساوي وبكامل عرض البطاقة */
         div[data-baseweb="tab-list"] {
             width: 100% !important;
             display: flex !important;
