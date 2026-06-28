@@ -272,26 +272,22 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             elif "هيلولة" in quick_word or "ربيين" in quick_word: st.info("🔗 **مفاهيم هرمية ذات صلة عبرية مقترحة:** مزارات اليهود ⟵ زيارة جماعية ⟵ تبادل القداسة ⟵ الصنف التجاري")
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
-# ==========================================
-# 🕌 الجزء 9: مفتاح السهم التفاعلي السيادي لإخفاء وإظهار لوحة البحث الأفقية
-# ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # تأسيس متغير الحالة المؤقت لحفظ وضعية القفل والفتح بداخل المتصفح لعام 2026
     if "search_panel_visible" not in st.session_state:
         st.session_state.search_panel_visible = True
 
-    # 🟢 تحويل الزر رسمياً بناءً على طلبكم: ابتكار زر السهم التفاعلي المتقلب للتحكم الكامل بالمساحة
+    # مفتاح السهم المتقلب للتحكم الكامل بالمساحة بناءً على رغبة الباحث د. رشيد الجانبي
     if st.session_state.search_panel_visible:
-        arrow_btn_label = "🔼 اضغط هنا لإخفاء محرك البحث وفلاتر الفرز وتوسيع مساحة التصفح"
+        arrow_btn_label = "🔼 اضغط هنا لطـي وإخفـاء محرك البحث وفلاتر الفرز لتوسيع مساحة القراءة"
     else:
-        arrow_btn_label = "🔽 اضغط هنا لإظهار محرك البحث الشامل وفلاتر الفرز الأفقية"
+        arrow_btn_label = "🔽 اضغط هنا لإظهـار محرك البحث الشامل وفلاتر الفرز الأفقية الموحدة"
         
-    # حقن زر السهم بعرض ممتد يملأ الحاوية بجمالية تراثية متناسقة
-    if st.button(arrow_btn_label, use_container_width=True, key="sovereign_search_toggle_arrow_btn"):
+    if st.button(arrow_btn_label, use_container_width=True, key="sovereign_search_toggle_arrow_btn_fixed"):
         st.session_state.search_panel_visible = not st.session_state.search_panel_visible
         st.rerun()
 
-    # عرض لوحة الفلاتر الأفقية فقط في حالة السماح بظهورها من طرف الباحث د. رشيد الجانبي
+    search_query, filter_type, selected_region, selected_era = "", "الكل", "الكل", "الكل"
+
     if st.session_state.search_panel_visible:
         st.markdown("""
         <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 8px 20px; border-radius: 8px 8px 0 0; color: white; text-align: right; font-weight: bold; font-size: 15px; font-family: "Reem Kufi", serif;'>
@@ -300,13 +296,11 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         """, unsafe_allow_html=True)
         
         with st.container(border=True):
-            # تصفيف واحترافية: مستطيل النص أقصى اليمين وبجانبه باقي الخيارات مصطفة أفقياً على سطر واحد
             search_col1, search_col2, search_col3, search_col4 = st.columns(4)
-            
             with search_col1:
-                search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
+                search_query = st.text_input("🎯 الولي أو المفهوم صلط الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
             with search_col2:
-                filter_type = st.selectbox("🕌 تصنيف المعلم:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
+                filter_type = st.selectbox("🕌 تصنيف المنشأة:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
             with search_col3:
                 raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
                 regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
@@ -315,25 +309,8 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
                 era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
                 selected_era = st.selectbox("⏳ العصر التاريخي والسياسي:", era_list, key="final_clean_ultimate_era_key_2026")
             
-            # بقاء شريط الإرشاد المنهجي الدقيق للأطروحة أسفل الخانات المفتوحة
             st.markdown("<p style='font-size:13px; color:#4B5563; text-align:right; margin-top:5px; margin-bottom:0; font-weight:bold;'>💡 تحقيق أكاديمي: ابحث بالأوسمة الذكية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف صلب الموضوع.</p>", unsafe_allow_html=True)
         st.write("---")
-    else:
-        # تأمين ثبات واستمرار متغيرات البحث والتصنيف الافتراضية خلف الكواليس لتفادي حدوث كسر بالاستعلامات عند الإخفاء
-        search_query, filter_type, selected_region, selected_era = "", "الكل", "الكل", "الكل"
-
-
-
-
-
-
-
-
-
-
-
-
-
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags, s.scientific_source
@@ -341,50 +318,56 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
     """
     params = []
     if search_query:
-        if search_query.startswith("#"): query += " AND s.tags LIKE ?"; params.append(f"%{search_query}%")
-        else: query += " AND s.name LIKE ?"; params.append(f"%{search_query}%")
-    if filter_type != "الكل": query += " AND s.type = ?"; params.append(filter_type)
-    if selected_region != "الكل": query += " AND g.region = ?"; params.append(selected_region)
-    if selected_era != "الكل": query += " AND s.historical_era = ?"; params.append(selected_era)
+        if search_query.startswith("#"): 
+            query += " AND s.tags LIKE ?"; params.append(f"%{search_query}%")
+        else: 
+            query += " AND s.name LIKE ?"; params.append(f"%{search_query}%")
+            
+    if filter_type != "الكل": 
+        query += " AND s.type = ?"; params.append(filter_type)
+    if selected_region != "الكل": 
+        query += " AND g.region = ?"; params.append(selected_region)
+    if selected_era != "الكل": 
+        query += " AND s.historical_era = ?"; params.append(selected_era)
         
     results = cursor.execute(query, params).fetchall()
     
-    if results:
-        st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة الأقمار الصناعية العربية النظيفة)")
-        focused_lat, focused_lon, zoom_level = 31.7917, -7.0926, 5
-        if search_query and len(results) == 1:
-            focused_lat = float(results[0][12]) if results[0][12] else 31.7917
-            focused_lon = float(results[0][13]) if results[0][13] else -7.0926
-            zoom_level = 10
+    st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة الأقمار الصناعية العربية النظيفة)")
+    focused_lat, focused_lon, zoom_level = 31.7917, -7.0926, 5
+    if search_query and len(results) == 1:
+        focused_lat = float(results[0][12]) if results[0][12] else 31.7917
+        focused_lon = float(results[0][13]) if results[0][13] else -7.0926
+        zoom_level = 10
 
-        markers_js = ""
+    markers_js = ""
+    if results:
         for r in results:
             r_name = str(r[1]).replace("'", "\\'")
             r_lat = float(r[12]) if r[12] else 31.7917
             r_lon = float(r[13]) if r[13] else -7.0926
             markers_js += f"L.marker([{r_lat}, {r_lon}]).addTo(map).bindPopup('<b>{r_name}</b>');\n"
 
-        html_map_code = f"""
-        <html>
-        <head>
-            <link rel="stylesheet" href="https://unpkg.com" />
-            <script src="https://unpkg.com"></script>
-            <style>#map {{ width: 100%; height: 450px; border-radius:12px; }} body {{ margin:0; padding:0; }}</style>
-        </head>
-        <body>
-            <div id="map"></div>
-            <script>
-                var map = L.map('map').setView([{focused_lat}, {focused_lon}], {zoom_level});
-                L.tileLayer('https://{{s}}://{{x}}&y={{y}}&z={{z}}', {{
-                    maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                }}).addTo(map);
-                {markers_js}
-            </script>
-        </body>
-        </html>
-        """
-        st.components.v1.html(html_map_code, height=460)
-        st.write("---")
+    html_map_code = f"""
+    <html>
+    <head>
+        <link rel="stylesheet" href="https://unpkg.com" />
+        <script src="https://unpkg.com"></script>
+        <style>#map {{ width: 100%; height: 450px; border-radius:12px; }} body {{ margin:0; padding:0; }}</style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            var map = L.map('map').setView([{focused_lat}, {focused_lon}], {zoom_level});
+            L.tileLayer('https://{{s}}://{{x}}&y={{y}}&z={{z}}', {{
+                maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }}).addTo(map);
+            {markers_js}
+        </script>
+    </body>
+    </html>
+    """
+    st.components.v1.html(html_map_code, height=460)
+    st.write("---")
 if st.session_state.current_page == "about":
     st.markdown("""
     <div style='background: linear-gradient(135deg, #FFFDF6, #F9F5E8); border: 3px double #D4AF37; padding: 35px; border-radius: 15px; text-align: center; margin-bottom: 25px;'>
@@ -438,6 +421,7 @@ elif menu == "🔍 محرك البحث الشامل والتحليلات" and re
         </div>
         """, unsafe_allow_html=True)
         
+        # تثبيت الارتفاع العملاق الفسيح لواجهة الـ A4 الممتد المرجعي لمنع انضغاط الحروف والسطور
         html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
         encoded_html = urllib.parse.quote(html_data)
         st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
@@ -474,7 +458,7 @@ if menu == "✍️ التوثيق الميداني (إدخال يدوي)":
             prov_dict = {str(row[1]): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces) if provinces else st.selectbox("إقليم / عمالة المملكة المغربية:", ["إقليم شفشاون"])
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
-            s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"])
+            s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير حدد"])
             s_tags = st.text_input("الوسوم والأنثروبولوجيا الدلالية مفصولة بفاصلة:")
             s_source = st.text_input("مصدر التوثيق المرجعي العلمي:", value="رواية شفوية ميدانية مأثورة")
         with col2:
@@ -603,6 +587,7 @@ if st.session_state.sidebar_visible:
                         prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         conn.commit()
+                        
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
                             prov_id = prov_id_row[0]
