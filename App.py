@@ -14,13 +14,34 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 # ==========================================
-# 🎨 الجزء 2: قالب التنسيق السيادي الحركي المطور - إصلاح انضغاط الشريط الجانبي (CSS الشامل)
+# ==========================================
+# 🎨 الجزء 2: قالب التنسيق الحركي وتضخيم مقبض التصفح الجانبي لليسرى (CSS الشامل)
 # ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 🟢 تصحيح جراحي: توسيع الحاوية الوسطى فقط مع حماية الشريط الجانبي الأيمن من الانضغاط أو التبعثر */
+        /* 🟢 تضخيم وتكبير مقبض التصفح الجانبي أقصى يسار الصفحة ليكون واضحاً وسهل التحريك 100% */
+        ::-webkit-scrollbar { 
+            width: 24px !important; 
+            height: 24px !important; 
+            display: block !important; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #F3F4F6 !important; 
+            border-radius: 12px !important; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(180deg, #1E3A8A, #D4AF37) !important; 
+            border-radius: 12px !important; 
+            border: 4px solid #FFFFFF !important; 
+            min-height: 80px !important;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #3B82F6, #1E3A8A) !important; 
+        }
+        
+        /* توسيع الحاوية الوسطى الشاملة وحماية الشريط الجانبي من الانضغاط */
         div[data-testid="stAppViewBlockContainer"] {
             max-width: 100% !important;
             width: 100% !important;
@@ -30,7 +51,6 @@ st.markdown("""
             padding-bottom: 2rem !important;
         }
         
-        /* 🟢 إعادة تثبيت أبعاد الشريط الجانبي لمنع انقلاب الحروف العربية عمودياً */
         section[data-testid="stSidebar"] {
             width: 340px !important;
             min-width: 340px !important;
@@ -40,7 +60,7 @@ st.markdown("""
             display: block !important;
         }
         
-        /* التمدد الملكي للتبويبات: إجبار أزرار التبويبات الثلاثة على التمدد بالتساوي وبكامل عرض البطاقة */
+        /* التمدد الملكي للتبويبات لملء عرض بطاقة الأولياء */
         div[data-baseweb="tab-list"] {
             width: 100% !important;
             display: flex !important;
@@ -71,7 +91,6 @@ st.markdown("""
             visibility: hidden !important;
         }
         
-        /* تنسيق وتثبيت نصوص الـ Placeholder بلون خفيف يمنع أي تداخل بصري خلف الكتابة */
         ::placeholder {
             text-align: right !important;
             direction: rtl !important;
@@ -79,16 +98,14 @@ st.markdown("""
             opacity: 0.6 !important;
         }
         
-        /* تحسين انسيابية الحاويات العلوية المثبتة لمنع تجمد الشاشة وحجب المحتوى السفلي */
         div[data-testid="stVerticalBlock"] {
             gap: 1.5rem !important;
         }
         
-        /* حقن الحصانة اللاتينية الصارمة لقتل التشوهات في الفرنسية والانجليزية ببطاقة التعريف */
         .latin-text, .latin-text p, .latin-text span, .latin-text h3 {
             direction: ltr !important;
             text-align: left !important;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+            font-family: 'Segoe UI', sans-serif !important;
         }
         
         .moroccan-title {
@@ -106,25 +123,6 @@ st.markdown("""
         .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
         div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
         
-        [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div, div[class*="copyButton"] span {
-            display: none !important;
-        }
-        [data-testid="stCodeBlock"] button, div[class*="copyButton"] button {
-            color: transparent !important;
-        }
-        [data-testid="stCodeBlock"] button::after, div[class*="copyButton"] button::after {
-            content: "📋 اضغط هنا للنسخ الفوري" !important;
-            font-size: 14px !important;
-            font-family: 'Tajawal', sans-serif !important;
-            color: #1E3A8A !important;
-            font-weight: bold !important;
-            display: block !important;
-        }
-
-        ::-webkit-scrollbar { width: 14px !important; height: 14px !important; display: block !important; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #1E3A8A, #3B82F6) !important; border-radius: 8px !important; border: 2px solid #FFFFFF !important; }
-        ::-webkit-scrollbar-track { background: #F3F4F6 !important; border-radius: 8px !important; }
-        
         .stButton>button {
             background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important;
             color: white !important;
@@ -140,8 +138,17 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-        
-        
+
+
+
+
+
+
+
+
+
+
+
 
 
 
