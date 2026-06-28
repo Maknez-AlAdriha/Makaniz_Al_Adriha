@@ -270,7 +270,11 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             elif "هيلولة" in quick_word or "ربيين" in quick_word: st.info("🔗 **مفاهيم هرمية ذات صلة عبرية مقترحة:** مزارات اليهود ⟵ زيارة جماعية ⟵ تبادل القداسة ⟵ الصنف التجاري")
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
+# ==========================================
+# 📦 الجزء 9: واجهة محرك البحث الميداني المطور بنظام السهم والطي التفاعلي لمنع التكدس (نسخة مطهرة)
+# ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
+    # حقن لوحة الفلاتر بداخل حاوية السهم الذكية لتختفي وتظهر بمرونة مطلقة دون أخذ مساحة الصفحة
     with st.expander("🔍 اضغط هنا لإظهار / إخفاء محرك البحث الميداني وفلاتر الفرز الطبقي", expanded=False):
         st.markdown("""
         <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 10px 20px; border-radius: 8px; color: white; text-align: right; font-weight: bold; font-size: 19px; font-family: "Reem Kufi", serif; margin-bottom: 15px;'>
@@ -278,25 +282,51 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         </div>
         """, unsafe_allow_html=True)
         
+        # توزيع الفلاتر الميدانية الأربعة الشاملة والمنسقة هندسياً
         filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
         with filter_col1:
-            search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="main_search_query_sticky")
+            # 🟢 تصحيح جراحي: تغيير المفتاح لمنع تداخل النصوص والرموز البرمجية العشوائية بالواجهة
+            search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="shrine_main_search_final_fixed")
         with filter_col2:
-            filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky")
+            filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky_fixed")
         with filter_col3:
-            regions_list = ["الكل"] + [str(row[0]) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
-            selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky")
+            regions_list = ["الكل"] + [str(row[0]) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row and row[0]]
+            selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky_fixed")
         with filter_col4:
             era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
-            selected_era = st.selectbox("⏳ الفلترة بالعصر السياسي والتاريخي للمزار:", era_list, key="main_selected_era_sticky")
+            selected_era = st.selectbox("⏳ الفلترة بالعصر السياسي والتاريخي للمزار:", era_list, key="main_selected_era_sticky_fixed")
             
         action_col1, action_col2 = st.columns(2)
         with action_col1:
-            if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn"):
+            if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn_fixed"):
                 st.rerun()
         with action_col2:
             st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف في نتائج الفرز مباشرة.</p>", unsafe_allow_html=True)
     st.write("---")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags, s.scientific_source
