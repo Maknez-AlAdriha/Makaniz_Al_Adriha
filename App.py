@@ -526,7 +526,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي الفولاذي لضخ معطيات الأنثروبولوجيا والكرامات فوراً
+# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي المحصن ضد خطأ التمرير الثنائي tuple is not supported
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -584,13 +584,12 @@ if st.session_state.sidebar_visible:
                     hist_val = str(row.get('history_details', 'غير محدد')).strip()
                     sc_src = str(row.get('scientific_source', 'رواية شفوية ميدانية مأثورة')).strip()
                     
-                    # استخلاص وتطهير معطيات الكرامات والاعتقادات والوظائف القروية صراحة من سياق السطر الحالي
                     b_type_val = str(row.get('belief_type', 'وظائف اجتماعية وقبلية')).strip()
                     b_details_val = str(row.get('belief_details', 'موثق بالتحقيق الميداني للأطروحة')).strip()
                     
                     if "#معجم" in tags_val or "#مصطلحات" in tags_val:
-                        existing_term = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
-                        if existing_term: 
+                        existing_term_row = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
+                        if existing_term_row: 
                             cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
                         else: 
                             cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
@@ -601,13 +600,14 @@ if st.session_state.sidebar_visible:
                         
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            prov_id = prov_id_row
+                            # 🟢 استخراج القيمة النصية الصافية من المصفوفة من خلال الفهرس 0 لمنع خطأ الـ tuple
+                            prov_id = prov_id_row[0]
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             auto_lat, auto_lon = get_auto_coords(prov_name)
                             
-                            existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
-                            if existing:
-                                shrine_id = existing
+                            existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
+                            if existing_row:
+                                shrine_id = existing_row[0]
                                 cursor.execute("""
                                     UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
                                     (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
@@ -617,7 +617,6 @@ if st.session_state.sidebar_visible:
                                     (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
                                 shrine_id = cursor.lastrowid
                             
-                            # 🟢 التحصين واللحام الجراحي الفوري: مسح وحقن نوع الكرامة والوظيفة وربطها برقم الضريح تلقائياً لملء الرسم البياني
                             cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
                             cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
                 
