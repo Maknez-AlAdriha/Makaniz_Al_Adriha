@@ -7,13 +7,13 @@ import shutil
 import io
 import urllib.parse
 
-# 🇲🇦 إعدادات الصفحة الترابية الشاملة للمملكة المغربية الشريفة متوافقة مع شاشات المحمول والحواسب لعام 2026
+# 🇲🇦 إعدادات الصفحة الترابية السيادية للمملكة المغربية الشريفة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
-# حقن كود المحاذاة الصارمة وتثبيت الواجهات المفتوحة لتعمل بمرونة وحركة فائقة السرعة بدون تشنج للقمة
+# حقن قالب الـ CSS لتثبيت المحرك أفقياً وتوسيع عرض الواجهة 100% لتوفير النقاء البصري
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
@@ -172,7 +172,6 @@ def init_ultimate_db():
         UNIQUE (name, province_id)
     )""")
     
-    # ترقية تلقائية لحقن عمود المرجعية العلمية والنقدية للأطروحة في السيرفر السحابي دون فقد الجداول القديمة
     try:
         cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
     except sqlite3.OperationalError:
@@ -200,14 +199,12 @@ init_ultimate_db()
 if "sidebar_visible" not in st.session_state: st.session_state.sidebar_visible = True
 if "current_page" not in st.session_state: st.session_state.current_page = "search"
 
-# استدعاء وعرض البانر الأفقي المعتمد بالتحديث المطابق العريض المتناسق 100%
 banner_path = "banner.png"
 if os.path.exists(banner_path):
     st.image(banner_path, use_container_width="stretch")
 else:
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
 
-# رسم صف الأزرار العليا التفاعلية الثلاثة المثبتة بالقمة
 btn_col1, btn_col2, btn_col3 = st.columns(3)
 with btn_col1:
     btn_label = "💥 إغلاق بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
@@ -225,7 +222,6 @@ with btn_col3:
         st.session_state.sidebar_visible = False
         st.session_state.current_page = "contact"
         st.rerun()
-# التطهير القاطع: سحب عناصر التوبل بـ صراحة عبر الفهرس لإبطال خطأ المربعات الحمراء وتثبيت المنظومة للأبد
 t_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
 total_shrines = int(t_res_raw[0]) if t_res_raw else 0
 
@@ -238,14 +234,12 @@ jewish_count = int(j_res_raw[0]) if j_res_raw else 0
 term_res_raw = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
 total_terms = int(term_res_raw[0]) if term_res_raw else 0
 
-# تفريغ مربعات اللوحة الإحصائية التراكمية في صدر المتصفح
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
 with stat_col2: st.metric("🕌 صلحاء المسلمين", muslim_count)
 with stat_col3: st.metric("🕍 مزارات اليهود", jewish_count)
 with stat_col4: st.metric("📖 المصطلحات الموثقة", total_terms)
 
-# توجيه قائمة المعطيات ونطاق الملاحة في الشريط الجانبي الأيمن بنقاء تام
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("<h2 style='text-align: center; color: #1E3A8A; font-weight:900;'>🏛️ بوابات المنظومة</h2>", unsafe_allow_html=True)
     menu = st.sidebar.radio(
@@ -257,13 +251,28 @@ else:
     if st.session_state.current_page == "about": menu = "🎓 حول المكنز الأكاديمي"
     elif st.session_state.current_page == "contact": menu = "📬 دفتر التواصل"
     else: menu = "🔍 محرك البحث الشامل والتحليلات"
-
-
-# ==========================================
-# 🕌 الجزء 9: شريط البحث الأفقي الاحترافي الموحد (سطر واحد مثبت في قمة الواجهة)
-# ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # حقن حاوية أفقية نحيفة ومصمتة تمنع تداخل البطاقات خلفها دوماً
+    st.markdown("### 📊 لوحة التحليلات والمؤشرات الأنثروبولوجية لصلحاء المملكة المغربية")
+    analysis_col1, analysis_col2 = st.columns(2)
+    with analysis_col1:
+        st.markdown("<b style='color:#1E3A8A;'>📈 التوزيع العددي والنوعي للوظائف والاعتقادات السائدة بالقرى:</b>", unsafe_allow_html=True)
+        functions_fetch = cursor.execute("SELECT function_type, COUNT(*) FROM beliefs_and_functions GROUP BY function_type").fetchall()
+        if functions_fetch:
+            df_chart = pd.DataFrame(functions_fetch, columns=["نوع الوظيفة الأنثروبولوجية", "عدد المزارات"])
+            df_chart["نوع الوظيفة الأنثروبولوجية"] = df_chart["نوع الوظيفة الأنثروبولوجية"].astype(str).str.strip()
+            df_chart = df_chart.groupby("نوع الوظيفة الأنثروبولوجية", as_index=False).sum()
+            st.bar_chart(df_chart, x="عدد المزارات", y="نوع الوظيفة الأنثروبولوجية", use_container_width=True)
+        else: st.caption("سيرتفع الرسم البياني فور ضخ جداول الكرامات الشفوية.")
+        
+    with analysis_col2:
+        st.markdown("<b style='color:#1E3A8A;'>🌿 المكنز التصنيفي الهرمي المتفرع (روابط المفاهيم الصوفية):</b>", unsafe_allow_html=True)
+        quick_word = st.text_input("ابحث عن مفهوم صوفي لفك رابطته الهرمية (مثال: مريد):")
+        if quick_word:
+            if "مريد" in quick_word: st.info("🔗 **مفاهيم هرمية ذات صلة سلوكية وميدانية مقترحة:** الشيخ ⟵ الخلوة ⟵ السلوك ⟵ الحضرة ⟵ الذاكرة الشعبية")
+            elif "هيلولة" in quick_word or "ربيين" in quick_word: st.info("🔗 **مفاهيم هرمية ذات صلة عبرية مقترحة:** مزارات اليهود ⟵ زيارة جماعية ⟵ تبادل القداسة ⟵ الصنف التجاري")
+            else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
+    st.write("---")
+if menu == "🔍 محرك البحث الشامل والتحليلات":
     with st.container():
         st.markdown("""
         <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 8px 20px; border-radius: 8px 8px 0 0; color: white; text-align: right; font-weight: bold; font-size: 16px; font-family: "Reem Kufi", serif;'>
@@ -272,52 +281,26 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         """, unsafe_allow_html=True)
         
         with st.container(border=True):
-            # 🟢 صف واحد مضغوط واحترافي: مستطيل النص أقصى اليمين وبجانبه باقي الفلاتر الثلاثة على نفس السطر لمنع أخذ مساحة
-            search_row_col1, search_row_col2, search_row_col3, search_row_col4 = st.columns([2, 1, 1, 1])
-            
-            with search_row_col1:
-                search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="shrine_main_search_final_fixed_ultimate")
-            with search_row_col2:
-                filter_type = st.selectbox("🕌 تصنيف المنشأة:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky_fixed_ultimate")
-            with search_row_col3:
+            search_col1, search_col2, search_col3, search_col4 = st.columns(4)
+            with search_col1:
+                search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="ultimate_search_query_key_2026")
+            with search_col2:
+                filter_type = st.selectbox("🕌 تصنيف المنشأة:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="ultimate_filter_type_key_2026")
+            with search_col3:
                 raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
                 regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
-                selected_region = st.selectbox("📍 جهة المملكة:", regions_list, key="main_selected_region_sticky_fixed_ultimate")
-            with search_row_col4:
+                selected_region = st.selectbox("📍 جهة المملكة:", regions_list, key="ultimate_selected_region_key_2026")
+            with search_col4:
                 era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
-                selected_era = st.selectbox("⏳ العصر السياسي:", era_list, key="main_selected_era_sticky_fixed_ultimate")
+                selected_era = st.selectbox("⏳ العصر السياسي:", era_list, key="ultimate_selected_era_key_2026")
             
-            # صف سفلي رقيق جداً للأزرار المساعدة والإرشاد المنهجي للأطروحة
-            action_row_col1, action_row_col2 = st.columns([1, 3])
-            with action_col1 if 'action_col1' in locals() else action_row_col1:
-                if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn_fixed_ultimate"):
+            action_col1, action_col2 = st.columns(2)
+            with action_col1:
+                if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="ultimate_reset_filters_btn_2026"):
                     st.rerun()
-            with action_col2 if 'action_col2' in locals() else action_row_col2:
+            with action_col2:
                 st.markdown("<p style='font-size:13px; color:#4B5563; text-align:right; margin-top:5px; margin-bottom:0;'>💡 <b>تحقيق أكاديمي:</b> ابحث بالأوسمة الذكية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف صلب الموضوع.</p>", unsafe_allow_html=True)
-                
     st.write("---")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    else:
-        # إبقاء قيم فلاتر البحث مستقرة وخالية من الانقطاع
-        search_query, filter_type, selected_region, selected_era = "", "الكل", "الكل", "الكل"
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags, s.scientific_source
@@ -346,7 +329,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             r_name = str(r[1]).replace("'", "\\'")
             r_lat = float(r[12]) if r[12] else 31.7917
             r_lon = float(r[13]) if r[13] else -7.0926
-            markers_js += f"L.marker([{r_lat}, r_lon]).addTo(map).bindPopup('<b>{r_name}</b>');\n"
+            markers_js += f"L.marker([{r_lat}, {r_lon}]).addTo(map).bindPopup('<b>{r_name}</b>');\n"
 
         html_map_code = f"""
         <html>
@@ -367,10 +350,8 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         </body>
         </html>
         """
-        # سحق اليافطة الحمراء نهائياً: استدعاء دالة المكونات التفاعلية مستقلة بنسبة مائة بالمائة
         st.components.v1.html(html_map_code, height=460)
         st.write("---")
-# 1. عرض صفحة "حول المكنز الأكاديمي" المحدث باسم الأستاذة المشرفة د. فاطنة الغزي عند الضغط على زرها العلوي الخاص
 if st.session_state.current_page == "about":
     st.markdown("""
     <div style='background: linear-gradient(135deg, #FFFDF6, #F9F5E8); border: 3px double #D4AF37; padding: 35px; border-radius: 15px; text-align: center; margin-bottom: 25px;'>
@@ -389,11 +370,10 @@ if st.session_state.current_page == "about":
     with tab_en:
         st.markdown("<div class='latin-text' style='background-color:#FAFAFA; padding:25px; border-left:5px solid #D4AF37; border-radius:8px;'><h3 style='color:#D4AF37;'>📝 Academic Abstract :</h3><p style='font-size:17px; color:#1F2937;'>Heritage is of great importance... This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b> supervised by <b>Prof. FATNA EL GHREZZI</b>. It establishes an advanced database that provides an exhaustive list of description or indexing terms.</p></div>", unsafe_allow_html=True)
 
-# 2. عرض صفحة "دفتر التواصل والملاحظات والرد السريع" عند الضغط على زرها العلوي الخاص
 elif st.session_state.current_page == "contact":
     st.header("📬 دفتر التواصل وإرسال الملاحظات والتحقيق العلمي الميداني")
     st.markdown("<p style='font-size:16px; color:#4B5563; text-align:right;'>هل تملك تصحيحاً، رواية شفوية، أو مراجع إضافية لإغناء هذا المعلم التراثي؟ أرسل ملاحظتك سراً إلى الدكتور رشيد الجانبي للعمل بها.</p>", unsafe_allow_html=True)
-    with st.form("visitor_feedback_fixed_top_form_new_final_ultimate", clear_on_submit=True):
+    with st.form("visitor_feedback_fixed_top_form_new_final", clear_on_submit=True):
         f_col1, f_col2, f_col3 = st.columns(3)
         with f_col1: v_name = st.text_input("اسم الباحث / الزائر الكريم:")
         with f_col2: v_email = st.text_input("البريد الإلكتروني للتواصل:")
@@ -403,11 +383,9 @@ elif st.session_state.current_page == "contact":
             if v_text:
                 now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
                 cursor.execute("INSERT INTO visitor_feedback (visitor_name, visitor_email, shrine_related, feedback_text, submission_date) VALUES (?, ?, ?, ?, ?)", (v_name, v_email, v_shrine, v_text, now_str))
-                conn.commit()
-                st.success("🙏 تم إرسال ملاحظتكم بنجاح وسرية تامة إلى الدكتور رشيد الجانبي للعمل بها.")
+                conn.commit(); st.success("🙏 تم إرسال ملاحظتكم بنجاح وسرية تامة إلى الدكتور رشيد الجانبي للعمل بها.")
             else: st.error("⚠️ من فضلك اكتب نص الملاحظة أولاً قبل الإرسال.")
 
-# 3. عرض النتائج وبطاقات صلحاء المملكة والـ A4 الممتد الفسيح بارتفاع 480 بكسل في وضع البحث الافتراضي
 elif menu == "🔍 محرك البحث الشامل والتحليلات" and results:
     for row in results:
         s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags, sc_source = row
@@ -427,7 +405,6 @@ elif menu == "🔍 محرك البحث الشامل والتحليلات" and re
         </div>
         """, unsafe_allow_html=True)
         
-        # 🟢 تثبيت المكتسب المسترجّع الحصين: واجهة طبع ورق الـ A4 ممتدة بالكامل وبارزة جداً بارتفاع 480 بكسل دون أي انضغاط
         html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
         encoded_html = urllib.parse.quote(html_data)
         st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
@@ -460,13 +437,13 @@ if menu == "✍️ التوثيق الميداني (إدخال يدوي)":
         with col1:
             s_name = st.text_input("اسم الولي / الضريح / المزار كاملاً:")
             s_type = st.selectbox("الهوية العقائدية والتصنيف الميداني:", ["أضرحة المسلمين", "مزارات اليهود"])
-            provinces = [str(row[0]) for row in cursor.execute("SELECT province FROM geography").fetchall() if row]
+            provinces = [str(row[0]) for row in cursor.execute("SELECT province FROM geography").fetchall()]
             prov_dict = {str(row[1]): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
             s_prov = st.selectbox("إقليم / عمالة المملكة المغربية:", provinces) if provinces else st.selectbox("إقليم / عمالة المملكة المغربية:", ["إقليم شفشاون"])
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
             s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"])
             s_tags = st.text_input("الوسوم والأنثروبولوجيا الدلالية مفصولة بفاصلة:")
-            s_source = st.text_input("مصدر التوثيق المرجعي العلمي (اسم الشهادة الشفوية أو رقم ورقة المخطوط المحقق):", value="رواية شفوية ميدانية مأثورة")
+            s_source = st.text_input("مصدر التوثيق المرجعي العلمي:", value="رواية شفوية ميدانية مأثورة")
         with col2:
             s_hist = st.text_area("📜 المبحث التاريخي، السيرة، والترجمة الكاملة ونسب صاحب المزار:")
             s_daily = st.text_area("🔄 الأنشطة والممارسات والطقوس اليومية الروتينية:")
@@ -536,9 +513,6 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         oral_text = st.text_area("نص الشهادة الحية والحكاية الشفوية الميدانية بالكامل وبالمعنى:")
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
-# ==========================================
-# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي الفولاذي الضامن للضخ الفوري لملفات الـ CSV
-# ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
     st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
@@ -548,8 +522,7 @@ if st.session_state.sidebar_visible:
         st.sidebar.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز!")
         st.sidebar.markdown("<h5 style='color: #D4AF37; margin-bottom: 5px;'>📬 صندوق ملاحظات الباحثين والزوار الحية:</h5>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
-        if not feedbacks: 
-            st.sidebar.caption("الصندوق فارغ حالياً.")
+        if not feedbacks: st.sidebar.caption("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
                 st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
@@ -579,13 +552,11 @@ if st.session_state.sidebar_visible:
                     elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
                     elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
                 df = df.rename(columns=rename_dict)
-                
-                # 🟢 تشغيل الفرز الفولاذي المباشر عبر قاعدة البيانات دون الاعتماد على كاش القواميس المؤقتة
+                p_dict = {str(row[0]).strip(): row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()}
+                p_id_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                 for index, row in df.iterrows():
                     s_name = str(row.get('shrine_name', '')).strip()
-                    if not s_name or s_name == "nan" or "shrine_name" in s_name: 
-                        continue
-                    
+                    if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
                     tags_val = str(row.get('tags', '')).strip()
                     s_type = str(row.get('shrine_type', 'أضرحة المسلمين')).strip()
                     hist_val = str(row.get('history_details', 'غير محدد')).strip()
@@ -593,49 +564,28 @@ if st.session_state.sidebar_visible:
                     
                     if "#معجم" in tags_val or "#مصطلحات" in tags_val:
                         existing_term = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
-                        if existing_term: 
-                            cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
-                        else: 
-                            cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                        if existing_term: cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                        else: cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
                     else:
                         prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
-                        
-                        # ضمان التحقق المباشر والصارم من وجود الإقليم في جدول الجغرافيا
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         conn.commit()
-                        
-                        # سحب معرف الإقليم مباشرة عبر الـ SQL لضمان الدقة المطلقة
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
                             prov_id = prov_id_row[0]
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             auto_lat, auto_lon = get_auto_coords(prov_name)
-                            
-                            # التحقق الصارم من وجود المنشأة بناءً على الاسم ومعرّف الإقليم الحقيقي المسترجع
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
-                            
                             if existing:
                                 cursor.execute("""
-                                    UPDATE shrines SET 
-                                        type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, 
-                                        researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, 
-                                        latitude=?, longitude=?, scientific_source=? 
-                                    WHERE id=?""", 
+                                    UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
                                     (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing[0]))
                             else:
                                 cursor.execute("""
-                                    INSERT INTO shrines (
-                                        name, type, province_id, exact_location, history_details, daily_activities, annual_activities, 
-                                        historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source
-                                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                                    INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
                                     (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
                                 shrine_id = cursor.lastrowid
-                                
                                 cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
                                 cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, str(row.get('belief_type', 'وظائف اجتماعية وقبلية')), str(row.get('belief_details', 'غير محدد'))))
-                
-                conn.commit()
-                st.sidebar.success("📊 تم دمج وضخ كافة المنشآت الجديدة تراكمياً بنجاح تام!")
-                st.rerun()
-            except Exception as e: 
-                st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
+                conn.commit(); st.sidebar.success("📊 تم الدمج التراكمي الشامل لكافة المكتسبات والتحسينات بنجاح!"); st.rerun()
+            except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
