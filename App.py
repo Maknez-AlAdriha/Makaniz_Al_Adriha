@@ -15,30 +15,41 @@ conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thre
 cursor = conn.cursor()
 # ==========================================
 # ==========================================
-# 🎨 الجزء 2: قالب التنسيق الحركي وتضخيم مقبض التصفح الجانبي لليسرى (CSS الشامل)
+# 🎨 الجزء 2: التضخيم النهائي والشامل لمقابض وشريط التصفح (CSS المطور 2026)
 # ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 🟢 تضخيم وتكبير مقبض التصفح الجانبي أقصى يسار الصفحة ليكون واضحاً وسهل التحريك 100% */
-        ::-webkit-scrollbar { 
-            width: 24px !important; 
-            height: 24px !important; 
-            display: block !important; 
+        /* 1. 🟢 تضخيم شريط التصفح الرئيسي للمتصفح بالكامل لتسهيل الإمساك والتحريك */
+        html, body, ::-webkit-scrollbar { 
+            width: 28px !important; 
+            height: 28px !important; 
         }
         ::-webkit-scrollbar-track { 
             background: #F3F4F6 !important; 
-            border-radius: 12px !important; 
         }
         ::-webkit-scrollbar-thumb { 
             background: linear-gradient(180deg, #1E3A8A, #D4AF37) !important; 
-            border-radius: 12px !important; 
-            border: 4px solid #FFFFFF !important; 
-            min-height: 80px !important;
+            border-radius: 14px !important; 
+            border: 5px solid #FFFFFF !important; 
+            min-height: 120px !important;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, #3B82F6, #1E3A8A) !important; 
+        }
+
+        /* 2. 🟢 فرض تضخيم أشرطة التصفح الداخلية لأي حاويات أو إطارات داخل الصفحة منعاً لأي انكماش */
+        * {
+            ::-webkit-scrollbar { 
+                width: 28px !important; 
+                height: 28px !important; 
+            }
+            ::-webkit-scrollbar-thumb { 
+                background: linear-gradient(180deg, #1E3A8A, #D4AF37) !important; 
+                border-radius: 14px !important; 
+                border: 4px solid #FFFFFF !important;
+            }
         }
         
         /* توسيع الحاوية الوسطى الشاملة وحماية الشريط الجانبي من الانضغاط */
