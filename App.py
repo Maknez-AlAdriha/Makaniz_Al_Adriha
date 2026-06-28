@@ -482,7 +482,7 @@ elif menu == "🎓 حول المكنز الأكاديمي":
     with tab_fr: st.markdown("<div class='latin-text' style='background-color:#FAFAFA; padding:25px; border-left:5px solid #10B981; border-radius:8px;'><p style='font-size:17px; color:#1F2937;'>C'est dans ce cadre rigoureux que s'inscrit cette thèse doctorale menée par le <b>Dr. RACHID JANEBI</b>.</p></div>", unsafe_allow_html=True)
     with tab_en: st.markdown("<div class='latin-text' style='background-color:#FAFAFA; padding:25px; border-left:5px solid #D4AF37; border-radius:8px;'><p style='font-size:17px; color:#1F2937;'>This platform stands as the ultimate technological fruition of the doctoral dissertation by <b>Dr. RACHID JANEBI</b>.</p></div>", unsafe_allow_html=True)
 # ==========================================
-# 🔐 بوابـة التحكم الحصينة وصندوق رسائل الباحثين الحية
+# 🔐 البلوك 1 من الجزء 10: بوابة العبور وصندوق رسائل الباحثين الحية
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -508,9 +508,9 @@ if st.session_state.sidebar_visible:
                 body_reply = urllib.parse.quote(f"السلام عليكم ورحمة الله وبركاته الأخ الفاضل {f_name}،\n\nنشكركم جزيلاً على ملاحظتكم القيمة التي أرسلتموها عبر المنصة...\n\nتحياتنا،\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
                 st.sidebar.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px;">✉️ اضغط هنا للرد الفوري على {f_name}</div></a>', unsafe_allow_html=True)
-                st.sidebar.markdown("<hr style='margin:5px 0 15px 0; border-top:1px dashed #D1D5DB;'>", unsafe_allow_html=True)
+                st.sidebar.markdown("<hr style='margin:5px 0 15px 0; border-top: 1px dashed #D1D5DB;'>", unsafe_allow_html=True)
         # ==========================================
-        # 📊 محرك استقبال وتطهير وإعادة تسمية خانات ملفات الـ CSV الميدانية
+        # 📊 البلوك 2 من الجزء 10: محرك استقبال وتطهير ملفات الـ CSV الميدانية بداخل شروط الإدارة
         # ==========================================
         st.sidebar.markdown("---")
         uploaded_csv = st.sidebar.file_uploader("اختر ملف الأضرحة أو المصطلحات الشامل (.csv):", type=["csv"], key="final_uploader")
@@ -539,7 +539,7 @@ if st.session_state.sidebar_visible:
                 for col in required_cols:
                     if col not in df.columns: df[col] = "غير محدد"
                 # ==========================================
-                # 🗂️ حلقة معالجة بيانات الـ CSV ومطابقة الفهرسة المعجمية والمقاطعات الإدارية
+                # 🗂️ البلوك 3 من الجزء 10: حلقة الفرز التراكمي ومطابقة الفهرسة اللغوية بداخل شرط الـ CSV
                 # ==========================================
                 added_shrine, updated_shrine = 0, 0
                 added_term, updated_term = 0, 0
@@ -568,7 +568,7 @@ if st.session_state.sidebar_visible:
                             conn.commit()
                             p_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                         # ==========================================
-                        # 🕌 الإنزال الجغرافي النهائي وحفظ مصادر التحقيق النقدي المرتبط بالـ CSV
+                        # 🕌 البلوك 4 من الجزء 10 والاخير: الإنزال الجغرافي الترابي وإغلاق الشروط بنجاح
                         # ==========================================
                         if prov_name in p_dict:
                             prov_id = p_dict[prov_name]
@@ -577,9 +577,9 @@ if st.session_state.sidebar_visible:
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                             
                             if existing:
-                                cursor.execute("UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?", (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing[0]))
+                                cursor.execute("UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?", (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing))
                                 updated_shrine += 1
-                                shrine_id = existing[0]
+                                shrine_id = existing
                             else:
                                 cursor.execute("INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
                                 added_shrine += 1
