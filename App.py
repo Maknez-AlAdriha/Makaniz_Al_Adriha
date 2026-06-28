@@ -526,7 +526,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي الفولاذي المطور لضخ معطيات الأنثروبولوجيا والكرامات فوراً
+# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي الفولاذي لضخ معطيات الأنثروبولوجيا والكرامات فوراً
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -601,13 +601,13 @@ if st.session_state.sidebar_visible:
                         
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            prov_id = prov_id_row[0]
+                            prov_id = prov_id_row
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             auto_lat, auto_lon = get_auto_coords(prov_name)
                             
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                             if existing:
-                                shrine_id = existing[0]
+                                shrine_id = existing
                                 cursor.execute("""
                                     UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
                                     (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
