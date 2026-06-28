@@ -272,16 +272,22 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             elif "هيلولة" in quick_word or "ربيين" in quick_word: st.info("🔗 **مفاهيم هرمية ذات صلة عبرية مقترحة:** مزارات اليهود ⟵ زيارة جماعية ⟵ تبادل القداسة ⟵ الصنف التجاري")
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
+# ==========================================
+# 🕌 الجزء 9: شريط البحث الأفقي الاحترافي بنظام السهم والطي التفاعلي (مقاومة الحجب)
+# ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    with st.container():
+    # 🟢 التطوير الحاسم: حقن لوحة الفرز الأفقية صلب سهم مطوي (st.expander) مقفل تلقائياً لتوفير مساحة التصفح كاملة
+    with st.expander("🔍 اضغط هنا لإظهار / إخفاء شريط البحث الشامل وفلاتر الفرز الأفقية الموحدة", expanded=False):
         st.markdown("""
-        <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 8px 20px; border-radius: 8px 8px 0 0; color: white; text-align: right; font-weight: bold; font-size: 16px; font-family: "Reem Kufi", serif;'>
-            🔍 محـرك البحـث العلمي الشـامـل لصلحاء وأضرحة المملكة المغربية الشريفة
+        <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 8px 20px; border-radius: 8px 8px 0 0; color: white; text-align: right; font-weight: bold; font-size: 15px; font-family: "Reem Kufi", serif;'>
+            🏛️ لوحة التحكم الجغرافي والزمني لصلحاء وأضرحة المملكة المغربية الشريفة
         </div>
         """, unsafe_allow_html=True)
         
         with st.container(border=True):
+            # تصفيف واحترافية: مستطيل النص أقصى اليمين وبجانبه باقي الخيارات مصطفة أفقياً على سطر واحد
             search_col1, search_col2, search_col3, search_col4 = st.columns(4)
+            
             with search_col1:
                 search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="ultimate_search_query_key_2026")
             with search_col2:
@@ -294,13 +300,28 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
                 era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
                 selected_era = st.selectbox("⏳ العصر السياسي:", era_list, key="ultimate_selected_era_key_2026")
             
+            # صف سفلي دقيق للأزرار المساعدة والإرشاد المنهجي
             action_col1, action_col2 = st.columns(2)
             with action_col1:
                 if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="ultimate_reset_filters_btn_2026"):
                     st.rerun()
             with action_col2:
-                st.markdown("<p style='font-size:13px; color:#4B5563; text-align:right; margin-top:5px; margin-bottom:0;'>💡 <b>تحقيق أكاديمي:</b> ابحث بالأوسمة الذكية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف صلب الموضوع.</p>", unsafe_allow_html=True)
+                st.markdown("<p style='font-size:13px; color:#4B5563; text-align:right; margin-top:5px; margin-bottom:0;'>💡 <b>تحقيق أكاديمي:</b> ابحث بالأوسمة الذكية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث صلب الموضوع.</p>", unsafe_allow_html=True)
+                
     st.write("---")
+
+
+
+
+
+
+
+
+
+
+
+
+
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags, s.scientific_source
