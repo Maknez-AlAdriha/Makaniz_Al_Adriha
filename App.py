@@ -273,44 +273,54 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
 # ==========================================
-# 🕌 الجزء 9: شريط البحث الأفقي الاحترافي المحصن ضد التداخل والتراكب البصري
+# 🕌 الجزء 9: مفتاح السهم التفاعلي السيادي لإخفاء وإظهار لوحة البحث الأفقية
 # ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # حقن حاوية أفقية عائمة بمظهر احترافي فخم يستعمل تفاعلية المتصفح الأصلية لمنع كسر النصوص
-    st.markdown("""
-    <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 10px 20px; border-radius: 8px 8px 0 0; color: white; text-align: right; font-weight: bold; font-size: 16px; font-family: "Reem Kufi", serif;'>
-        🏛️ بوابـة الفـرز والتحقيـق العلمـي الأفقيـة الموحدة (نمط عائم مثبت)
-    </div>
-    """, unsafe_allow_html=True)
+    # تأسيس متغير الحالة المؤقت لحفظ وضعية القفل والفتح بداخل المتصفح لعام 2026
+    if "search_panel_visible" not in st.session_state:
+        st.session_state.search_panel_visible = True
 
-    # 🟢 الحل الجراحي: استخدام حاوية حاجبة بيضاء مصمتة بنسبة 100% مع حقول معزولة هيدروليكياً لمنع التداخل
-    with st.container(border=True):
-        st.markdown("<p style='font-size:15px; color:#4B5563; font-weight:bold; margin-bottom:5px; margin-top:0;'>🔍 حدد نطاق البحث الفوري صلب الموضوع:</p>", unsafe_allow_html=True)
+    # 🟢 تحويل الزر رسمياً بناءً على طلبكم: ابتكار زر السهم التفاعلي المتقلب للتحكم الكامل بالمساحة
+    if st.session_state.search_panel_visible:
+        arrow_btn_label = "🔼 اضغط هنا لإخفاء محرك البحث وفلاتر الفرز وتوسيع مساحة التصفح"
+    else:
+        arrow_btn_label = "🔽 اضغط هنا لإظهار محرك البحث الشامل وفلاتر الفرز الأفقية"
         
-        # مصفوفة الحقول الأربعة على سطر أفقي واحد مضغوط واحترافي لمنع أخذ مساحة
-        search_col1, search_col2, search_col3, search_col4 = st.columns(4)
+    # حقن زر السهم بعرض ممتد يملأ الحاوية بجمالية تراثية متناسقة
+    if st.button(arrow_btn_label, use_container_width=True, key="sovereign_search_toggle_arrow_btn"):
+        st.session_state.search_panel_visible = not st.session_state.search_panel_visible
+        st.rerun()
+
+    # عرض لوحة الفلاتر الأفقية فقط في حالة السماح بظهورها من طرف الباحث د. رشيد الجانبي
+    if st.session_state.search_panel_visible:
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 8px 20px; border-radius: 8px 8px 0 0; color: white; text-align: right; font-weight: bold; font-size: 15px; font-family: "Reem Kufi", serif;'>
+            🏛️ لوحة التحكم الجغرافي والزمني لصلحاء وأضرحة المملكة المغربية الشريفة
+        </div>
+        """, unsafe_allow_html=True)
         
-        with search_col1:
-            search_query = st.text_input("🎯 الولي أو المفهوم الميداني (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
-        with search_col2:
-            filter_type = st.selectbox("🕌 تصنيف المعلم:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
-        with search_col3:
-            raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
-            regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
-            selected_region = st.selectbox("📍 جهة المملكة المغربية:", regions_list, key="final_clean_ultimate_region_key_2026")
-        with search_col4:
-            era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
-            selected_era = st.selectbox("⏳ العصر التاريخي والسياسي:", era_list, key="final_clean_ultimate_era_key_2026")
-        
-        # صف سفلي رقيق جداً لعزل أزرار الإدارة والإرشاد
-        action_col1, action_col2 = st.columns(2)
-        with action_col1:
-            if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="final_clean_ultimate_reset_btn_2026"):
-                st.rerun()
-        with action_col2:
-            st.markdown("<p style='font-size:13px; color:#4B5563; text-align:right; margin-top:8px; margin-bottom:0;'>💡 <b>تحقيق أكاديمي:</b> ابحث بالأوسمة الذكية مثل (#النسب_الشريف) لعزل المباحث والوظائف صلب الموضوع.</p>", unsafe_allow_html=True)
+        with st.container(border=True):
+            # تصفيف واحترافية: مستطيل النص أقصى اليمين وبجانبه باقي الخيارات مصطفة أفقياً على سطر واحد
+            search_col1, search_col2, search_col3, search_col4 = st.columns(4)
             
-    st.write("---")
+            with search_col1:
+                search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
+            with search_col2:
+                filter_type = st.selectbox("🕌 تصنيف المعلم:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
+            with search_col3:
+                raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
+                regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
+                selected_region = st.selectbox("📍 جهة المملكة المغربية:", regions_list, key="final_clean_ultimate_region_key_2026")
+            with search_col4:
+                era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
+                selected_era = st.selectbox("⏳ العصر التاريخي والسياسي:", era_list, key="final_clean_ultimate_era_key_2026")
+            
+            # بقاء شريط الإرشاد المنهجي الدقيق للأطروحة أسفل الخانات المفتوحة
+            st.markdown("<p style='font-size:13px; color:#4B5563; text-align:right; margin-top:5px; margin-bottom:0; font-weight:bold;'>💡 تحقيق أكاديمي: ابحث بالأوسمة الذكية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف صلب الموضوع.</p>", unsafe_allow_html=True)
+        st.write("---")
+    else:
+        # تأمين ثبات واستمرار متغيرات البحث والتصنيف الافتراضية خلف الكواليس لتفادي حدوث كسر بالاستعلامات عند الإخفاء
+        search_query, filter_type, selected_region, selected_era = "", "الكل", "الكل", "الكل"
 
 
 
