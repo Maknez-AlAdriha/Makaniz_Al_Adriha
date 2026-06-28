@@ -15,46 +15,44 @@ conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thre
 cursor = conn.cursor()
 # ==========================================
 # ==========================================
-# 🎨 الجزء 2: التكبير والتضخيم السيادي المطلق لشريط المتصفح الرئيسي الخارجي (أقصى اليسار)
+# 🎨 الجزء 2: نسف أشرطة المتصفح الافتراضية وبناء شريط تصفح مخصص وعريض جداً بالخلفية (CSS الشامل 2026)
 # ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 🟢 تضخيم وتكبير شريط المتصفح الرئيسي الخارجي أقصى يسار الشاشة ليصبح ضخماً وبارزاً وسهل الإمساك 100% */
-        html::-webkit-scrollbar, 
-        body::-webkit-scrollbar,
-        html::-webkit-scrollbar-track,
-        body::-webkit-scrollbar-track {
-            width: 32px !important;
-            height: 32px !important;
-            display: block !important;
-            background-color: #F3F4F6 !important;
+        /* 1. 🟢 الفتح والتحرير الشامل: إجبار نافذة المتصفح على إخفاء الشريط النحيف العاصي */
+        html {
+            overflow: hidden !important;
         }
-        html::-webkit-scrollbar-thumb,
-        body::-webkit-scrollbar-thumb {
+        
+        /* 2. 🟢 بناء الحاوية العملاقة: تحويل جسم المنصة بالكامل إلى حاوية مستقلة بشريط تصفح داخلي عريض جداً وسهل الإمساك */
+        body, [data-testid="stAppViewContainer"] {
+            overflow-y: auto !important;
+            height: 100vh !important;
+        }
+        
+        /* 3. 🟢 التضخيم الملكي: فرض سُمك ضخم وعريض جداً (30 بكسل) للمقبض الجديد أقصى يسار الشاشة بصياغة بارزة */
+        ::-webkit-scrollbar {
+            width: 30px !important;
+            height: 30px !important;
+            display: block !important;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F3F4F6 !important;
+            border-radius: 15px !important;
+        }
+        ::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, #1E3A8A, #D4AF37) !important;
-            border-radius: 16px !important;
-            border: 6px solid #FFFFFF !important;
-            min-height: 150px !important;
+            border-radius: 15px !important;
+            border: 5px solid #FFFFFF !important;
+            min-height: 140px !important;
             display: block !important;
         }
-        html::-webkit-scrollbar-thumb:hover,
-        body::-webkit-scrollbar-thumb:hover {
+        ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, #3B82F6, #1E3A8A) !important;
         }
 
-        /* تضخيم أشرطة التصفح الداخلية الفرعية للحاويات لتوحيد النسق الجمالي */
-        div[class*="st-emotion-cache"]::-webkit-scrollbar {
-            width: 24px !important;
-            height: 24px !important;
-        }
-        div[class*="st-emotion-cache"]::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #1E3A8A, #D4AF37) !important;
-            border-radius: 12px !important;
-            border: 4px solid #FFFFFF !important;
-        }
-        
         /* توسيع الحاوية الوسطى الشاملة وحماية الشريط الجانبي من الانضغاط */
         div[data-testid="stAppViewBlockContainer"] {
             max-width: 100% !important;
