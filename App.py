@@ -541,7 +541,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🔐 الجزء 14 والاخير: بوابات التحكم السيادية ومحرك الدمج التراكمي الشامل للـ CSV لصلحاء المملكة
+# 🔐 الجزء 14 والاخير: بوابات التحكم السيادية ومحرك الدمج التراكمي المحصن ضد خطأ constraint failed
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -552,21 +552,13 @@ if st.session_state.sidebar_visible:
         st.sidebar.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز!")
         st.sidebar.markdown("<h5 style='color: #D4AF37; margin-bottom: 5px;'>📬 صندوق ملاحظات الباحثين والزوار الحية:</h5>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
-        
-        if not feedbacks: 
-            st.sidebar.caption("الصندوق فارغ حالياً.")
+        if not feedbacks: st.sidebar.caption("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
-                st.sidebar.markdown(f"""
-                <div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px; text-align:right;'>
-                    <small style='color:#9CA3AF;'>📅 {f_date}</small><br><b>👤 المرسل:</b> {f_name}<br><b>📧 البريد:</b> {f_email}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}
-                </div>
-                """, unsafe_allow_html=True)
-                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: بخصوص ملاحظتكم حول ({f_shrine})")
-                body_reply = urllib.parse.quote(f"السلام عليكم ورحمة الله وبركاته الأخ الفاضل {f_name}،\n\nنشكركم جزيلاً على ملاحظتكم القيمة التي أرسلتموها عبر المنصة...\n\nتحياتنا،\nالدكتور رشيد الجانبي")
-                mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
-                st.sidebar.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px;">✉️ اضغط هنا للرد الفوري على {f_name}</div></a>', unsafe_allow_html=True)
-                st.sidebar.markdown("<hr style='margin:5px 0 15px 0; border-top:1px dashed #D1D5DB;'>", unsafe_allow_html=True)
+                st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
+                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
+                mailto_link = f"mailto:{f_email}?subject={subject_reply}"
+                st.sidebar.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px;">✉️ رد سريع</div></a>', unsafe_allow_html=True)
 
         st.sidebar.markdown("---")
         uploaded_csv = st.sidebar.file_uploader("اختر ملف الأضرحة أو المصطلحات الشامل (.csv):", type=["csv"], key="final_uploader")
@@ -607,8 +599,9 @@ if st.session_state.sidebar_visible:
                         else: cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
                     else:
                         prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
+                        # 🟢 التصحيح الحاسم: استخدام INSERT OR IGNORE لسحق خطأ التكرار الجغرافي والسماح بدمج المعطيات
                         if prov_name not in p_dict and prov_name != "nan" and prov_name != "":
-                            cursor.execute("INSERT INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
+                            cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                             conn.commit()
                             p_dict = {str(row).strip(): row for row in cursor.execute("SELECT province FROM geography").fetchall()}
                             p_id_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
