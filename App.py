@@ -14,19 +14,37 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 # ==========================================
-# 🎨 الجزء 2: قالب التنسيق الحركي المطور وتوسيع حاوية العرض لتشغل 100% من الشاشة (CSS الشامل)
+# 🎨 الجزء 2: قالب التنسيق السيادي الحركي وتوسيع مساحة المنصة والتبويبات 100% (CSS الشامل)
 # ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 🟢 حقن التمدد السيادي: إزالة الهوامش الجانبية الميتة للمتصفح واستغلال كامل عرض الشاشة مائة بالمائة */
-        div[data-testid="stAppViewBlockContainer"] {
-            padding-left: 2rem !important;
-            padding-right: 2rem !important;
+        /* تدمير وتوسيع حاويات العرض الكبرى والفرعية لتجبر المنصة على التمدد البانورامي بكامل الشاشة */
+        [data-testid="stAppViewContainer"], 
+        [data-testid="stAppViewBlockContainer"], 
+        .main, 
+        .block-container,
+        div[class*="st-emotion-cache"] {
+            max-width: 100% !important;
+            width: 100% !important;
+            padding-left: 1.5rem !important;
+            padding-right: 1.5rem !important;
             padding-top: 2rem !important;
             padding-bottom: 2rem !important;
-            max-width: 100% !important;
+        }
+        
+        /* 🟢 حقن التمدد الملكي للتبويبات: إجبار أزرار التبويبات الثلاثة على التمدد بالتساوي وبكامل عرض البطاقة */
+        div[data-baseweb="tab-list"] {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: space-between !important;
+        }
+        div[data-baseweb="tab"] {
+            flex-grow: 1 !important;
+            text-align: center !important;
+            justify-content: center !important;
+            font-size: 18px !important;
         }
         
         /* التنسيق العام لليمين للحاويات العربية مع السماح بالمرونة للأقسام الأجنبية */
@@ -47,7 +65,7 @@ st.markdown("""
             visibility: hidden !important;
         }
         
-        /* تنسيق وتثبيت نصوص الخلفية (Placeholders) لليمين بلون خفيف جداً يمنع أي تداخل بصري خلف الكتابة */
+        /* تنسيق وتثبيت نصوص الـ Placeholder بلون خفيف يمنع أي تداخل بصري خلف الكتابة */
         ::placeholder {
             text-align: right !important;
             direction: rtl !important;
@@ -78,7 +96,7 @@ st.markdown("""
             display: block !important;
         }
         
-        .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 8px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
+        .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 10px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
         .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
         div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
         
