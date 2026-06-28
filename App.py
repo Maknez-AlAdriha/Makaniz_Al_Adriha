@@ -7,7 +7,7 @@ import shutil
 import io
 import urllib.parse
 
-# 🇲🇦 إعدادات الصفحة الترابية السيادية للمملكة المغربية الشريفة لعام 2026
+# 🇲🇦 إعدادات الصفحة الترابية الشاملة للمملكة المغربية الشريفة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
@@ -237,7 +237,7 @@ total_terms = int(term_res_raw[0]) if term_res_raw else 0
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
 with stat_col2: st.metric("🕌 صلحاء المسلمين", muslim_count)
-with stat_col3: st.metric("🕍 مزارات اليهود", jewish_count)
+with stat_col3: st.metric("開設 مزارات اليهود", jewish_count)
 with stat_col4: st.metric("📖 المصطلحات الموثقة", total_terms)
 
 if st.session_state.sidebar_visible:
@@ -276,7 +276,6 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
     if "search_panel_visible" not in st.session_state:
         st.session_state.search_panel_visible = True
 
-    # مفتاح السهم المتقلب للتحكم الكامل بالمساحة بناءً على رغبة الباحث د. رشيد الجانبي
     if st.session_state.search_panel_visible:
         arrow_btn_label = "🔼 اضغط هنا لطـي وإخفـاء محرك البحث وفلاتر الفرز لتوسيع مساحة القراءة"
     else:
@@ -298,7 +297,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         with st.container(border=True):
             search_col1, search_col2, search_col3, search_col4 = st.columns(4)
             with search_col1:
-                search_query = st.text_input("🎯 الولي أو المفهوم صلط الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
+                search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
             with search_col2:
                 filter_type = st.selectbox("🕌 تصنيف المنشأة:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
             with search_col3:
@@ -323,12 +322,9 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         else: 
             query += " AND s.name LIKE ?"; params.append(f"%{search_query}%")
             
-    if filter_type != "الكل": 
-        query += " AND s.type = ?"; params.append(filter_type)
-    if selected_region != "الكل": 
-        query += " AND g.region = ?"; params.append(selected_region)
-    if selected_era != "الكل": 
-        query += " AND s.historical_era = ?"; params.append(selected_era)
+    if filter_type != "الكل": query += " AND s.type = ?"; params.append(filter_type)
+    if selected_region != "الكل": query += " AND g.region = ?"; params.append(selected_region)
+    if selected_era != "الكل": query += " AND s.historical_era = ?"; params.append(selected_era)
         
     results = cursor.execute(query, params).fetchall()
     
@@ -421,7 +417,6 @@ elif menu == "🔍 محرك البحث الشامل والتحليلات" and re
         </div>
         """, unsafe_allow_html=True)
         
-        # تثبيت الارتفاع العملاق الفسيح لواجهة الـ A4 الممتد المرجعي لمنع انضغاط الحروف والسطور
         html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
         encoded_html = urllib.parse.quote(html_data)
         st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
@@ -530,6 +525,9 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         oral_text = st.text_area("نص الشهادة الحية والحكاية الشفوية الميدانية بالكامل وبالمعنى:")
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
+# ==========================================
+# 🔐 الجزء 14 والاخير: بوابات التحكم وصنع محرك الدمج التراكمي الشامل للـ CSV
+# ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
     st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
@@ -570,7 +568,7 @@ if st.session_state.sidebar_visible:
                     elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
                 df = df.rename(columns=rename_dict)
                 p_dict = {str(row[0]).strip(): row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()}
-                p_id_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                
                 for index, row in df.iterrows():
                     s_name = str(row.get('shrine_name', '')).strip()
                     if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
