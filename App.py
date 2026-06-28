@@ -476,9 +476,9 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         
        
         # ==========================================
-# 📦 الجزء 11: تفريغ بطاقات الأولياء وحزم الاقتباس وتوسيع واجهة طبع وثيقة A4 المسترجعة الحصينة
+# 📦 الجزء 11: تفريغ بطاقات الأولياء وحزم الاقتباس وتوسيع واجهة طبع وثيقة A4 المعالجة والمطهرة
 # ==========================================
-        # تفريغ البطاقات التراثية لصلحاء المملكة المغربية الشريفة مع تفعيل واجهة الطبع الفسيحة لورق A4
+        # تفريغ البطاقات التراثية لصلحاء المملكة المغربية الشريفة مع تفعيل واجهة الطباعة النظيفة لورق A4
         for row in results:
             s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags, sc_source = row
             badge_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#D4AF37"
@@ -498,10 +498,10 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             </div>
             """, unsafe_allow_html=True)
             
-            # 🟢 التعديل الهيكلي الحاسم: رفع ارتفاع الـ iframe إلى 480 بكسل لتنطلق واجهة الطباعة كاملة وواضحة جداً بدون انضغاط
+            # 🟢 التصحيح الجغرافي الحاسم: حذف الخيار الخاطئ use_container_width للحفاظ على استقرار السيرفر سحابياً
             html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
             encoded_html = urllib.parse.quote(html_data)
-            st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480, use_container_width=True)
+            st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
             
             c_col1, c_col2 = st.columns(2)
             with c_col1:
