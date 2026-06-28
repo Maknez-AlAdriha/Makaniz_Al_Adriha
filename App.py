@@ -147,27 +147,6 @@ st.markdown("""
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # إحكام تموضع القاموس الإحداثي الجغرافي لـ أولياء المغرب ليعمل صعوداً ونزولاً دون أي تجميد
 PROVINCE_COORDINATES = {
     'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
@@ -496,7 +475,10 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
 
         
        
-        # تفريغ البطاقات التراثية لصلحاء المملكة المغربية الشريفة مع تفعيل زر الطبع المسترجع بالكامل ورق A4 للباحثين
+        # ==========================================
+# 📦 الجزء 11: تفريغ بطاقات الأولياء وحزم الاقتباس وتوسيع واجهة طبع وثيقة A4 المسترجعة الحصينة
+# ==========================================
+        # تفريغ البطاقات التراثية لصلحاء المملكة المغربية الشريفة مع تفعيل واجهة الطبع الفسيحة لورق A4
         for row in results:
             s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags, sc_source = row
             badge_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#D4AF37"
@@ -516,14 +498,14 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             </div>
             """, unsafe_allow_html=True)
             
-            # 🟢 المكتسب المسترجع الحصين: إعادة توليد وطبع ملف الولي المختار بمحددات ورق A4 القياسي
+            # 🟢 التعديل الهيكلي الحاسم: رفع ارتفاع الـ iframe إلى 480 بكسل لتنطلق واجهة الطباعة كاملة وواضحة جداً بدون انضغاط
             html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
             encoded_html = urllib.parse.quote(html_data)
-            st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=60)
+            st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480, use_container_width=True)
             
             c_col1, c_col2 = st.columns(2)
             with c_col1:
-                # 🟢 التحسين 2: ترقية بطاقة الفهرسة العشرية (Dublin Core) لتوافق معايير الأرشفة للمكتبات الوطنية الكبرى والرباط
+                # ترقية بطاقة الفهرسة العشرية (Dublin Core) لتوافق معايير الأرشفة للمكتبات الوطنية الكبرى والرباط
                 dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage.Spatial: {region}, {province}, {loc}\nTemporal.Era: {era}\nSource.Provenance: {sc_source}\nDescription: {hist}"
                 st.download_button(label=f"📥 تصدير بطاقة الفهرسة العشرية (Dublin Core) لـ {name}", data=dublin_core_text, file_name=f"Library_Index_{name}.txt", mime="text/plain", key=f"dc_export_{s_id}")
             with c_col2:
@@ -545,6 +527,14 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
                 st.write(books if books else "لا توجد مراجع مسجلة.")
                 if creative: st.write(creative)
                 if links: st.markdown(f"🔗 **روابط ومكان الوجود الرقمي للمخطوطات والوثائق:** {links}")
+
+
+
+
+
+
+
+
 elif menu == "✍️ التوثيق الميداني (إدخال يدوي)":
     st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
     with st.form("add_shrine_ultimate_form"):
