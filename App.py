@@ -13,7 +13,9 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
-# حقن كود المحاذاة الصارمة وتتصفيف الواجهات لتعمل بمرونة وحركة فائقة السرعة بدون تشنج أو تجمد للقمة
+# ==========================================
+# 🎨 الجزء 2: قالب التنسيق الحركي المطور وسحق تداخل نصوص الخلفية (CSS الشامل والمطهر)
+# ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
@@ -25,6 +27,23 @@ st.markdown("""
             line-height: 1.8 !important;
             direction: rtl;
             text-align: right;
+        }
+        
+        /* 🟢 حقن الحماية الجمالية: نسف وسحق عبارة Press Enter to apply التلقائية لمنع تشويه مربعات النص */
+        div[data-testid="stTextInput"] p, 
+        div[data-testid="stTextInput"] span,
+        div[data-testid="stTextInput"] div::after {
+            content: "" !important;
+            display: none !important;
+            visibility: hidden !important;
+        }
+        
+        /* 🟢 تنسيق وتثبيت نصوص الخلفية (Placeholders) لليمين بلون خفيف جداً يمنع أي تداخل بصري خلف الكتابة */
+        ::placeholder {
+            text-align: right !important;
+            direction: rtl !important;
+            color: #9CA3AF !important;
+            opacity: 0.6 !important;
         }
         
         /* تحسين انسيابية الحاويات العلوية المثبتة لمنع تجمد الشاشة وحجب المحتوى السفلي */
@@ -54,22 +73,6 @@ st.markdown("""
         .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
         div[style*="border:3px solid"] { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.05) !important; background-color: #FFFFFF !important; border-radius: 12px !important; }
         
-        /* حجب أزرار المتصفح التلقائية لمنع الأيقونات اللغوية المقلوبة والأعطال البصرية */
-        [data-testid="collapsedControlButton"], 
-        [data-testid="stSidebarCollapseButton"], 
-        button[data-testid="sidebar-toggle"], 
-        div[class*="StyledCollapsedControl"],
-        .st-emotion-cache-1wbqy5l, 
-        .st-emotion-cache-6q9w0x {
-            display: none !important;
-            font-size: 0px !important;
-            color: transparent !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            width: 0px !important;
-            height: 0px !important;
-        }
-
         [data-testid="stCodeBlock"] button span, [data-testid="stCodeBlock"] button div, [data-testid="stCodeBlock"] span, [data-testid="stCodeBlock"] div, div[class*="copyButton"] span {
             display: none !important;
         }
@@ -103,6 +106,35 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # إحكام تموضع القاموس الإحداثي الجغرافي لـ أولياء المغرب ليعمل صعوداً ونزولاً دون أي تجميد
 PROVINCE_COORDINATES = {
     'إقليم خنيفرة': (32.9358, -5.6644), 'إقليم بني ملال': (32.3373, -6.3498),
