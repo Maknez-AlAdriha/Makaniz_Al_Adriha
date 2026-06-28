@@ -541,7 +541,7 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
 # ==========================================
-# 🔐 الجزء 14 والاخير: بوابات التحكم السيادية ومحرك الدمج التراكمي المحصن ضد خطأ constraint failed
+# 🔐 الجزء 14 والاخير: محرك الاستيراد التراكمي الفولاذي الضامن للضخ الفوري لملفات الـ CSV
 # ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
@@ -552,7 +552,8 @@ if st.session_state.sidebar_visible:
         st.sidebar.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز!")
         st.sidebar.markdown("<h5 style='color: #D4AF37; margin-bottom: 5px;'>📬 صندوق ملاحظات الباحثين والزوار الحية:</h5>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
-        if not feedbacks: st.sidebar.caption("الصندوق فارغ حالياً.")
+        if not feedbacks: 
+            st.sidebar.caption("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
                 st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
@@ -582,12 +583,13 @@ if st.session_state.sidebar_visible:
                     elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
                     elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
                 df = df.rename(columns=rename_dict)
-                p_dict = {str(row).strip(): row for row in cursor.execute("SELECT province FROM geography").fetchall()}
-                p_id_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                 
+                # 🟢 تشغيل الفرز الفولاذي المباشر عبر قاعدة البيانات دون الاعتماد على كاش القواميس المؤقتة
                 for index, row in df.iterrows():
                     s_name = str(row.get('shrine_name', '')).strip()
-                    if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
+                    if not s_name or s_name == "nan" or "shrine_name" in s_name: 
+                        continue
+                    
                     tags_val = str(row.get('tags', '')).strip()
                     s_type = str(row.get('shrine_type', 'أضرحة المسلمين')).strip()
                     hist_val = str(row.get('history_details', 'غير محدد')).strip()
@@ -595,27 +597,49 @@ if st.session_state.sidebar_visible:
                     
                     if "#معجم" in tags_val or "#مصطلحات" in tags_val:
                         existing_term = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
-                        if existing_term: cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
-                        else: cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                        if existing_term: 
+                            cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                        else: 
+                            cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
                     else:
                         prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
-                        # 🟢 التصحيح الحاسم: استخدام INSERT OR IGNORE لسحق خطأ التكرار الجغرافي والسماح بدمج المعطيات
-                        if prov_name not in p_dict and prov_name != "nan" and prov_name != "":
-                            cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
-                            conn.commit()
-                            p_dict = {str(row).strip(): row for row in cursor.execute("SELECT province FROM geography").fetchall()}
-                            p_id_dict = {str(row).strip(): row for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
-                        if prov_name in p_id_dict:
-                            prov_id = p_id_dict[prov_name]
+                        
+                        # ضمان التحقق المباشر والصارم من وجود الإقليم في جدول الجغرافيا
+                        cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
+                        conn.commit()
+                        
+                        # سحب معرف الإقليم مباشرة عبر الـ SQL لضمان الدقة المطلقة
+                        prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
+                        if prov_id_row:
+                            prov_id = prov_id_row[0]
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             auto_lat, auto_lon = get_auto_coords(prov_name)
+                            
+                            # التحقق الصارم من وجود المنشأة بناءً على الاسم ومعرّف الإقليم الحقيقي المسترجع
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
+                            
                             if existing:
-                                cursor.execute("UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?", (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing))
+                                cursor.execute("""
+                                    UPDATE shrines SET 
+                                        type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, 
+                                        researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, 
+                                        latitude=?, longitude=?, scientific_source=? 
+                                    WHERE id=?""", 
+                                    (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing[0]))
                             else:
-                                cursor.execute("INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
+                                cursor.execute("""
+                                    INSERT INTO shrines (
+                                        name, type, province_id, exact_location, history_details, daily_activities, annual_activities, 
+                                        historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source
+                                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                                    (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
                                 shrine_id = cursor.lastrowid
+                                
                                 cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
                                 cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, str(row.get('belief_type', 'وظائف اجتماعية وقبلية')), str(row.get('belief_details', 'غير محدد'))))
-                conn.commit(); st.sidebar.success("📊 تم الدمج التراكمي الشامل لكافة المكتسبات والتحسينات بنجاح!"); st.rerun()
-            except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
+                
+                conn.commit()
+                st.sidebar.success("📊 تم دمج وضخ كافة المنشآت الجديدة تراكمياً بنجاح تام!")
+                st.rerun()
+            except Exception as e: 
+                st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
