@@ -7,7 +7,7 @@ import shutil
 import io
 import urllib.parse
 
-# 🇲🇦 إعدادات الصفحة الترابية السيادية للمملكة المغربية الشريفة متوافقة مع شاشات المحمول والحواسب لعام 2026
+# 🇲🇦 إعدادات الصفحة الترابية السيادية للمملكة المغربية الشريفة متوافقة مع كافة الشاشات لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
@@ -227,16 +227,16 @@ with btn_col3:
         st.rerun()
 # 🟢 فك تشنج السيرفر النهائي: سحب عناصر التوبل بـ صراحة لإبطال خطأ TypeError وتأمين حركة العدادات الأربعة
 t_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-total_shrines = int(t_res_raw[0]) if t_res_raw else 0
+total_shrines = int(t_res_raw) if t_res_raw else 0
 
 m_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-muslim_count = int(m_res_raw[0]) if m_res_raw else 0
+muslim_count = int(m_res_raw) if m_res_raw else 0
 
 j_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-jewish_count = int(j_res_raw[0]) if j_res_raw else 0
+jewish_count = int(j_res_raw) if j_res_raw else 0
 
 term_res_raw = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
-total_terms = int(term_res_raw[0]) if term_res_raw else 0
+total_terms = int(term_res_raw) if term_res_raw else 0
 
 # تفريغ مربعات اللوحة الإحصائية التراكمية في صدر المتصفح
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
@@ -296,7 +296,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         with filter_col2:
             filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky")
         with filter_col3:
-            regions_list = ["الكل"] + [str(row[0]) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
+            regions_list = ["الكل"] + [str(row) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
             selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky")
         with filter_col4:
             era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
@@ -307,7 +307,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn"):
                 st.rerun()
         with action_col2:
-            st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف في نتائج الفرز مباشرة.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل الوظائف مباشرة.</p>", unsafe_allow_html=True)
     st.write("---")
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
@@ -358,7 +358,8 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         </body>
         </html>
         """
-        st.components.v1.html(html_map_code, height=460, use_container_width=True)
+        # 🟢 سحق اليافطة الحمراء: حذف الخيار الخاطئ use_container_width لتستقر دالة المكونات التفاعلية بنسبة مائة بالمائة
+        st.components.v1.html(html_map_code, height=460)
         st.write("---")
 if menu == "🔍 محرك البحث الشامل والتحليلات" and results:
     for row in results:
@@ -379,14 +380,14 @@ if menu == "🔍 محرك البحث الشامل والتحليلات" and resu
         </div>
         """, unsafe_allow_html=True)
         
-        # 🟢 التعديل البنيوي المحقق: عرض وثيقة الـ A4 بـ مرونة كاملة ليمتد التقرير بوضوح كالشمس دون انضغاط حروف
+        # عرض وثيقة الـ A4 بـ مرونة كاملة ليمتد التقرير بوضوح كالشمس دون انضغاط حروف
         html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
         encoded_html = urllib.parse.quote(html_data)
         st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
         
         c_col1, c_col2 = st.columns(2)
         with c_col1:
-            # 🟢 التحسين 2: بطاقة الفهرسة العشرية المتطابقة مع أنظمة المكتبة الوطنية بالرباط
+            # بطاقة الفهرسة العشرية المتطابقة مع أنظمة المكتبة الوطنية بالرباط
             dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage.Spatial: {region}, {province}, {loc}\nTemporal.Era: {era}\nSource.Provenance: {sc_source}\nDescription: {hist}"
             st.download_button(label=f"📥 تصدير بطاقة الفهرسة العشرية (Dublin Core) لـ {name}", data=dublin_core_text, file_name=f"Library_Index_{name}.txt", mime="text/plain", key=f"dc_export_{s_id}")
         with c_col2:
@@ -405,7 +406,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات" and resu
             if creative: st.write(creative)
             if links: st.markdown(f"🔗 **روابط ومكان الوجود الرقمي للمخطوطات والوثائق:** {links}")
 elif menu == "🔍 محرك البحث الشامل والتحليلات":
-    st.info("لا توجد مزارات مسجلة تطابق معايير البحث المالية الحالية.")
+    st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية.")
 if menu == "✍️ التوثيق الميداني (إدخال يدوي)":
     st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
     with st.form("add_shrine_ultimate_form"):
@@ -419,7 +420,6 @@ if menu == "✍️ التوثيق الميداني (إدخال يدوي)":
             s_loc = st.text_input("المدخل الجغرافي الترابي والمحلي الدقيق (الجماعة، الدوار):")
             s_era = st.selectbox("العصر التاريخي والسياسي للمزار المعتمد:", ["العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"])
             s_tags = st.text_input("الوسوم والأنثروبولوجيا الدلالية مفصولة بفاصلة:")
-            # 🟢 التحسين 5 الموثق: حقن خانة مصدر التحقيق العلمي لتوثيق الروايات أو المخطوطات بصلب المنظومة
             s_source = st.text_input("مصدر التوثيق المرجعي العلمي (اسم الشهادة الشفوية أو رقم ورقة المخطوط المحقق):", value="رواية شفوية ميدانية مأثورة")
         with col2:
             s_hist = st.text_area("📜 المبحث التاريخي، السيرة، والترجمة الكاملة ونسب صاحب المزار:")
@@ -469,14 +469,14 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
     st.header("📖 المعجم والمكنز المفاهيمي المتداول بالمغرب (مراتب، لباس، مفاهيم عبرية)")
     tab1, tab2, tab3 = st.tabs(["🔍 استعراض المكنز اللغوي وقراءة الشروح", "➕ إضافة وتوثيق مصطلح جديد", "🎙️ دفتر تدوين وتسجيل الروايات الشفوية"])
     with tab1:
-        term_search = st.text_input("🔎 ابحث عن شرح أي مصطلح متداول (مريد، فقير، هيلولة...):")
+        term_search = st.text_input("🔎 ابحث عن شرح أي مصطلح متداول (مريد، فقير...):")
         results_t = cursor.execute("SELECT term, category, definition FROM thesaurus_terms WHERE term LIKE ?", (f"%{term_search}%",)).fetchall()
         for t_name, t_cat, t_def in results_t:
             st.markdown(f"**📙 المصطلح العلمي المتداول:** `{t_name}` | *المبحث الفهرسي:* _{t_cat}_")
             st.info(f"📝 **التحديد المفاهيمي الأنثروبولوجي التراثي:** {t_def}")
     with tab2:
         with st.form("add_term_form"):
-            new_term = st.text_input("المصطلح أو Mفهوم الميداني كما هو متداول بالقبيلة:")
+            new_term = st.text_input("المصطلح أو المفهوم الميداني كما هو متداول بالقبيلة:")
             term_cat = st.selectbox("تصنيف المفهوم وموقعه من خطة الفهرس للصلحاء والأضرحة:", ['مصطلحات متعلقة بالأضرحة', 'مصطلحات متعلقة بالأولياء ومراتبهم', 'مصطلحات متعلقة باللباس والمظهر', 'مصطلحات متعلقة بالربيين ومزارات اليهود'])
             term_def = st.text_area("الشرح والتحديد المفاهيمي الدقيق للمصطلح الصوفي:")
             if st.form_submit_button("💾 إدراج المفهوم في القاموس الموسوعي الشامل") and new_term and term_def:
@@ -529,16 +529,11 @@ if st.session_state.sidebar_visible:
         if not feedbacks: st.sidebar.caption("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
-                st.sidebar.markdown(f"""
-                <div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px; text-align:right;'>
-                    <small style='color:#9CA3AF;'>📅 {f_date}</small><br><b>👤 المرسل:</b> {f_name}<br><b>📧 البريد:</b> {f_email}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}
-                </div>
-                """, unsafe_allow_html=True)
-                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: بخصوص ملاحظتكم حول ({f_shrine})")
-                body_reply = urllib.parse.quote(f"السلام عليكم ورحمة الله وبركاته الأخ الفاضل {f_name}،\n\nنشكركم جزيلاً على ملاحظتكم القيمة التي أرسلتموها عبر المنصة...\n\nتحياتنا،\nالدكتور رشيد الجانبي")
+                st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>📧 البريد:</b> {f_email}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
+                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
+                body_reply = urllib.parse.quote(f"السلام عليكم ورحمة الله الفاضل {f_name}،\n\nنشكركم جزيلاً على ملاحظتكم القيمة...\n\nتحياتنا،\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
                 st.sidebar.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px;">✉️ اضغط هنا للرد الفوري على {f_name}</div></a>', unsafe_allow_html=True)
-                st.sidebar.markdown("<hr style='margin:5px 0 15px 0; border-top:1px dashed #D1D5DB;'>", unsafe_allow_html=True)
 
         st.sidebar.markdown("---")
         uploaded_csv = st.sidebar.file_uploader("اختر ملف الأضرحة أو المصطلحات الشامل (.csv):", type=["csv"], key="final_uploader")
@@ -562,7 +557,8 @@ if st.session_state.sidebar_visible:
                     elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
                     elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
                 df = df.rename(columns=rename_dict)
-                p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                p_dict = {str(row[0]).strip(): row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()}
+                p_id_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
                 for index, row in df.iterrows():
                     s_name = str(row.get('shrine_name', '')).strip()
                     if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
@@ -580,9 +576,10 @@ if st.session_state.sidebar_visible:
                         if prov_name not in p_dict and prov_name != "nan" and prov_name != "":
                             cursor.execute("INSERT INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                             conn.commit()
-                            p_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
-                        if prov_name in p_dict:
-                            prov_id = p_dict[prov_name]
+                            p_dict = {str(row[0]).strip(): row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()}
+                            p_id_dict = {str(row[1]).strip(): row[0] for row in cursor.execute("SELECT id, province FROM geography").fetchall()}
+                        if prov_name in p_id_dict:
+                            prov_id = p_id_dict[prov_name]
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             auto_lat, auto_lon = get_auto_coords(prov_name)
                             existing = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
@@ -590,7 +587,6 @@ if st.session_state.sidebar_visible:
                                 cursor.execute("UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?", (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, existing[0]))
                                 shrine_id = existing[0]
                             else:
-                                # 🟢 التطهير التام للسطر 632: إنزال الاستعلام مكتملاً وخالياً من أي انقطاع لسلسلة الحروف
                                 cursor.execute("INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
                                 shrine_id = cursor.lastrowid
                                 cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
