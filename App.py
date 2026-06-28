@@ -7,18 +7,18 @@ import shutil
 import io
 import urllib.parse
 
-# 🇲🇦 إعدادات الصفحة الترابية السيادية للمملكة المغربية الشريفة متوافقة مع كافة الشاشات لعام 2026
+# 🇲🇦 Configuration de la page étendue pour l'affichage de l'atlas en 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
-# الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
+# Connexion stable au référentiel SQL
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
-# حقن كود المحاذاة الصارمة وتثبيت الواجهات المفتوحة لتعمل بمرونة وحركة فائقة السرعة بدون تشنج للقمة
+# Injection du style CSS pour fixer la zone de recherche en haut et agrandir la barre de défilement
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. تثبيت محرك البحث والفلاتر في قمة الشاشة دوماً أثناء تصفح المكنز ليكون متاحاً للمتصفح */
+        /* 1. Fixation du moteur de recherche en haut de l'écran (Sticky Header) */
         div[data-testid="stVerticalBlock"] > div:has(div[class*="stTextInput"]) {
             position: -webkit-sticky !important;
             position: sticky !important;
@@ -31,14 +31,14 @@ st.markdown("""
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05) !important;
         }
 
-        /* 2. نسف أشرطة المتصفح الافتراضية النحيفة وبناء شريط تصفح داخلي عريض جداً بالخلفية */
+        /* 2. Dissimulation de la barre native du navigateur */
         html { overflow: hidden !important; }
         body, [data-testid="stAppViewContainer"] {
             overflow-y: auto !important;
             height: 100vh !important;
         }
         
-        /* 3. تضخيم شريط ومقبض التصفح أقصى يسار الشاشة ليصبح ضخماً وبارزاً وسهل الإمساك 100% */
+        /* 3. Création d'une barre de défilement géante de 32px de largeur à gauche */
         html::-webkit-scrollbar, body::-webkit-scrollbar, html::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
             width: 32px !important;
             height: 32px !important;
@@ -52,28 +52,26 @@ st.markdown("""
             min-height: 150px !important;
             display: block !important;
         }
-        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #3B82F6, #1E3A8A) !important;
-        }
+        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #3B82F6, #1E3A8A) !important; }
 
-        /* 4. تصحيح جراحي: توسيع الحاوية الوسطى فقط مع حماية الشريط الجانبي الأيمن من الانضغاط أو التبعثر */
+        /* Expansion complète de la zone de contenu centrale */
         div[data-testid="stAppViewBlockContainer"] {
             max-width: 100% !important;
             width: 100% !important;
             padding: 2rem !important;
         }
         
-        /* إعادة تثبيت أبعاد الشريط الجانبي لمنع انقلاب الحروف العربية عمودياً */
+        /* Protection de la barre latérale droite contre l'écrasement */
         section[data-testid="stSidebar"] { width: 340px !important; min-width: 340px !important; }
         section[data-testid="stSidebar"] div[class*="st-emotion-cache"] { width: auto !important; display: block !important; }
         
-        /* التمدد الملكي للتبويبات لملء عرض بطاقة الأولياء بالتساوي وبكامل العرض */
+        /* Étalement des onglets sur toute la largeur */
         div[data-baseweb="tab-list"] { width: 100% !important; display: flex !important; justify-content: space-between !important; }
         div[data-baseweb="tab"] { flex-grow: 1 !important; text-align: center !important; justify-content: center !important; font-size: 18px !important; }
         .stTabs [data-baseweb="tab"] { background-color: #F3F4F6 !important; border: 1px solid #E5E7EB !important; padding: 10px 18px !important; border-radius: 8px 8px 0px 0px !important; font-weight: bold !important; }
         .stTabs [aria-selected="true"] { background-color: #1E3A8A !important; color: white !important; border-color: #1E3A8A !important; }
         
-        /* التنسيق العام لليمين للحاويات العربية مع السماح بالمرونة للأقسام الأجنبية */
+        /* Alignements de l'arabe à droite */
         html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
             font-family: 'Tajawal', sans-serif !important;
             font-size: 19px !important; 
@@ -82,7 +80,6 @@ st.markdown("""
             text-align: right;
         }
         
-        /* نسف وسحق عبارة Press Enter to apply التلقائية لمنع تشويه مربعات النص */
         div[data-testid="stTextInput"] p, div[data-testid="stTextInput"] span, div[data-testid="stTextInput"] div::after { content: "" !important; display: none !important; visibility: hidden !important; }
         ::placeholder { text-align: right !important; direction: rtl !important; color: #9CA3AF !important; opacity: 0.6 !important; }
         div[data-testid="stVerticalBlock"] { gap: 1.5rem !important; }
@@ -92,7 +89,7 @@ st.markdown("""
         .stButton>button { background: linear-gradient(135deg, #1E3A8A, #3B82F6) !important; color: white !important; font-weight: 900 !important; border: 2px solid #D4AF37 !important; border-radius: 10px !important; padding: 8px 16px !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important; margin: 5px auto !important; display: block !important; }
     </style>
 """, unsafe_allow_html=True)
-# إحكام تموضع القاموس الإحداثي الجغرافي لـ أولياء المغرب ليعمل صعوداً ونزولاً دون أي تجميد
+# Coordonnées géographiques pour le centrage dynamique
 PROVINCE_COORDINATES = {
     'إقليم شفشاون': (35.1687, -5.2636), 'إقليم تطوان': (35.5785, -5.3684),
     'عمالة طنجة أصيلة': (35.7595, -5.8340), 'إقليم العرائش': (35.1841, -6.1554),
@@ -172,7 +169,6 @@ def init_ultimate_db():
         UNIQUE (name, province_id)
     )""")
     
-    # 🟢 حل مجهري لخطأ الـ OperationalError: حقن العمود تلقائياً في السيرفر دون إتلاف الجداول الحية مسبقاً
     try:
         cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
     except sqlite3.OperationalError:
@@ -200,14 +196,12 @@ init_ultimate_db()
 if "sidebar_visible" not in st.session_state: st.session_state.sidebar_visible = True
 if "current_page" not in st.session_state: st.session_state.current_page = "search"
 
-# استدعاء البانر الملكي العريض بالتحديث المطابق العريض المتناسق 100%
 banner_path = "banner.png"
 if os.path.exists(banner_path):
     st.image(banner_path, use_container_width="stretch")
 else:
     st.markdown('<span class="moroccan-title">المَكْنِزُ الوَطَنِيُّ لِلأَضْرِحَةِ وَالمَزَارَاتِ بِالمَغْرِبِ</span>', unsafe_allow_html=True)
 
-# رسم صف الأزرار العليا التفاعلية الثلاثة المثبتة بالقمة
 btn_col1, btn_col2, btn_col3 = st.columns(3)
 with btn_col1:
     btn_label = "💥 إغلاق بوابات الإدارة لتوسيع التصفح ⬅️" if st.session_state.sidebar_visible else "🏛️ إظهار بوابات المنظومة والإدارة ➡️"
@@ -225,27 +219,25 @@ with btn_col3:
         st.session_state.sidebar_visible = False
         st.session_state.current_page = "contact"
         st.rerun()
-# 🟢 فك تشنج السيرفر النهائي: سحب عناصر التوبل بـ صراحة لإبطال خطأ TypeError وتأمين حركة العدادات الأربعة
+# Extraction sécurisée par index pour supprimer l'erreur de conversion de tuple
 t_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-total_shrines = int(t_res_raw) if t_res_raw else 0
+total_shrines = int(t_res_raw[0]) if t_res_raw else 0
 
 m_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-muslim_count = int(m_res_raw) if m_res_raw else 0
+muslim_count = int(m_res_raw[0]) if m_res_raw else 0
 
 j_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-jewish_count = int(j_res_raw) if j_res_raw else 0
+jewish_count = int(j_res_raw[0]) if j_res_raw else 0
 
 term_res_raw = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
-total_terms = int(term_res_raw) if term_res_raw else 0
+total_terms = int(term_res_raw[0]) if term_res_raw else 0
 
-# تفريغ مربعات اللوحة الإحصائية التراكمية في صدر المتصفح
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
 with stat_col2: st.metric("🕌 صلحاء المسلمين", muslim_count)
 with stat_col3: st.metric("🕍 مزارات اليهود", jewish_count)
 with stat_col4: st.metric("📖 المصطلحات الموثقة", total_terms)
 
-# توجيه قائمة المعطيات ونطاق الملاحة في الشريط الجانبي الأيمن بنقاء تام
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("<h2 style='text-align: center; color: #1E3A8A; font-weight:900;'>🏛️ بوابات المنظومة</h2>", unsafe_allow_html=True)
     menu = st.sidebar.radio(
@@ -258,7 +250,6 @@ else:
     elif st.session_state.current_page == "contact": menu = "📬 دفتر التواصل"
     else: menu = "🔍 محرك البحث الشامل والتحليلات"
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # 🟢 التحسين 1: دمج رسومات بيانية ميدانية وفورية لتحليل نسب توزيع الوظائف التراثية بالقبائل المغربية دون بتر
     st.markdown("### 📊 لوحة التحليلات والمؤشرات الأنثروبولوجية لصلحاء المملكة المغربية")
     analysis_col1, analysis_col2 = st.columns(2)
     with analysis_col1:
@@ -272,7 +263,6 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         else: st.caption("سيرتفع الرسم البياني فور ضخ جداول الكرامات الشفوية.")
         
     with analysis_col2:
-        # 🟢 التحسين 4: المكنز التصنيفي الهرمي المتفرع لربط المفاهيم الصوفية تلقائياً للباحثين
         st.markdown("<b style='color:#1E3A8A;'>🌿 المكنز التصنيفي الهرمي المتفرع (روابط المفاهيم الصوفية):</b>", unsafe_allow_html=True)
         quick_word = st.text_input("ابحث عن مفهوم صوفي لفك رابطته الهرمية (مثال: مريد):")
         if quick_word:
@@ -281,7 +271,6 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
 if menu == "🔍 محرك البحث الشامل والتحليلات":
-    # 🟢 حقن لوحة الفلاتر بداخل حاوية السهم الذكية لتختفي وتظهر بمرونة مطلقة دون أخذ نصف مساحة الصفحة
     with st.expander("🔍 اضغط هنا لإظهار / إخفاء محرك البحث الميداني وفلاتر الفرز الطبقي", expanded=False):
         st.markdown("""
         <div style='background: linear-gradient(135deg, #1E3A8A, #3B82F6); padding: 10px 20px; border-radius: 8px; color: white; text-align: right; font-weight: bold; font-size: 19px; font-family: "Reem Kufi", serif; margin-bottom: 15px;'>
@@ -289,14 +278,13 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         </div>
         """, unsafe_allow_html=True)
         
-        # توزيع الفلاتر الميدانية الأربعة الشاملة والمنسقة هندسياً
         filter_col1, filter_col2, filter_col3, filter_col4 = st.columns(4)
         with filter_col1:
             search_query = st.text_input("🎯 اسم الولي، المعلم الروحي، أو الوسم (#):", placeholder="اكتب للبحث الفوري...", key="main_search_query_sticky")
         with filter_col2:
             filter_type = st.selectbox("🕌 تصنيف المنشأة الروحية المعتمد:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="main_filter_type_sticky")
         with filter_col3:
-            regions_list = ["الكل"] + [str(row) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
+            regions_list = ["الكل"] + [str(row[0]) for row in cursor.execute("SELECT DISTINCT region FROM geography").fetchall() if row]
             selected_region = st.selectbox("📍 الفلترة بجهات المملكة المغربية الـ 12:", regions_list, key="main_selected_region_sticky")
         with filter_col4:
             era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
@@ -307,7 +295,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             if st.button("🔄 تصفير خانات الفرز الميداني", use_container_width=True, key="reset_filters_sticky_btn"):
                 st.rerun()
         with action_col2:
-            st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل الوظائف مباشرة.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='font-size:14px; color:#4B5563; text-align:right; margin-top:10px;'>💡 <b>إرشاد علمي:</b> يمكنك استخدام الأوسمة التراثية مثل (#النسب_الشريف) أو (#أراضي_الأوقاف) لعزل المباحث والوظائف في نتائج الفرز مباشرة.</p>", unsafe_allow_html=True)
     st.write("---")
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     query = """
@@ -358,7 +346,6 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
         </body>
         </html>
         """
-        # 🟢 سحق اليافطة الحمراء: حذف الخيار الخاطئ use_container_width لتستقر دالة المكونات التفاعلية بنسبة مائة بالمائة
         st.components.v1.html(html_map_code, height=460)
         st.write("---")
 if menu == "🔍 محرك البحث الشامل والتحليلات" and results:
@@ -380,14 +367,12 @@ if menu == "🔍 محرك البحث الشامل والتحليلات" and resu
         </div>
         """, unsafe_allow_html=True)
         
-        # عرض وثيقة الـ A4 بـ مرونة كاملة ليمتد التقرير بوضوح كالشمس دون انضغاط حروف
         html_data = generate_printable_html(name, s_type, region, province, loc, hist, daily, annual, books, creative, links, beliefs_text, sc_source)
         encoded_html = urllib.parse.quote(html_data)
         st.iframe(src=f"data:text/html;charset=utf-8,{encoded_html}", height=480)
         
         c_col1, c_col2 = st.columns(2)
         with c_col1:
-            # بطاقة الفهرسة العشرية المتطابقة مع أنظمة المكتبة الوطنية بالرباط
             dublin_core_text = f"Title: {name}\nSubject: {s_type}\nCoverage.Spatial: {region}, {province}, {loc}\nTemporal.Era: {era}\nSource.Provenance: {sc_source}\nDescription: {hist}"
             st.download_button(label=f"📥 تصدير بطاقة الفهرسة العشرية (Dublin Core) لـ {name}", data=dublin_core_text, file_name=f"Library_Index_{name}.txt", mime="text/plain", key=f"dc_export_{s_id}")
         with c_col2:
@@ -529,7 +514,7 @@ if st.session_state.sidebar_visible:
         if not feedbacks: st.sidebar.caption("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
-                st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>📧 البريد:</b> {f_email}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
+                st.sidebar.markdown(f"<div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px;'>📅 {f_date}<br><b>👤 المرسل:</b> {f_name}<br><b>🕌 خاص بـ:</b> {f_shrine}<br><b>📝 الملاحظة:</b> {f_text}</div>", unsafe_allow_html=True)
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
                 body_reply = urllib.parse.quote(f"السلام عليكم ورحمة الله الفاضل {f_name}،\n\nنشكركم جزيلاً على ملاحظتكم القيمة...\n\nتحياتنا،\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
