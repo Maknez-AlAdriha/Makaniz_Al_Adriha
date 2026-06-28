@@ -14,11 +14,20 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 # ==========================================
-# 🎨 الجزء 2: قالب التنسيق الحركي المطور وسحق تداخل نصوص الخلفية (CSS الشامل والمطهر)
+# 🎨 الجزء 2: قالب التنسيق الحركي المطور وتوسيع حاوية العرض لتشغل 100% من الشاشة (CSS الشامل)
 # ==========================================
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
+        
+        /* 🟢 حقن التمدد السيادي: إزالة الهوامش الجانبية الميتة للمتصفح واستغلال كامل عرض الشاشة مائة بالمائة */
+        div[data-testid="stAppViewBlockContainer"] {
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+            max-width: 100% !important;
+        }
         
         /* التنسيق العام لليمين للحاويات العربية مع السماح بالمرونة للأقسام الأجنبية */
         html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"], .stMarkdown, p, span, label, button, select, input, textarea {
@@ -29,7 +38,7 @@ st.markdown("""
             text-align: right;
         }
         
-        /* 🟢 حقن الحماية الجمالية: نسف وسحق عبارة Press Enter to apply التلقائية لمنع تشويه مربعات النص */
+        /* نسف وسحق عبارة Press Enter to apply التلقائية لمنع تشويه مربعات النص */
         div[data-testid="stTextInput"] p, 
         div[data-testid="stTextInput"] span,
         div[data-testid="stTextInput"] div::after {
@@ -38,7 +47,7 @@ st.markdown("""
             visibility: hidden !important;
         }
         
-        /* 🟢 تنسيق وتثبيت نصوص الخلفية (Placeholders) لليمين بلون خفيف جداً يمنع أي تداخل بصري خلف الكتابة */
+        /* تنسيق وتثبيت نصوص الخلفية (Placeholders) لليمين بلون خفيف جداً يمنع أي تداخل بصري خلف الكتابة */
         ::placeholder {
             text-align: right !important;
             direction: rtl !important;
