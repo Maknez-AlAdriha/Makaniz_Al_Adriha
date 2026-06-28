@@ -377,7 +377,24 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
     with col4:
         era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
         selected_era = st.selectbox("الفلترة بالعصر السياسي والتاريخي للمزار المعتمد:", era_list)
-    # بناء محرك التراكم والفرز وربط الأطلس التفاعلي بحركة محرك استعلام الباحثين مباشرة
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   # ==========================================
+# 🗺️ الجزء 10: أطلس التموضع الجغرافي الديناميكي المطور (تطهير الدوائر الحمراء)
+# ==========================================
     query = """
     SELECT s.id, s.name, s.type, g.region, g.province, s.exact_location, s.history_details, s.daily_activities, s.annual_activities, s.researchers_books, s.creative_works, s.web_links, s.latitude, s.longitude, s.historical_era, s.tags, s.scientific_source
     FROM shrines s JOIN geography g ON s.province_id = g.id WHERE 1=1
@@ -393,24 +410,27 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
     results = cursor.execute(query, params).fetchall()
     
     if results:
-        # 🟢 ربط الخريطة بالبحث العلمي: إذا كان البحث الميداني يحمل اسماً لضريح معين وله نتيجة فريدة، يطير الأطلس تلقائياً لتموضعه ويرفع معدل الزوم لـ 11
         st.markdown("### 🗺️ أطلس التموضع التراكمي للمنشآت الروحية (خريطة تفاعلية ديناميكية)")
         map_list = []
         focused_lat, focused_lon, zoom_level = 31.7917, -7.0926, 5
         
+        # 🟢 ضبط آلي: إذا كانت نتيجة البحث فريدة، نقوم بالتركيز مع زوم متوسط (9) لمنع تضخم دائرة المركز الحمراء واختفاء المعالم
         if search_query and len(results) == 1:
             focused_lat = float(results[0][12]) if results[0][12] else 31.7917
-            focused_lon = float(results[0][13]) if results[0][13] else -7.0926
-            zoom_level = 11
+            focused_lon = float(results[0][13]) if ... else -7.0926
+            zoom_level = 9
             
         for r in results:
             lat_val = float(r[12]) if r[12] else 31.7917
             lon_val = float(r[13]) if r[13] else -7.0926
             map_list.append({"latitude": lat_val, "longitude": lon_val})
             
-        # 🟢 التحسين 3: الفهرس الجغرافي الطبقي المطور: رسم الأطلس بناءً على التحريك الآلي والتركيز التفاعلي للشاشات لعام 2026
+        # رسم الأطلس الطبقي الجغرافي متمدداً بكامل مساحة الشاشة بنقاء تام
         st.map(pd.DataFrame(map_list), latitude=focused_lat, longitude=focused_lon, zoom=zoom_level, use_container_width="stretch")
         st.write("---")
+
+        
+       
         # تفريغ البطاقات التراثية لصلحاء المملكة المغربية الشريفة مع تفعيل زر الطبع المسترجع بالكامل ورق A4 للباحثين
         for row in results:
             s_id, name, s_type, region, province, loc, hist, daily, annual, books, creative, links, lat, lon, era, tags, sc_source = row
