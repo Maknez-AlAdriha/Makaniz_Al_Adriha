@@ -49,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -197,12 +197,12 @@ def show_about_project_popup():
     """, unsafe_allow_html=True)
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.rerun()
-# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة سحابياً برقم الهاتف والبريد السيادي
+
+# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
     
-    # عرض خط الهاتف المباشر للدكتور رشيد الجانبي بوقار كامل
     st.markdown("""
     <div style='background-color: #F8FAFC; border-right: 5px solid #1E3A8A; padding: 15px; border-radius: 4px; margin-bottom: 20px;'>
         <p style='margin:0; font-weight:700; color:#1E3A8A; font-size:16px;'>📞 للاتصال المباشر مع الدكتور رشيد الجانبي:</p>
@@ -212,29 +212,25 @@ def show_contact_us_popup():
     
     with st.form("shamel_contact_secure_form", clear_on_submit=True):
         c_sender_name = st.text_input("اسم الباحث / المرسل الكريم:", placeholder="اكتب اسمك الكامل هنا...")
-        c_sender_email = st.text_input("البريد الإلكتروني للمرسل (لاستقبل الرد الآلي السريع):", placeholder="example@domain.com")
-        c_sender_subject = st.text_input("موضوع الرسالة صلب الموضوع:", placeholder="مثال: تصويب علمي، إغناء بيبليوغرافي...")
+        c_sender_email = st.text_input("البريد الإلكتروني للمرسل (لاستقبال الرد الآلي السريع):", placeholder="example@domain.com")
+        c_sender_subject = st.text_input("موضوع المراسلة صلب الموضوع:", placeholder="مثال: تصويب علمي، إغناء بيبليوغرافي...")
         c_sender_message = st.text_area("نص الرسالة أو الملاحظة الترابية بالكامل:")
         
-        # حقل المرسل إليه المقيد والمثبت تلقائياً ببريدك الرسمي لمنع التلاعب والأخطاء الإملائية
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
         if st.form_submit_button("🚀 إرسال الرسالة بنجاح وصياغة محرك الرد الفوري", use_container_width=True):
             if c_sender_email and c_sender_message:
                 now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
                 
-                # تخزين المراسلة داخل قاعدة البيانات التاريخية
                 cursor.execute("""
                     INSERT INTO visitor_feedback (visitor_name, visitor_email, shrine_related, feedback_text, submission_date) 
                     VALUES (?, ?, ?, ?, ?)""", 
                     (c_sender_name, c_sender_email, c_sender_subject, c_sender_message, now_str))
                 conn.commit()
                 
-                # قذف إشعار التذكير الفوري على الشاشة بنجاح الإرسال ليتوجه الدكتور لبريده المعتمد
                 st.success("🔔 تم إرسال رسالة تذكير بنجاح إلى الموقع! يرجى من الدكتور رشيد الجانبي تفقد بريده الإلكتروني للاطلاع على التفاصيل الكاملة للمراسلة.")
                 st.toast("📨 تم قذف رسالة التذكير بنجاح!", icon="🔔")
                 
-                # محرك الرد الآلي السريع: إعداد دفق الرد البريدى الموجه بضغطة زر واحدة لتلقف معطيات المرسل
                 subject_reply = urllib.parse.quote(f"رد تلقائي من المكنز الوطني: حول مراسلتكم ({c_sender_subject})")
                 body_reply = urllib.parse.quote(f"المرسل الكريم {c_sender_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{c_sender_email}?subject={subject_reply}&body={body_reply}"
@@ -248,15 +244,40 @@ def show_contact_us_popup():
                 """, unsafe_allow_html=True)
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للملفات والتقارير الإحصائية وسحق الـ tuple نهائياً
+# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
-    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v12")
+    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v13")
     
     if developer_key == "MAROC_2026":
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
+        
+        # 🟢 التطوير السائد والمثالي: صعود صندوق الرسائل هنا بالأعلى ليكون مرئياً فوراً أمام الدكتور رشيد
+        st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
+        feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
+        
+        if not feedbacks:
+            st.info("الصندوق فارغ حالياً؛ لا توجد رسائل أو تذكيرات واردة من الزوار في قاعدة البيانات.")
+        else:
+            for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
+                st.markdown(f"""
+                <div style='background-color:#FFFFFF; border-right:4px solid #1E3A8A; padding:12px; margin-bottom:10px; border-radius:8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);'>
+                    <span style='color:#6B7280; font-size:13px;'>📅 {f_date}</span><br>
+                    <b>👤 اسم المرسل:</b> {f_name}<br>
+                    <b>📌 الموضوع:</b> {f_shrine}<br>
+                    <b>📝 نص الرسالة الترابية:</b> {f_text}
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # محرك الرد السريع والأوتوماتيكي بضغطة واحدة من داخل الصندوق
+                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
+                mailto_link = f"mailto:{f_email}?subject={subject_reply}"
+                st.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px; box-shadow: 0 2px 5px rgba(22,163,74,0.2);">✉️ رد سريع ومباشر لبريد المرسل</div></a>', unsafe_allow_html=True)
+
+        st.markdown("---")
+        st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h4>", unsafe_allow_html=True)
         
         if "uploader_counter" not in st.session_state: 
             st.session_state.uploader_counter = 0
@@ -265,7 +286,7 @@ def show_admin_dashboard_popup():
             "اختر ملفات الأضرحة والمصطلحات الشاملة بصيغة (.csv) [يمكنك اختيار ملفات متعددة معاً]:", 
             type=["csv"], 
             accept_multiple_files=True,
-            key=f"popup_csv_uploader_multi_v12_{st.session_state.uploader_counter}"
+            key=f"popup_csv_uploader_multi_v13_{st.session_state.uploader_counter}"
         )
         
         if uploaded_csv_list:
@@ -318,7 +339,7 @@ def show_admin_dashboard_popup():
                                 
                                 prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                                 if prov_id_row:
-                                    # 🟢 سحق خطأ الـ tuple الجغرافي: استخراج القيمة الرقمية الصافية بالفهرس 0 قسرياً
+                                    # 🟢 سحق الـ tuple الجغرافي الأول: استخلاص المعرف الصافي بالفهرس 0
                                     prov_id = int(prov_id_row[0])
                                     era_val = str(row.get('historical_era', 'غير محدد')).strip()
                                     
@@ -330,7 +351,7 @@ def show_admin_dashboard_popup():
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                                     if existing_row:
-                                        # 🟢 سحق خطأ الـ tuple المزاراتي: استخراج المعرف الصافي بالفهرس 0 قسرياً لتأمين التحديث التراكمي
+                                        # 🟢 سحق الـ tuple المزاراتي الثاني: استخلاص المعرف الصافي بالفهرس 0 لتأمين التراكم
                                         shrine_id = int(existing_row[0])
                                         cursor.execute("""
                                             UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
@@ -344,10 +365,10 @@ def show_admin_dashboard_popup():
                                     
                                     cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
                                     cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
-                    
                     conn.commit()
                     st.session_state.uploader_counter += 1
                     
+                    # قذف تقرير التغذية الرقمية التفصيلي والناجع مائة بالمائة صلب المنظومة الوطنية
                     success_msg = f"📊 تم استيراد عدد {files_count} من الملفات بنجاح؛ تمت إضافة عدد {added_shrines} من الأضرحة الجديدة، وعدد {added_terms} من المصطلحات المعجمية صلب المنظومة."
                     st.success(success_msg)
                     st.toast(success_msg, icon="🎉")
@@ -363,7 +384,7 @@ active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_pa
 
 st.markdown(f"""
     <div class='shamel-top-gradient-fixed-ribbon'>
-        <!-- صف روابط المكنز النصية الصافية والنحيفة بسقف المتصفح لعام 2026 مائة بالمائة -->
+        <!-- صف روابط المكنز النصية الصافية ونحيفة بسقف المتصفح لعام 2026 مائة بالمائة -->
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
         <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
         <a class='shamel-nav-link' href='?page=about' target='_self' style='{active_about_style}'>حول المشروع</a>
@@ -373,10 +394,10 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 # ==========================================
-# معالج الاستدعاء الفوري والتحويل التفاعلي للنوافذ سحابياً (بصفر مشاكل Pylance وصفر أخطاء ترتيب)
+# معالج الاستدعاء الفوري والتحويل التفاعلي للنوافذ سحابياً (بسطام محمي وصفر أخطاء ترتيب)
 # ==========================================
 
-# بايثون يمرر الاستدعاء بنجاح تام لأن شرح وهندسة الدالات تم قراءته مسبقاً في البلوكات العليا
+# بايثون يمرر الاستدعاء بسلام مطلق لأن شرح وهندسة كافة الدالات تم قراءته مسبقاً في البلوكات العليا
 if current_page_val == "about":
     st.query_params.clear()
     show_about_project_popup()
