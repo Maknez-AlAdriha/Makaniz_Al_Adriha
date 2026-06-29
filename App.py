@@ -257,7 +257,7 @@ def show_contact_us_popup():
         c_sender_subject = st.text_input("موضوع المراسلة صلب الموضوع:", placeholder="مثال: تصويب علمي، إغناء بيبليوغرافي...")
         c_sender_message = st.text_area("نص الرسالة أو الملاحظة الترابية بالكامل:")
         
-        st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
+        st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="ba9at.almaarifa@gmail.com", disabled=True)
         
         # زر الإرسال الممتد أفقياً بنجاح وثبات
         submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وإرسال التذكير", use_container_width=True)
