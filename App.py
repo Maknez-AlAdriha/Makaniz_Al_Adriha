@@ -49,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -116,7 +116,6 @@ st.markdown(f"""
         }}
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
-        
         /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
@@ -124,9 +123,9 @@ st.markdown(f"""
             right: 0px !important;
             left: 0px !important;
             height: 55px !important;
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important;
-            border-bottom: 2px solid #D4AF37 !important;
-            z-index: 9999999 !important;
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
+            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
+            z-index: 9999999 !important; /* أعلى درجة نفاذ برمجية تمنع أي حجب سحابي نهائياً */
             display: flex !important;
             align-items: center !important;
             padding: 0 60px !important;
@@ -152,34 +151,13 @@ st.markdown(f"""
             transform: translateY(-1px) !important;
         }}
 
-        /* تنسيق وتفخيم محتوى النافذة المنبثقة التراثية لتطابق نموذج المكتبة الشاملة */
-        .popup-header-title {{
-            font-family: "Reem Kufi", serif !important;
-            color: #1E3A8A;
-            font-size: 24px;
-            font-weight: bold;
-            border-bottom: 2px solid #D4AF37;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }}
-        
-        .popup-content-text {{
-            font-family: 'Tajawal', sans-serif !important;
-            font-size: 17px;
-            line-height: 1.8;
-            color: #1F2937;
-            text-align: justify;
-            direction: rtl;
-        }}
-
         /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
         div[data-testid="stDialog"], 
         div[data-testid="stDialog"] > div, 
         div[data-testid="stDialog"] .stForm, 
         div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 520px !important;
-            overflow-y: auto !important;
+            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد المتصفح */
+            overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند تمدد وتراكم الخانات */
         }}
         
         /* ضبط وتجميل مظهر مقبض شريط التمرير الـ Scroll الداخلي للنافذة ليتناسق مع المكنز */
@@ -219,25 +197,6 @@ st.markdown(f"""
             text-align: right;
             background: transparent !important;
         }}
-        
-        /* تنسيق الألواح البانورامية المضيئة لأقسام المكنز الثلاثة صلب الواجهة المفتوحة */
-        .section-card-panel {{
-            background: rgba(255, 255, 255, 0.95) !important;
-            border-right: 6px solid #064E3B !important;
-            border-radius: 8px !important;
-            padding: 20px !important;
-            margin-bottom: 25px !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-        }}
-        .section-card-title {{
-            font-family: "Reem Kufi", serif !important;
-            color: #1E3A8A !important;
-            font-size: 22px !important;
-            font-weight: bold !important;
-            margin-bottom: 10px !important;
-            border-bottom: 1px solid #D4AF37 !important;
-            padding-bottom: 5px !important;
-        }}
     </style>
 """, unsafe_allow_html=True)
 # ==========================================
@@ -257,9 +216,8 @@ def show_about_project_popup():
     </div>
     """, unsafe_allow_html=True)
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
-        st.rerun()
-
-# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين
+        st.st.rerun()
+# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين بصفر تعارض عمودي
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -279,7 +237,7 @@ def show_contact_us_popup():
         
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
-        # زر الإرسال الممتد أفقياً بنجاح وثبات
+        # زر الإرسال الممتد أفقياً بنجاح وثبات كامل
         submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وإرسال التذكير", use_container_width=True)
         
         if submit_clicked:
@@ -297,71 +255,7 @@ def show_contact_us_popup():
                 st.rerun()
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# ==========================================
-# 🟢 محرك لوحة الانتقاء الحركي لأقسام المكنز الثلاثة الشامخة (بدون ملفات خارجية)
-# ==========================================
-def show_maknez_sections_dashboard():
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center; color:#FFFFFF; font-family:\"Reem Kufi\", serif; text-shadow:2px 2px 4px rgba(0,0,0,0.8); font-size:32px;'>🏛️ الأروقة والأقسام الميدانية الموثقة للمكنز الوطني</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#FFFFFF; font-family:\"Tajawal\", sans-serif; text-shadow:1px 1px 3px rgba(0,0,0,0.7); font-size:18px;'>تصفح وجرد وتحميل مفردات المباحث التاريخية والأنثروبولوجية للأطروحة الجامعية لعام 2026</p>", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # 1. رواق صلحاء وأولياء الإسلام بالمغرب
-    st.markdown("<div class='section-card-panel'>", unsafe_allow_html=True)
-    st.markdown("<div class='section-card-title'>🕌 رواق صلحاء وأولياء الإسلام بالمملكة المغربية الشريفة</div>", unsafe_allow_html=True)
-    st.markdown("<p>يحتوي هذا الرواق على الجرد والتحقيق الميداني الشامل لكافة الأضرحة والمنشآت الروحية التابعة لصلحاء المسلمين عبر جهات وأقاليم المملكة التاريخية.</p>", unsafe_allow_html=True)
-    
-    shrines_muslim = cursor.execute("""
-        SELECT s.name, g.province, s.historical_era, s.scientific_source 
-        FROM shrines s JOIN geography g ON s.province_id = g.id 
-        WHERE s.type = 'أضرحة المسلمين' ORDER BY s.id DESC""").fetchall()
-        
-    if not shrines_muslim:
-        st.info("لم يتم ضخ معطيات المسلمين حالياً؛ استخدم بوابة الإدارة لرفع ملفات الـ CSV.")
-    else:
-        df_m = pd.DataFrame(shrines_muslim, columns=["اسم المعلم الروحي الشريف", "الإقليم / العمالة التاريخية", "العصر التاريخي", "المصدر العلمي المعتمد"])
-        st.dataframe(df_m, use_container_width=True, hide_index=True)
-        csv_m = df_m.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 قذف وتحميل تقرير رواق المسلمين بالكامل (CSV)", data=csv_m, file_name="رواق_أضرحة_المسلمين_المغرب.csv", mime="text/csv", use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    # 2. رواق مزارات اليهود المغاربة
-    st.markdown("<div class='section-card-panel'>", unsafe_allow_html=True)
-    st.markdown("<div class='section-card-title'>📜 رواق مزارات وتراث اليهود المغاربة المشترك</div>", unsafe_allow_html=True)
-    st.markdown("<p>قسم منقح ومنعزل يضم التوثيق والبيبليوغرافيا التاريخية الخاصة بمزارات اليهود المغاربة، تجسيداً لقيم التعددية الثقافية والوفاء العلمي الميداني صلب مادة الأطروحة.</p>", unsafe_allow_html=True)
-    
-    shrines_jew = cursor.execute("""
-        SELECT s.name, g.province, s.historical_era, s.scientific_source 
-        FROM shrines s JOIN geography g ON s.province_id = g.id 
-        WHERE s.type = 'مزارات اليهود' ORDER BY s.id DESC""").fetchall()
-        
-    if not shrines_jew:
-        st.info("لم يتم ضخ معطيات مزارات اليهود حالياً؛ استخدم بوابة الإدارة لرفع ملفات الـ CSV المخصصة.")
-    else:
-        df_j = pd.DataFrame(shrines_jew, columns=["اسم المعلم / الضريح", "الإقليم الجغرافي", "العصر والعهد التاريخي", "المصدر والتحقيق الميداني"])
-        st.dataframe(df_j, use_container_width=True, hide_index=True)
-        csv_j = df_j.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 قذف وتحميل تقرير رواق مزارات اليهود (CSV)", data=csv_j, file_name="رواق_مزارات_اليهود_المغاربة.csv", mime="text/csv", use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # 3. المكنز اللغوي ومصطلحات الصوفية والأنثروبولوجيا
-    st.markdown("<div class='section-card-panel'>", unsafe_allow_html=True)
-    st.markdown("<div class='section-card-title'>📖 القاموس الاصطلاحي ومكنز المفاهيم الصوفية والأنثروبولوجية</div>", unsafe_allow_html=True)
-    st.markdown("<p>معجم هجائي قاموسي شامل لتعريف المصطلحات والمفاهيم الكبرى الواردة في الأطروحة لتسهيل الاستطلاع والفهم على الباحثين وطلاب العلم.</p>", unsafe_allow_html=True)
-    
-    terms_data = cursor.execute("SELECT term, category, definition FROM thesaurus_terms ORDER BY term ASC").fetchall()
-    if not terms_data:
-        st.info("القاموس الاصطلاحي فارغ حالياً؛ قُم بضخ المفاهيم المتبقية عبر رفع ملف CSV يحمل وسم المعجم.")
-    else:
-        df_t = pd.DataFrame(terms_data, columns=["المصطلح / المفهوم المحقق", "الصنف / التصنيف العلمي", "التعريف والمضمون التوثيقي المعتمد"])
-        st.dataframe(df_t, use_container_width=True, hide_index=True)
-        csv_t = df_t.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 قذف وتحميل معجم المصطلحات بالكامل (CSV)", data=csv_t, file_name="معجم_المصطلحات_الصوفية_والأنثروبولوجية.csv", mime="text/csv", use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    if st.button("⬅️ العودة للواجهة الرئيسية للمكنز الشريف", use_container_width=True, key="back_to_home_from_sec_dashboard"):
-        st.query_params.clear()
-        st.rerun()
-# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً
+# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
@@ -371,7 +265,7 @@ def show_admin_dashboard_popup():
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
         
-        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً أمام الدكتور رشيد دون تمرير
+        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً دون تمرير
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
         
@@ -388,7 +282,7 @@ def show_admin_dashboard_popup():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # فتح الـ Gmail وحقن البيانات تلقائياً بأمر الملاحة الصافي الصرف المانع للصفحة البيضاء
+                # استخدام target='_self' لمنع فتح أي صفحة بيضاء "بلا عنوان" نهائياً صلب المتصفح عند الرد المباشر المستقر
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
                 body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
@@ -397,3 +291,125 @@ def show_admin_dashboard_popup():
 
         st.markdown("---")
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h4>", unsafe_allow_html=True)
+        
+        if "uploader_counter" not in st.session_state: 
+            st.session_state.uploader_counter = 0
+            
+        uploaded_csv_list = st.file_uploader(
+            "اختر ملفات الأضرحة والمصطلحات الشاملة بصيغة (.csv) [يمكنك اختيار ملفات متعددة معاً]:", 
+            type=["csv"], 
+            accept_multiple_files=True,
+            key=f"popup_csv_uploader_multi_v14_{st.session_state.uploader_counter}"
+        )
+        
+        if uploaded_csv_list:
+            if st.button("🚀 البدء في معالجة وضخ كافة الملفات المحددة دفعة واحدة", use_container_width=True):
+                files_count = len(uploaded_csv_list)
+                added_shrines = 0
+                added_terms = 0
+                
+                try:
+                    for uploaded_csv in uploaded_csv_list:
+                        df = pd.read_csv(uploaded_csv, encoding='utf-8')
+                        rename_dict = {}
+                        for col in df.columns:
+                            clean_col = str(col).strip().replace('\n', '').replace(' ', '')
+                            if 'shrine_name' in clean_col: rename_dict[col] = 'shrine_name'
+                            elif 'shrine_type' in clean_col: rename_dict[col] = 'shrine_type'
+                            elif 'province' in clean_col: rename_dict[col] = 'province'
+                            elif 'exact_location' in clean_col: rename_dict[col] = 'exact_location'
+                            elif 'history_details' in clean_col: rename_dict[col] = 'history_details'
+                            elif 'daily_activ' in clean_col: rename_dict[col] = 'daily_activities'
+                            elif 'annual_activities' in clean_col: rename_dict[col] = 'annual_activities'
+                            elif 'researchers_books' in clean_col: rename_dict[col] = 'researchers_books'
+                            elif 'creative_works' in clean_col: rename_dict[col] = 'creative_works'
+                            elif 'web_links' in clean_col: rename_dict[col] = 'web_links'
+                            elif 'belief_type' in clean_col: rename_dict[col] = 'belief_type'
+                            elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
+                            elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
+                        df = df.rename(columns=rename_dict)
+                        for index, row in df.iterrows():
+                            s_name = str(row.get('shrine_name', '')).strip()
+                            if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
+                            tags_val = str(row.get('tags', '')).strip()
+                            s_type = str(row.get('shrine_type', 'أضرحة المسلمين')).strip()
+                            hist_val = str(row.get('history_details', 'غير محدد')).strip()
+                            sc_src = str(row.get('scientific_source', 'رواية شفوية ميدانية مأثورة')).strip()
+                            b_type_val = str(row.get('belief_type', 'وظائف اجتماعية وقبلية')).strip()
+                            b_details_val = str(row.get('belief_details', 'موثق بالتحقيق الميداني للأطروحة')).strip()
+                            
+                            if "#معجم" in tags_val or "#مصطلحات" in tags_val:
+                                existing_term_row = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
+                                if existing_term_row: 
+                                    cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                                else: 
+                                    cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                                    added_terms += 1
+                            else:
+                                prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
+                                cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
+                                conn.commit()
+                                
+                                prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
+                                if prov_id_row:
+                                    prov_id = int(prov_id_row[0])
+                                    era_val = str(row.get('historical_era', 'غير محدد')).strip()
+                                    
+                                    auto_lat = 31.7917
+                                    auto_lon = -7.0926
+                                    if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
+                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
+                                    
+                                    existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
+                                    if existing_row:
+                                        shrine_id = int(existing_row[0])
+                                        cursor.execute("""
+                                            UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
+                                            (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
+                                    else:
+                                        cursor.execute("""
+                                            INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                                        (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
+                                        shrine_id = cursor.lastrowid
+                                        added_shrines += 1
+                                    
+                                    cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
+                                    cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
+                    conn.commit()
+                    st.session_state.uploader_counter += 1
+                    success_msg = f"📊 تم استيراد عدد {files_count} من الملفات بنجاح؛ تمت إضافة عدد {added_shrines} من الأضرحة الجديدة، وعدد {added_terms} من المصطلحات المعجمية صلب المنظومة."
+                    st.success(success_msg)
+                    st.toast(success_msg, icon="🎉")
+                except Exception as e: 
+                    st.error(f"❌ خطأ أثناء الاستيراد الميداني التراكمي: {e}")
+    elif developer_key != "":
+        st.error("⚠️ الرمز السري غير صحيح، يرجى مراجعة حصانة المنظومة السيادية.")
+# نحت صف روابط المكنز النصية صلب الشريط المتدرج بالقمة (ترتيب تتابعي محمي بنسبة 100% عازل للحظر سحابياً)
+current_page_val = st.query_params.get("page", "home")
+active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
+active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_page_val == "admin" else ""
+
+st.markdown(f"""
+    <div class='shamel-top-gradient-fixed-ribbon'>
+        <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
+        <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self' style='{active_about_style}'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
+        <a class='shamel-nav-link' href='?page=admin' target='_self' style='{active_admin_style}'>🔐 بوابة الإدارة</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #FFFFFF !important;'>🔍 البحث في المكنز</a>
+    </div>
+""", unsafe_allow_html=True)
+
+if current_page_val == "about":
+    st.query_params.clear()
+    show_about_project_popup()
+elif current_page_val == "admin":
+    st.query_params.clear()
+    show_admin_dashboard_popup()
+elif current_page_val == "contact":
+    st.query_params.clear()
+    show_contact_us_popup()
+
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة المكتملة
+st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
