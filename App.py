@@ -49,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -83,7 +83,7 @@ st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً مائة بالمائة */
+        /* تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً مائة بالمائة */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -117,7 +117,7 @@ st.markdown(f"""
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتدرج اللوني اللامع لعمارة وصورة المكنز */
+        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
             top: 0px !important; /* الالتصاق التام والصريح بسقف الشاشة فوق حافة الصورة العلوية */
@@ -173,25 +173,26 @@ st.markdown(f"""
             direction: rtl;
         }}
 
-        /* 🟢 التصحيح الفولاذي الشامل: إجبار حاوية النافذة الكبرى وعناصرها الداخلية على قبول التمرير قسرياً بحرف D كبير */
-        div[data-testid="stDialog"], div[data-testid="stDialog"] > div {{
-            max-height: 520px !important; /* تقييد الارتفاع الكلي بالبكسل الثابت ليتناسب تماماً مع أبعاد متصفح كروم */
-            overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند زيادة الحقول */
-        }}
-        
-        /* استهداف الاستمارة الداخلية والكتل العمودية بداخل النافذة لفرض التمرير الشامل */
-        div[data-testid="stDialog"] .stForm, div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            overflow-y: visible !important;
-            height: auto !important;
+        /* 🟢 الحل البرمجي الحاسم والموحد: تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
+        div[data-testid="stDialog"], 
+        div[data-testid="stDialog"] > div, 
+        div[data-testid="stDialog"] .stForm, 
+        div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
+            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد المتصفح */
+            overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند تمدد وتراكم الخانات */
         }}
         
         /* ضبط وتجميل مظهر مقبض شريط التمرير الـ Scroll الداخلي للنافذة ليتناسق مع المكنز */
         div[data-testid="stDialog"]::-webkit-scrollbar {{
             width: 8px !important;
+            display: block !important;
         }}
         div[data-testid="stDialog"]::-webkit-scrollbar-thumb {{
             background-color: #1E3A8A !important;
             border-radius: 4px !important;
+        }}
+        div[data-testid="stDialog"]::-webkit-scrollbar-track {{
+            background: rgba(0, 0, 0, 0.05) !important;
         }}
 
         /* تلوين وتغيير وسم التذييل التلقائي ليحمل توقيع الدكتور رشيد الجانبي بوقار علمي ملوكي */
@@ -230,7 +231,7 @@ def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class='popup-content-text'>
-        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
+        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية, تاريخية, بيبليوغرافية, وأنثروبولوجية متعلقة بالمنشآت الروحية, الأضرحة, والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
         <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
         <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
         <p style='text-align: center; font-weight: bold; color: #1E3A8A;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
@@ -240,7 +241,7 @@ def show_about_project_popup():
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.rerun()
 
-# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع ببريدك المعتمد
+# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع ببريدك المعتمد (محصنة مائة بالمائة)
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -391,7 +392,7 @@ def show_admin_dashboard_popup():
                                     auto_lat = 31.7917
                                     auto_lon = -7.0926
                                     if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                                     elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
