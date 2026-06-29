@@ -18,7 +18,7 @@ if target_banner:
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
-# 🎨 3. حقن كود الـ CSS الجراحي لسحق الحواف البيضاء وجعل الصورة تمتد بعرض الشاشة الكامل
+# 🎨 3. حقن كود الـ CSS الجراحي المصحح بالكامل بمضاعفة الأقواس لمنع الـ SyntaxError
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
@@ -63,7 +63,7 @@ st.markdown(f"""
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
         }}
 
-        /* قسر تمدد حاوية الصورة لتشغل العرض الكامل للشاشة 100% بدون أي فواصل */
+        /* قسر تمدد حاوية الصورة لتشغل العرض الكامل للشاشة 100% بدون أي فواصل جراحية */
         .full-width-banner {{
             width: 100vw !important;
             max-width: 100vw !important;
@@ -93,31 +93,31 @@ menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.1,
 
 with menu_col_1:
     st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="btn_home_final_v1"):
+    if st.button("الرئيسية", key="btn_home_final_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_2:
     st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="btn_sections_final_v1"):
+    if st.button("أقسام المكنز", key="btn_sections_final_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_3:
-    st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_btn=True)
-    if st.button("حول المكنز", key="btn_about_final_v1"):
+    st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
+    if st.button("حول المكنز", key="btn_about_final_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_4:
     st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="btn_contact_final_v1"):
+    if st.button("اتصل بنا", key="btn_contact_final_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_5:
     st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-    if st.button("🔍 شعار البحث في المكنز", key="btn_search_final_v1"):
+    if st.button("🔍 شعار البحث في المكنز", key="btn_search_final_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
