@@ -115,7 +115,6 @@ st.markdown(f"""
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
-                /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
             top: 0px !important;
@@ -127,7 +126,7 @@ st.markdown(f"""
             z-index: 9999999 !important;
             display: flex !important;
             align-items: center !important;
-            padding: 0 30px !important;
+            padding: 0 15px !important;
             direction: rtl !important;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
         }}
@@ -136,9 +135,9 @@ st.markdown(f"""
             color: #FFFFFF !important;
             font-family: 'Tajawal', sans-serif !important;
             font-weight: 700 !important;
-            font-size: 15px !important;
+            font-size: 14px !important;
             text-decoration: none !important;
-            padding: 0 15px !important;
+            padding: 0 12px !important;
             transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
             cursor: pointer !important;
             display: inline-block !important;
@@ -191,20 +190,28 @@ st.markdown(f"""
             direction: rtl !important;
         }}
 
-        /* 🟢 حقن وتفخيم صندوق البحث: جعل الخط المكتوب والنص الافتراضي بالوسط مائة بالمائة وبلون أزرق غليظ ملكي */
+        /* حقن وتفخيم صندوق البحث: جعل الخط المكتوب والنص الافتراضي بالوسط مائة بالمائة وبلون أزرق غليظ ملكي مصون */
         div[data-testid="stTextInput"] input {{
-            text-align: center !important; /* قسر التمركز في الوسط تماماً */
-            font-size: 18px !important; /* تكبير مقاس الخط لسهولة تصفح طالب العلم */
-            font-weight: 900 !important; /* جعل الخط غليظاً جداً وبصلابة تامة */
-            color: #1E3A8A !important; /* تلوين النص المكتوب بالأزرق الملكي الجذاب */
+            text-align: center !important;
+            font-size: 18px !important;
+            font-weight: 900 !important;
+            color: #1E3A8A !important;
         }}
-        
-        /* تلوين النص المؤقت (Placeholder) بالأزرق الغليظ ليتناسق مع حقل البحث */
         div[data-testid="stTextInput"] input::placeholder {{
             text-align: center !important;
             color: #1E3A8A !important;
             font-weight: bold !important;
             opacity: 0.7 !important;
+        }}
+
+        /* تخصيص مظهر مؤشرات العدادات الإحصائية (Metrics) لتظهر كبطاقات ذهبية فخمة */
+        div[data-testid="stMetric"] {{
+            background: #FFFFFF !important;
+            border-top: 4px solid #D4AF37 !important;
+            border-radius: 8px !important;
+            padding: 15px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+            text-align: center !important;
         }}
 
         .card-shrine-popup {{
@@ -215,7 +222,7 @@ st.markdown(f"""
             box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
             margin-top: 12px !important;
             direction: rtl !important;
-            text-align: right !important;
+            text-align: right;
         }}
         .card-shrine-field {{
             font-size: 16px !important;
@@ -247,19 +254,6 @@ st.markdown(f"""
             text-align: right !important;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.6) !important;
         }}
-
-
-
-
-
-
-
-
-
-
-
-
-
     </style>
 """, unsafe_allow_html=True)
 # ==========================================
@@ -312,7 +306,7 @@ def popup_individual_shrine_card(shrine_name):
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
     if row:
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  Detailed 🕌 {row[0]}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {row[0]}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {row[3]}</div>
@@ -349,7 +343,7 @@ def show_maknez_sections_dashboard():
     with tab1:
         st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #1E3A8A; padding-right:10px;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>", unsafe_allow_html=True)
         shrines_m = cursor.execute("SELECT name, id FROM shrines WHERE type = 'أضرحة المسلمين' ORDER BY id DESC").fetchall()
-        if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً صلب قاعدة البيانات.")
+        if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً.")
         else:
             cols = st.columns(3)
             for idx, (name, s_id) in enumerate(shrines_m):
@@ -359,7 +353,7 @@ def show_maknez_sections_dashboard():
     with tab2:
         st.markdown("<h4 style='color:#064E3B; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #064E3B; padding-right:10px;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>", unsafe_allow_html=True)
         shrines_j = cursor.execute("SELECT name, id FROM shrines WHERE type = 'مزارات اليهود' ORDER BY id DESC").fetchall()
-        if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً صلب قاعدة البيانات.")
+        if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً.")
         else:
             cols = st.columns(3)
             for idx, (name, s_id) in enumerate(shrines_j):
@@ -369,7 +363,7 @@ def show_maknez_sections_dashboard():
     with tab3:
         st.markdown("<h4 style='color:#0F5132; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #0F5132; padding-right:10px;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>", unsafe_allow_html=True)
         terms = cursor.execute("SELECT term, id FROM thesaurus_terms ORDER BY term ASC").fetchall()
-        if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً صلب قاعدة البيانات.")
+        if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً.")
         else:
             cols = st.columns(4)
             for idx, (term, t_id) in enumerate(terms):
@@ -424,10 +418,7 @@ def show_shamel_search_engine_page():
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
                 if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_{s_id}_{idx}", use_container_width=True): popup_individual_shrine_card(s_name)
-# ==========================================
-# 🟢 البلوك 11 من 12 المطور والمطهر: محرك أطلس المكنز بعد سحق خطأ الاسم كلياً وتثبيت الزووم
-# ==========================================
-
+# الأطلس الجغرافي الفائق لعام 2026 بعد التطهير الكامل وصيانة المكتسبات الشامخة
 def show_maknez_atlas_interactive_map_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #1E3A8A;'>
@@ -436,7 +427,6 @@ def show_maknez_atlas_interactive_map_page():
         </div>
     """, unsafe_allow_html=True)
     
-    # سحب الإحداثيات الجغرافية والمعطيات الترابية حياً بالكامل مائة بالمائة من مكنز الأطروحة التاريخية
     sh_map_data = cursor.execute("""
         SELECT shrines.name, shrines.latitude, shrines.longitude, shrines.type, geography.province, geography.region, shrines.exact_location 
         FROM shrines 
@@ -445,12 +435,10 @@ def show_maknez_atlas_interactive_map_page():
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
-        # صندوق البحث الملوكي الموسط والمجمل بالأزرق الغليظ صلب الواجهة
-        search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v24")
+        search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v25")
         
         search_query_fixed = search_map_input.strip().lower()
         
-        # 🟢 تصحيح جراحي شامل: تصفية المعطيات بنقاء وتطهير المتغيرات لمنع خطأ NameError نهائياً
         filtered_data = []
         if search_query_fixed:
             for item in sh_map_data:
@@ -466,7 +454,6 @@ def show_maknez_atlas_interactive_map_page():
             
         df_map = pd.DataFrame(map_list)
         
-        # حساب التمركز التلقائي بدقة بالاعتماد على الفهارس الصافية وسحق عرض خريطة العالم
         if search_query_fixed and not df_map.empty:
             center_lat = float(df_map.iloc[0]["latitude"])
             center_lon = float(df_map.iloc[0]["longitude"])
@@ -476,12 +463,10 @@ def show_maknez_atlas_interactive_map_page():
             
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
-        # استخلاص المعطيات الترابية وعرض البطاقة الأنيقة فوراً من اليمين إلى اليسار RTL
         if search_query_fixed and len(filtered_data) > 0:
-            target_sh = filtered_data[0] # التقاط السطر الفردي الصافي المستهدف بنجاح
-            
+            target_sh = filtered_data[0]
             st.markdown(f"""
-                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15 rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
+                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
                     <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
                     <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh[0]} ({target_sh[3]})</div>
                     <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
@@ -491,14 +476,45 @@ def show_maknez_atlas_interactive_map_page():
                 </div>
             """, unsafe_allow_html=True)
             
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v24"):
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v25"):
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
-# ==========================================
-# 🏛️ البلوك 12 من 12 المطور: بوابة الإدارة ومعالج الانتقال الحركي لـ URL الشامل وصيانة الأزرار
-# ==========================================
+# 🟢 المكون السيادي المبتكر الفاخر: لوحة العدادات والمؤشرات الإحصائية الرقمية التراكمية وسداسية شريط روابط الشاملة بالسقف
+def show_maknez_statistics_page():
+    st.markdown("""
+        <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37;'>
+            <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>📊 لوحة المؤشرات الرقمية والعدادات الإحصائية التراكمية</h2>
+            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>التقرير البياني الحي والموثق الثمرة العلمية للتحقيق الميداني للأطروحة</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # حساب الأرقام حياً من الجداول لقفل اللحام الإحصائي
+    total_shrines = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()[0]
+    muslim_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()[0]
+    jew_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()[0]
+    total_terms = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()[0]
+    
+    # توزيع العدادات الأربعة الشامخة في صف أفقي أنيق ببطاقات ذهبية جذابة
+    m_col1, f_col2, f_col3, f_col4 = st.columns(4)
+    with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
+    with f_col2: st.metric(label="🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
+    with f_col3: st.metric(label="📜 رواق المزارات اليهودية التاريخية", value=jew_shrines)
+    with f_col4: st.metric(label="📖 المصطلحات والمفاهيم المعجمية", value=total_terms)
+    
+    st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 25px 0;'>", unsafe_allow_html=True)
+    
+    # توليد رسم بياني حركي وتفاعلي يوضح للجنة الفرز كفاءة التوزيع الجغرافي للأطروحة لعام 2026
+    st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-bottom:15px;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للمملكة:</h4>", unsafe_allow_html=True)
+    geo_df = pd.read_sql_query("""
+        SELECT geography.province as 'الإقليم الترابي', COUNT(shrines.id) as 'عدد المعالم الموثقة' 
+        FROM shrines JOIN geography ON shrines.province_id = geography.id 
+        GROUP BY geography.province""", conn)
+        
+    if geo_df.empty: st.info("الرسوم البيانية بانتظار ضخ ملفات الـ CSV من بوابة الإدارة لتفعيل المؤشرات.")
+    else: st.bar_chart(geo_df.set_index('الإقليم الترابي'), use_container_width=True)
 
+# بوابة إدارة وتغذية المكنز الوطني ودعم الاستيراد التراكمي الشامل للمشرف
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
@@ -533,13 +549,14 @@ def show_admin_dashboard_popup():
             st.session_state.uploader_counter += 1
             st.success("📊 تم الضخ التراكمي بنجاح صلب قاعدة البيانات.")
 
-# نحت صف روابط المكنز الستة صلب الشريط المتدرج بالسقف لعام 2026 مائة بالمائة
+# نحت صف روابط المكنز النصية صلب الشريط المتدرج بالسقف لعام 2026 مائة بالمائة (إدماج تبويب الإحصائيات)
 current_page_val = st.query_params.get("page", "home")
 active_sections_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "sections" else ""
 active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
 active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_page_val == "admin" else ""
 active_search_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "search" else ""
 active_atlas_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "atlas" else ""
+active_stats_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "stats" else ""
 
 st.markdown(f"""
     <div class='shamel-top-gradient-fixed-ribbon'>
@@ -549,7 +566,8 @@ st.markdown(f"""
         <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
         <a class='shamel-nav-link' href='?page=admin' target='_self' style='{active_admin_style}'>🔐 بوابة الإدارة</a>
         <a class='shamel-nav-link' href='?page=search' target='_self' style='{active_search_style}'>🔍 البحث في المكنز</a>
-        <a class='shamel-nav-link' href='?page=atlas' target='_self' style='margin-right: auto; {active_atlas_style}'>🗺️ أطلس المكنز</a>
+        <a class='shamel-nav-link' href='?page=atlas' target='_self' style='{active_atlas_style}'>🗺️ أطلس المكنز</a>
+        <a class='shamel-nav-link' href='?page=stats' target='_self' style='margin-right: auto; {active_stats_style}'>📊 إحصائيات المكنز</a>
     </div>
 """, unsafe_allow_html=True)
 
@@ -560,6 +578,5 @@ elif current_page_val == "contact": show_contact_us_popup()
 if current_page_val == "sections": show_maknez_sections_dashboard()
 elif current_page_val == "search": show_shamel_search_engine_page()
 elif current_page_val == "atlas": show_maknez_atlas_interactive_map_page()
+elif current_page_val == "stats": show_maknez_statistics_page()
 else: st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
-
-
