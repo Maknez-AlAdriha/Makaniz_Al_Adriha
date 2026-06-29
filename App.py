@@ -22,7 +22,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: سحق الهوامش وبناء الشريط الأسود المطور لأزرار بايثون الأصلية (CSS الشامل)
+# 🎨 الجزء 3: قالب التنسيق السيادي وسحق أشرطة وصناديق الأزرار كلياً (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -40,7 +40,7 @@ st.markdown(f"""
             height: 100vh !important;
         }}
         
-        /* تصفير الهوامش والبطانات الخارجية للمنصة لالتصاق الشريط الأسود بسقف المتصفح تماماً وبدون حواف بيضاء */
+        /* تصفير الهوامش والبطانات الخارجية للمنصة لسحق المساحات الميتة والجوانب البيضاء كلياً */
         div[data-testid="stAppViewBlockContainer"] {{
             max-width: 100% !important;
             width: 100% !important;
@@ -55,46 +55,50 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* إلغاء الفراغات العمودية التلقائية وحجب رأس الصفحة الافتراضي لمنع الحجب البصري */
-        div[data-testid="stHeader"] {{
+        /* نسف حوايج وبطانات أدوات الكتل التلقائية لبايثون لعدم تداخل المربعات */
+        div[data-testid="stHeader"], div[data-testid="stHorizontalBlock"] {{
             background: transparent !important;
-            height: 0px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: none !important; /* إخفاء الكتلة القديمة التي تسببت في صناديق بيضاء */
         }}
+        
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. صبغ الحاوية الأفقية العلوية لبايثون بالأسود الملكي الفاخر قسرياً وثباتها في السقف */
-        div[data-testid="stHorizontalBlock"] {{
-            background-color: #000000 !important; /* صبغ الشريط بالأسود المصمت والكامل قسرياً */
-            border-bottom: 2px solid #1E3A8A !important; /* خط أزرق ملكي رقيق يعزل عمارة الصورة الشامخة */
-            width: 100vw !important;
-            padding: 10px 60px !important;
-            margin: 0px !important;
+        /* 2. 🟢 بناء شريط الملاحة الأفقي الملتصق بالقمة بالتدرج اللوني الأصيل لعمارة وصورة المكنز */
+        .shamel-top-gradient-ribbon {{
+            position: fixed !important;
+            top: 0px !important;
+            right: 0px !important;
+            left: 0px !important;
+            height: 60px !important; /* ارتفاع نحيف وراقي جداً يوفر مساحة القراءة بالأسفل */
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
+            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
             z-index: 99999 !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+            display: flex !important;
+            align-items: center !important;
+            padding: 0 60px !important;
+            direction: rtl !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
         }}
         
-        /* 3. تدمير الصناديق والمربعات البيضاء لأزرار بايثون تماماً وتحويلها لنصوص حرة ونحيفة كالشاملة */
-        .shamel-nav-native-btn button {{
-            background: transparent !important; /* سحق الخلفية البيضاء كلياً */
-            color: #FFFFFF !important; /* خط أبيض ناصع ومضيء مائة بالمائة فوق السواد */
+        /* 3. 🟢 الهندسة الجراحية: الروابط النصية الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
+        .shamel-nav-link {{
+            color: #FFFFFF !important; /* لون الخط الأبيض الناصع والمضيء للوضوح المطلق */
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 700 !important; /* تضخيم رصين واحترافي للحروف */
+            font-weight: 700 !important; /* خط نحيف ونقي تماماً ورصين */
             font-size: 16px !important;
-            border: none !important; /* نسف الحدود والخطوط المحيطة بالزر */
-            border-radius: 0px !important;
-            padding: 4px 10px !important;
-            box-shadow: none !important;
-            transition: color 0.2s ease-in-out !important;
+            text-decoration: none !important; /* حذف أي خطوط تحت النص */
+            padding: 0 25px !important; /* مسافات أفقية مريحة ومتناسقة بين العناصر كالشاملة */
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
             cursor: pointer !important;
-            margin: 0px auto !important;
-            display: block !important;
+            display: inline-block !important;
         }}
         
-        /* تأثير الوميض الزمردي التراثي للمملكة عند تمرير مؤشر الفأرة فوق نصوص بايثون المحدثة */
-        .shamel-nav-native-btn button:hover {{
-            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط النشط */
-            background: transparent !important;
-            box-shadow: none !important;
+        /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
+        .shamel-nav-link:hover {{
+            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط */
+            transform: translateY(-1px) !important;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -107,39 +111,18 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: إطلاق ورص خماسية أزرار بايثون الأصلية والمنقحة (سحق خطأ st.st.rerun)
+# 📦 الجزء 4: حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط التدرج اللوني العالي
 # ==========================================
-menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.8, 4.5])
+st.markdown("""
+    <div class='shamel-top-gradient-ribbon'>
+        <!-- الكلمات تتراص بنحافة مطلقة من اليمين إلى اليسار صلب خلفية التدرج اللوني الشامخة لعام 2026 -->
+        <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
+        <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
+    </div>
+""", unsafe_allow_html=True)
 
-with menu_col_1:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="btn_shamel_native_home"):
-        st.rerun()  # 🟢 تم إصلاح اللحام هنا وحذف التكرار لتنطلق الحروف فوراً
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_2:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="btn_shamel_native_sections"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_3:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("حول المشروع", key="btn_shamel_native_about"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_4:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="btn_shamel_native_contact"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_5:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("🔍 البحث في المكنز", key="btn_shamel_native_search"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# حقن مسافة الأمان تحت الشريط الأسود لتبدأ الصورة بالأسفل بنقاء ونظام
-st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
+st.markdown("<div style='margin-top: 65px;'></div>", unsafe_allow_html=True)
