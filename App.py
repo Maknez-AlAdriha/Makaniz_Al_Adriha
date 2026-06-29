@@ -14,7 +14,7 @@ st.set_page_config(page_title="المكنز الوطني للأضرحة والم
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
-# حقن كود الـ CSS لشريط الملاحة الخماسي المندمج فوق البانر تلقائياً وبخلفية زجاجية فخمة
+# حقن كود الـ CSS للشريط الشفاف الخماسي المندمج فوق البانر تلقائياً وبخلفية زجاجية فخمة ومصمتة
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
@@ -55,7 +55,7 @@ st.markdown("""
             transform: translateY(-1px);
         }
 
-        /* تضخيم وتوسيع شريط ومقبض التصفح أقصى يسار الشاشة ليصبح سهلاً في الإمساك */
+        /* تضخيم وتوسيع شريط ومقبض التصفح أقصى يسار الشاشة ليصبح سهلاً في الإمساك والملاحة */
         html::-webkit-scrollbar, body::-webkit-scrollbar { width: 32px !important; }
         html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
             background: linear-gradient(180deg, #1E3A8A, #10B981) !important;
@@ -71,7 +71,7 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-# إحكام تموضع القاموس الإحداثي الجغرافي لـ أولياء المغرب ليعمل صعوداً ونزولاً دون أي تجميد
+# إحكام تموضع القاموس الإحداثي الجغرافي لـ أولياء المغرب ليعمل صعوداً ونزولاً دون أي تجميد بؤري
 PROVINCE_COORDINATES = {
     'إقليم شفشاون': (35.1687, -5.2636), 'إقليم تطوان': (35.5785, -5.3684),
     'عمالة طنجة أصيلة': (35.7595, -5.8340), 'إقليم العرائش': (35.1841, -6.1554),
@@ -175,8 +175,10 @@ def init_ultimate_db():
     conn.commit()
 
 init_ultimate_db()
-if "sidebar_visible" not in st.session_state: st.session_state.sidebar_visible = True
-if "current_page" not in st.session_state: st.session_state.current_page = "search"
+# 🟢 تحصين استراتيجي حاسم: إجبار المنظومة على إغلاق الشريط الجانبي وتوجيه الصفحة تلقائياً للرئيسية فور الدخول
+if "current_page" not in st.session_state or st.session_state.current_page == "sidebar":
+    st.session_state.current_page = "search"
+    st.session_state.sidebar_visible = False  # إغلاق المقبض الأيمن قسرياً في البدء لتوسيع العرض مائة بالمائة
 
 target_banner = None
 for valid_name in ["banner.png", "Banner.png", "banner.PNG", "banner.jpg", "banner.jpeg"]:
@@ -185,23 +187,24 @@ for valid_name in ["banner.png", "Banner.png", "banner.PNG", "banner.jpg", "bann
         break
 
 if target_banner:
-    # القراءة الفورية الفولاذية للملف المحلي لكسر حظر السيرفر ومنع المربع الأزرق نهائياً
+    # التطهير الجراحي: تحويل ملف الصورة المحلي لكسر حظر المتصفح المحلي وسحق الخلفية الزرقاء الافتراضية
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
     
+    # بسط وتفجير الصورة على كامل مساحة شاشة الحاسوب 100% بدون حواف بيضاء ميتة
     st.markdown(f"""
     <div style='position: relative; width: 100%; text-align: center; margin: 0; padding: 0;'>
         <img src='data:image/png;base64,{encoded_string}' style='width: 100%; height: auto; display: block; margin: 0; padding: 0;'>
     </div>
     """, unsafe_allow_html=True)
     
-    # حقن حاوية الملاحة الخماسية العائمة في أعلى الشاشة كالمكتبة الشاملة تماماً
+    # حقن شريط الملاحة الخماسي العائم والشفاف مباشرة في أعلى قمة الصورة كالشاملة تماماً
     st.markdown("<div style='position: absolute; top: 25px; right: 50px; left: 50px; z-index: 99999;'>", unsafe_allow_html=True)
     menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.1, 1.3, 1.3, 1.2, 1.7, 3.5])
     
     with menu_col_1:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("الرئيسية", key="shamel_home_fixed_v3_base64"):
+        if st.button("الرئيسية", key="shamel_home_fixed_v4_base64"):
             st.session_state.sidebar_visible = False
             st.session_state.current_page = "search"
             st.rerun()
@@ -210,7 +213,7 @@ if target_banner:
     with menu_col_2:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
         btn_lbl = "إغلاق الأقسام" if st.session_state.sidebar_visible else "أقسام المكنز"
-        if st.button(btn_lbl, key="shamel_sections_fixed_v3_base64"):
+        if st.button(btn_lbl, key="shamel_sections_fixed_v4_base64"):
             st.session_state.sidebar_visible = not st.session_state.sidebar_visible
             st.session_state.current_page = "search"
             st.rerun()
@@ -218,7 +221,7 @@ if target_banner:
         
     with menu_col_3:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("حول المشروع", key="shamel_about_fixed_v3_base64"):
+        if st.button("حول المشروع", key="shamel_about_fixed_v4_base64"):
             st.session_state.sidebar_visible = False
             st.session_state.current_page = "about"
             st.rerun()
@@ -226,7 +229,7 @@ if target_banner:
         
     with menu_col_4:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("اتصل بنا", key="shamel_contact_fixed_v3_base64"):
+        if st.button("اتصل بنا", key="shamel_contact_fixed_v4_base64"):
             st.session_state.sidebar_visible = False
             st.session_state.current_page = "contact"
             st.rerun()
@@ -234,7 +237,7 @@ if target_banner:
         
     with menu_col_5:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("🔍 البحث في المكنز", key="shamel_search_fixed_v3_base64"):
+        if st.button("🔍 البحث في المكنز", key="shamel_search_fixed_v4_base64"):
             st.session_state.sidebar_visible = False
             st.session_state.current_page = "search"
             st.rerun()
@@ -247,19 +250,19 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-# فتح حاوية العرض الطبيعية لبقية شاشات وبطاقات صلحاء المملكة بالأسفل
+# تأمين وفتح الفسحة المريحة لبطاقات التصفح والأطلس بالأسفل
 st.markdown("<div style='padding: 2rem;'>", unsafe_allow_html=True)
 t_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-total_shrines = int(t_res_raw[0]) if t_res_raw else 0
+total_shrines = int(t_res_raw) if t_res_raw else 0
 
 m_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-muslim_count = int(m_res_raw[0]) if m_res_raw else 0
+muslim_count = int(m_res_raw) if m_res_raw else 0
 
 j_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-jewish_count = int(j_res_raw[0]) if j_res_raw else 0
+jewish_count = int(j_res_raw) if j_res_raw else 0
 
 term_res_raw = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
-total_terms = int(term_res_raw[0]) if term_res_raw else 0
+total_terms = int(term_res_raw) if term_res_raw else 0
 
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
@@ -273,7 +276,6 @@ if st.session_state.sidebar_visible:
         "اختر فصل المعطيات لتصفحه أو تغذيته:",
         ["🔍 محرك البحث الشامل والتحليلات", "✍️ التوثيق الميداني (إدخال يدوي)", "🔄 لوحة المراجعة والتصحيح والتعديل", "📖 مكنز المصطلحات والمفاهيم الصوفية"]
     )
-    st.session_state.current_page = "sidebar"
 else:
     if st.session_state.current_page == "about": menu = "🎓 حول المكنز الأكاديمي"
     elif st.session_state.current_page == "contact": menu = "📬 دفتر التواصل"
@@ -289,7 +291,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             df_chart["نوع الوظيفة الأنثروبولوجية"] = df_chart["نوع الوظيفة الأنثروبولوجية"].astype(str).str.strip()
             df_chart = df_chart.groupby("نوع الوظيفة الأنثروبولوجية", as_index=False).sum()
             st.bar_chart(df_chart, x="عدد المزارات", y="نوع الوظيفة الأنثروبولوجية", use_container_width=True)
-        else: st.caption("سيرتفع الرسم البياني فور ضخ جداول الكرامات الشفوية الميدانية.")
+        else: st.caption("سيرتفع الرسم البياني فور ضخ جداول الكرامات الشفوية الميدانية عبر محرك المكنز المطور.")
         
     with analysis_col2:
         st.markdown("<b style='color:#1E3A8A;'>🌿 المكنز التصنيفي الهرمي المتفرع (روابط المفاهيم الصوفية):</b>", unsafe_allow_html=True)
@@ -303,7 +305,7 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
     if "search_panel_visible" not in st.session_state:
         st.session_state.search_panel_visible = True
 
-    # مفتاح السهم التفاعلي المتقلب للتحكم الكامل بالمساحة وعزل الخانات عند القراءة
+    # مفتاح السهم التفاعلي المتقلب للتحكم الكامل بالمساحة وعزل الخانات بالكامل عند التصفح
     if st.session_state.search_panel_visible:
         arrow_btn_label = "🔼 اضغط هنا لطـي وإخفـاء محرك البحث وفلاتر الفرز لتوسيع مساحة القراءة"
     else:
@@ -327,10 +329,10 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             with search_col1:
                 search_query = st.text_input("🎯 الولي أو المفهوم صلب الموضوع (#):", placeholder="اكتب للبحث الفوري...", key="final_clean_ultimate_query_key_2026")
             with search_col2:
-                filter_type = st.selectbox("🕌 تصنيف المنشأة:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
+                filter_type = st.selectbox("🕌 تصنيف المعلم:", ["الكل", "أضرحة المسلمين", "مزارات اليهود"], key="final_clean_ultimate_type_key_2026")
             with search_col3:
                 raw_regions = cursor.execute("SELECT DISTINCT region FROM geography").fetchall()
-                regions_list = ["الكل"] + [row[0] for row in raw_regions if row and row[0]]
+                regions_list = ["الكل"] + [row for row in raw_regions if row and row]
                 selected_region = st.selectbox("📍 جهة المملكة المغربية:", regions_list, key="final_clean_ultimate_region_key_2026")
             with search_col4:
                 era_list = ["الكل", "العصر الإدريسي", "العصر المرابطي", "العصر الموحدي", "العصر المريني", "العصر السعدي", "العصر العلوي", "غير محدد"]
@@ -464,8 +466,9 @@ elif menu == "🔍 محرك البحث الشامل والتحليلات" and re
             st.write(books if books else "لا توجد مراجع مسجلة.")
             if creative: st.write(creative)
             if links: st.markdown(f"🔗 **روابط ومكان الوجود الرقمي للمخطوطات والوثائق:** {links}")
-elif menu == "🔍 محرك البحث الشامل والتحليلات":
-    st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية في هذا النطاق.")
+else:
+    if menu == "🔍 محرك البحث الشامل والتحليلات":
+        st.info("لا توجد مزارات مسجلة تطابق معايير البحث الحالية في هذا النطاق.")
 if menu == "✍️ التوثيق الميداني (إدخال يدوي)":
     st.header("✍️ التوثيق الميداني وإغناء المنظومة الرقمية")
     with st.form("add_shrine_ultimate_form"):
@@ -549,6 +552,9 @@ elif menu == "📖 مكنز المصطلحات والمفاهيم الصوفية
         oral_text = st.text_area("نص الشهادة الحية والحكاية الشفوية الميدانية بالكامل وبالمعنى:")
         if st.button("💾 أرشفة الرواية الشفوية في خزانة الذاكرة التراثية"):
             if informant and oral_text: st.success("✅ تم حفظ وأرشفة الرواية الشفوية بنجاح ومطابقتها زمنياً!")
+# ==========================================
+# 🔐 الجزء 14 والاخير: محرك الدمج الفولاذي التراكمي الشامل للـ CSV لصلحاء المملكة وصندوق الملاحظات وحذف التكرار
+# ==========================================
 if st.session_state.sidebar_visible:
     st.sidebar.markdown("---")
     st.sidebar.markdown("<h4 style='color: #1E3A8A;'>🔐 بوابـة المشـرف والباحث المعتمد</h4>", unsafe_allow_html=True)
@@ -591,7 +597,6 @@ if st.session_state.sidebar_visible:
                     elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
                     elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
                 df = df.rename(columns=rename_dict)
-                p_dict = {str(row[0]).strip(): row[0] for row in cursor.execute("SELECT province FROM geography").fetchall()}
                 
                 for index, row in df.iterrows():
                     s_name = str(row.get('shrine_name', '')).strip()
@@ -633,6 +638,6 @@ if st.session_state.sidebar_visible:
                             cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
                 conn.commit()
                 st.session_state.uploader_counter += 1
-                st.sidebar.success("📊 تم دمج وضخ كافة المنشآت والكرامات وتنشيط الرسوم بنجاح!")
+                st.sidebar.success("📊 تم دمج وضخ كافة المنشآت والكرامات وتنزيل المؤشرات التراكمية بنجاح!")
                 st.rerun()
             except Exception as e: st.sidebar.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
