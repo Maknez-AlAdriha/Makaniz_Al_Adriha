@@ -425,7 +425,7 @@ def show_shamel_search_engine_page():
                 st.markdown(card_html, unsafe_allow_html=True)
                 if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_{s_id}_{idx}", use_container_width=True): popup_individual_shrine_card(s_name)
 # ==========================================
-# 🟢 البلوك 11 من 12 المطور والمطهر: محرك أطلس المكنز بعد نسف العنوان التفسيري كلياً
+# 🟢 البلوك 11 من 12 المطور والمطهر: محرك أطلس المكنز بعد سحق خطأ الاسم كلياً وتثبيت الزووم
 # ==========================================
 
 def show_maknez_atlas_interactive_map_page():
@@ -445,16 +445,16 @@ def show_maknez_atlas_interactive_map_page():
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
-        # 🟢 تم حذف وإزالة وسم st.markdown الخاص بالعنوان التفسيري المداخل والمشوه نهائياً وصار صندوق البحث حراً طليقاً
-        search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v23")
+        # صندوق البحث الملوكي الموسط والمجمل بالأزرق الغليظ صلب الواجهة
+        search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v24")
         
-        search_query = search_map_input.strip().lower()
+        search_query_fixed = search_map_input.strip().lower()
         
-        # تصفية المعطيات بناء على الحروف المكتوبة في مربع البحث بنقاء بايثون الصرف
+        # 🟢 تصحيح جراحي شامل: تصفية المعطيات بنقاء وتطهير المتغيرات لمنع خطأ NameError نهائياً
         filtered_data = []
-        if search_query:
+        if search_query_fixed:
             for item in sh_map_data:
-                if search_query in str(item).lower():
+                if search_query_fixed in str(item).lower():
                     filtered_data.append(item)
         else:
             filtered_data = sh_map_data
@@ -466,10 +466,10 @@ def show_maknez_atlas_interactive_map_page():
             
         df_map = pd.DataFrame(map_list)
         
-        # اللحام والتصحيح المعماري الصارم: التركيز فوق المغرب دائماً وسحق عرض خريطة العالم المصغرة
-        if search_query and not df_map.empty:
-            center_lat = float(df_map.iloc["latitude"])
-            center_lon = float(df_map.iloc["longitude"])
+        # حساب التمركز التلقائي بدقة بالاعتماد على الفهارس الصافية وسحق عرض خريطة العالم
+        if search_query_fixed and not df_map.empty:
+            center_lat = float(df_map.iloc[0]["latitude"])
+            center_lon = float(df_map.iloc[0]["longitude"])
             map_zoom = 12  
         else:
             center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
@@ -477,26 +477,26 @@ def show_maknez_atlas_interactive_map_page():
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
         # استخلاص المعطيات الترابية وعرض البطاقة الأنيقة فوراً من اليمين إلى اليسار RTL
-        if search_query and len(filtered_data) > 0:
-            target_sh = filtered_data 
+        if search_query_fixed and len(filtered_data) > 0:
+            target_sh = filtered_data[0] # التقاط السطر الفردي الصافي المستهدف بنجاح
             
             st.markdown(f"""
-                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
+                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15 rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
                     <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
-                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / M المزار المحقق:</b> {target_sh} ({target_sh})</div>
-                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh} | خط الطول: {target_sh}</div>
-                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh}</div>
-                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh}</div>
-                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh}</div>
+                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh[0]} ({target_sh[3]})</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
+                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh[5]}</div>
+                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh[4]}</div>
+                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh[6]}</div>
                 </div>
             """, unsafe_allow_html=True)
             
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v23"):
-                popup_individual_shrine_card(target_sh)
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v24"):
+                popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # ==========================================
-# 🏛️ البلوك 12 من 12 المطور: بوابة الإدارة ومعالج الانتقال الحركي لـ URL الشامل
+# 🏛️ البلوك 12 من 12 المطور: بوابة الإدارة ومعالج الانتقال الحركي لـ URL الشامل وصيانة الأزرار
 # ==========================================
 
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
@@ -561,3 +561,5 @@ if current_page_val == "sections": show_maknez_sections_dashboard()
 elif current_page_val == "search": show_shamel_search_engine_page()
 elif current_page_val == "atlas": show_maknez_atlas_interactive_map_page()
 else: st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
+
+
