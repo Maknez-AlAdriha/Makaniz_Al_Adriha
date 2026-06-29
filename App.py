@@ -22,13 +22,13 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: قالب التنسيق السيادي وسحق أزرار الصناديق لتطابق الشاملة (CSS الشامل)
+# 🎨 الجزء 3: قالب التنسيق السيادي وسحق أشرطة وصناديق الأزرار كلياً (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. بسط وتثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً */
+        /* 1. تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -40,7 +40,7 @@ st.markdown(f"""
             height: 100vh !important;
         }}
         
-        /* تصفير الهوامش والبطانات الخارجية للمنصة لسحق المساحات الميتة */
+        /* تصفير الهوامش والبطانات الخارجية للمنصة لسحق المساحات الميتة والجوانب البيضاء */
         div[data-testid="stAppViewBlockContainer"] {{
             max-width: 100% !important;
             width: 100% !important;
@@ -63,37 +63,33 @@ st.markdown(f"""
             top: 0px !important;
             right: 0px !important;
             left: 0px !important;
-            height: 60px !important; /* ارتفاع نحيف جداً وأنيق */
-            background: rgba(0, 0, 0, 0.45) !important; /* Voile غسقي يحمي القراءة ويمنع التداخل */
+            height: 60px !important; /* ارتفاع نحيف جداً وراقي يوفر كامل المساحة بالتصفح بالأسفل */
+            background: rgba(0, 0, 0, 0.55) !important; /* غسق داكن يحمي الحروف ويمنع التداخل البصري */
             border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* خط الشاملة الأفقي الرقيق جداً */
             z-index: 99999 !important;
             display: flex !important;
             align-items: center !important;
-            padding: 0 50px !important;
+            padding: 0 60px !important;
+            direction: rtl !important;
         }}
         
-        /* 3. الهندسة الجراحية: نسف وسحق الصناديق والحدود والخلفيات تماماً لتصبح نصوصاً صافية ونحيفة مائة بالمائة كالشاملة */
-        .shamel-nav-btn button {{
-            background: transparent !important; /* حذف الخلفية تماماً */
-            color: #CDD5E0 !important; /* لون الخط الأبيض العاجي والناعم للشاملة */
+        /* 3. الهندسة الجراحية: الروابط النصية الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
+        .shamel-nav-link {{
+            color: #CDD5E0 !important; /* لون الخط الأبيض العاجي والناعم للمكتبة الشاملة */
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 500 !important; /* خط نحيف ونقي وغير غليظ */
+            font-weight: 500 !important; /* خط نحيف ونقي تماماً */
             font-size: 16px !important;
-            border: none !important; /* نسف الحدود والخطوط المحيطة بالزر */
-            border-radius: 0px !important;
-            padding: 0px !important; /* إلغاء البطانة الداخلية ليتحول لنص حر */
-            box-shadow: none !important;
-            transition: color 0.2s ease-in-out !important;
-            cursor: pointer;
-            margin: 0px !important;
-            text-align: right !important;
+            text-decoration: none !important; /* حذف أي خطوط تحت النص */
+            padding: 0 15px !important;
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
+            cursor: pointer !important;
+            display: inline-block !important;
         }}
         
-        /* تأثير الHover التفاعلي: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
-        .shamel-nav-btn button:hover {{
-            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط النشط */
-            background: transparent !important;
-            box-shadow: none !important;
+        /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي الشريف للمملكة عند تمرير الفأرة */
+        .shamel-nav-link:hover {{
+            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط */
+            transform: translateY(-1px) !important;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -106,44 +102,19 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: توزيع روابط الشاملة النحيفة صلب الشريط النحيف بالقمة (بعد حذف المكنز الوطني للأضرحة)
+# 📦 الجزء 4: حقن خماسية روابط الـ HTML النصية الصافية والمنحوتة صلب شريط القمة (تقليد دقيق للشاملة)
 # ==========================================
-st.markdown("<div class='shamel-top-ribbon'>", unsafe_allow_html=True)
+# قمنا هنا باستخدام كود الـ HTML الصافي مائة بالمائة لكسر حلقة الصناديق البيضاء التلقائية لبايثون
+st.markdown("""
+    <div class='shamel-top-ribbon'>
+        <!-- روابط الشاملة تتراص أفقياً بمرونة متناهية ونحافة مطلقة من اليمين إلى اليسار -->
+        <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
+        <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 700;'>🔍 البحث في المكنز</a>
+    </div>
+""", unsafe_allow_html=True)
 
-# تم ضبط تقسيم الأعمدة وتزحيفها بالتساوي أفقياً لتتراص الروابط بنحافة مطلقة من اليمين إلى اليسار
-menu_col_home, menu_col_sec, menu_col_about, menu_col_contact, menu_col_search, _ = st.columns([0.8, 1.1, 1.1, 1.0, 1.8, 6.0])
-
-with menu_col_home:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="shamel_btn_home_v2"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_sec:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="shamel_btn_sections_v2"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_about:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("حول المشروع", key="shamel_btn_about_v2"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_contact:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="shamel_btn_contact_v2"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-with menu_col_search:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("🔍 البحث في المكنز", key="shamel_btn_search_v2"):
-        st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
 st.markdown("<div style='margin-top: 70px;'></div>", unsafe_allow_html=True)
