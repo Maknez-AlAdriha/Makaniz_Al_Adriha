@@ -394,7 +394,10 @@ def show_shamel_search_engine_page():
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
                 if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_{s_id}_{idx}", use_container_width=True): popup_individual_shrine_card(s_name)
-# 🟢 الأطلس الجغرافي الفائق لعام 2026 بعد سحق وتطهير أخطاء الصياغة كلياً ومطابقة المكتسبات الشامخة
+# ==========================================
+# 🟢 البلوك 11 من 12 المطور والمطهر: محرك أطلس المكنز ومستطيل الملاحة والتركيب الفوري للبطاقة الجغرافية الكاملة
+# ==========================================
+
 def show_maknez_atlas_interactive_map_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #1E3A8A;'>
@@ -403,6 +406,7 @@ def show_maknez_atlas_interactive_map_page():
         </div>
     """, unsafe_allow_html=True)
     
+    # سحب الإحداثيات الجغرافية والمعطيات الترابية حياً بالكامل مائة بالمائة من مكنز الأطروحة التاريخية
     sh_map_data = cursor.execute("""
         SELECT shrines.name, shrines.latitude, shrines.longitude, shrines.type, geography.province, geography.region, shrines.exact_location 
         FROM shrines 
@@ -412,15 +416,15 @@ def show_maknez_atlas_interactive_map_page():
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
         st.markdown("<h4 style='color:#1E3A8A; font-weight:bold;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة:</h4>", unsafe_allow_html=True)
-        search_map_input = st.text_input("اكتب اسم الضريح أو جزءاً منه (مثال: فيفي، العيساوي...):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...")
+        search_map_input = st.text_input("اكتب اسم الضريح أو جزءاً منه (مثال: فيفي، العيساوي...):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v20")
         
         search_query = search_map_input.strip().lower()
         
-        # 🟢 تصحيح جراحي صارم: تفكيك السطر المدمج وتطهيره من التداخل الشرطي لمنع خطأ الـ SyntaxError نهائياً
+        # تصفية المعطيات بناء على الحروف المكتوبة في مربع البحث بنقاء بايثون الصرف
         filtered_data = []
         if search_query:
             for item in sh_map_data:
-                if search_query in str(item[0]).lower():
+                if search_query in str(item[0]).lower():  # البحث الصريح في اسم الضريح لمنع تداخل النصوص
                     filtered_data.append(item)
         else:
             filtered_data = sh_map_data
@@ -442,23 +446,30 @@ def show_maknez_atlas_interactive_map_page():
             
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
+        # 🟢 اللحام والالتقاط الجراحي الصائب بالفهرس: فك استخلاص المعطيات الترابية وعرض البطاقة الأنيقة فوراً
         if search_query and len(filtered_data) > 0:
-            target_sh = filtered_data[0]
+            target_sh = filtered_data[0] # استخراج السطر الفردي المستهدف بنجاح
+            
             st.markdown(f"""
                 <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
                     <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
                     <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh[0]} ({target_sh[3]})</div>
-                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالمليمتر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
                     <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh[5]}</div>
                     <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh[4]}</div>
                     <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh[6]}</div>
                 </div>
             """, unsafe_allow_html=True)
             
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn"):
+            # حقن وتوليد الزر الملوكي لانبثاق نافذة النبذة من قلب الأطلس التفاعلي
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v20"):
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
+# ==========================================
+# 🏛️ البلوك 12 من 12 المطور: بوابة الإدارة السيادية وحلقة تفكيك جداول الـ CSV ومعالج الانتقال الحركي لـ URL
+# ==========================================
+
 # بوابة إدارة وتغذية المكنز الوطني ودعم الاستيراد التراكمي الشامل للمشرف
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
@@ -489,7 +500,7 @@ def show_admin_dashboard_popup():
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)", (s_name, s_type, int(prov_id_row[0]), hist_val, lat_val, lon_val))
+                            cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)", (s_name, s_type, int(prov_id_row), hist_val, lat_val, lon_val))
             conn.commit()
             st.session_state.uploader_counter += 1
             st.success("📊 تم الضخ التراكمي بنجاح صلب قاعدة البيانات.")
