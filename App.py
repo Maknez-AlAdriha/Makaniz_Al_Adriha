@@ -49,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -170,6 +170,24 @@ st.markdown(f"""
             direction: rtl;
         }}
 
+        /* تلوين وتغيير وسم التذييل التلقائي ليحمل توقيع الدكتور رشيد الجانبي بوقار علمي ملوكي */
+        footer {{
+            visibility: hidden !important;
+        }}
+        footer:after {{
+            content: 'Created by JANEBI RACHID' !important;
+            visibility: visible !important;
+            display: block !important;
+            position: relative !important;
+            padding: 5px !important;
+            color: #FFFFFF !important;
+            font-family: 'Tajawal', sans-serif !important;
+            font-weight: bold !important;
+            font-size: 14px !important;
+            text-align: right !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6) !important;
+        }}
+
         html, body, .stMarkdown, p, span, label {{
             font-family: 'Tajawal', sans-serif !important;
             direction: rtl;
@@ -188,7 +206,7 @@ def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class='popup-content-text'>
-        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
+        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية, تاريخية, بيبليوغرافية, وأنثروبولوجية متعلقة بالمنشآت الروحية, الأضرحة, والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
         <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
         <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
         <p style='text-align: center; font-weight: bold; color: #1E3A8A;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
@@ -198,7 +216,7 @@ def show_about_project_popup():
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.rerun()
 
-# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع
+# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع ببريدك المعتمد
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -244,17 +262,17 @@ def show_contact_us_popup():
                 """, unsafe_allow_html=True)
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
+# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للملفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
-    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v13")
+    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v14")
     
     if developer_key == "MAROC_2026":
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
         
-        # 🟢 التطوير السائد والمثالي: صعود صندوق الرسائل هنا بالأعلى ليكون مرئياً فوراً أمام الدكتور رشيد
+        # صعود صندوق الرسائل والملاحظات هنا بالأعلى ليكون مرئياً فوراً أمام الدكتور رشيد دون تمرير
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
         
@@ -286,7 +304,7 @@ def show_admin_dashboard_popup():
             "اختر ملفات الأضرحة والمصطلحات الشاملة بصيغة (.csv) [يمكنك اختيار ملفات متعددة معاً]:", 
             type=["csv"], 
             accept_multiple_files=True,
-            key=f"popup_csv_uploader_multi_v13_{st.session_state.uploader_counter}"
+            key=f"popup_csv_uploader_multi_v14_{st.session_state.uploader_counter}"
         )
         
         if uploaded_csv_list:
