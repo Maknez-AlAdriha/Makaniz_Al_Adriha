@@ -180,10 +180,10 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 # ==========================================
-# 🏢 القسم 4 المطور: إعادة كتابة النص مع تطهير وحذف الجملة من الترويسة العليا كلياً
+# 🔐 القسم 4 (الجزء الأول): دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية
 # ==========================================
 
-# 🟢 التثبيت الاستراتيجي: ضبط عنوان النافذة الرسمي الصافي "نبذة عن المشروع" وسحق العبارة السابقة
+# 1. 🎓 الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع
 @st.dialog("نبذة عن المشروع")
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
@@ -196,25 +196,125 @@ def show_about_project_popup():
         <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_final_v3"):
+    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v4"):
         st.rerun()
 
-# حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط تدرج القمة اللامع بالسقف
-st.markdown("""
+# 2. 🔐 الدالة المنبثقة السيادية لبوابة الإدارة وضخ ملفات الـ CSV برقم السير MAROC_2026
+@st.dialog("بوابة إدارة وتغذية المكنز الوطني")
+def show_admin_dashboard_popup():
+    st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي</div>", unsafe_allow_html=True)
+    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key")
+    
+    if developer_key == "MAROC_2026":
+        st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
+        st.markdown("---")
+        
+        if "uploader_counter" not in st.session_state: 
+            st.session_state.uploader_counter = 0
+            
+        uploaded_csv = st.file_uploader("اختر ملف الأضرحة والمزارات الشامل بصيغة (.csv):", type=["csv"], key=f"popup_csv_uploader_{st.session_state.uploader_counter}")
+        
+        if uploaded_csv is not None:
+            try:
+                df = pd.read_csv(uploaded_csv, encoding='utf-8')
+                rename_dict = {}
+                for col in df.columns:
+                    clean_col = str(col).strip().replace('\n', '').replace(' ', '')
+                    if 'shrine_name' in clean_col: rename_dict[col] = 'shrine_name'
+                    elif 'shrine_type' in clean_col: rename_dict[col] = 'shrine_type'
+                    elif 'province' in clean_col: rename_dict[col] = 'province'
+                    elif 'exact_location' in clean_col: rename_dict[col] = 'exact_location'
+                    elif 'history_details' in clean_col: rename_dict[col] = 'history_details'
+                    elif 'daily_activ' in clean_col: rename_dict[col] = 'daily_activities'
+                    elif 'annual_activities' in clean_col: rename_dict[col] = 'annual_activities'
+                    elif 'researchers_books' in clean_col: rename_dict[col] = 'researchers_books'
+                    elif 'creative_works' in clean_col: rename_dict[col] = 'creative_works'
+                    elif 'web_links' in clean_col: rename_dict[col] = 'web_links'
+                    elif 'belief_type' in clean_col: rename_dict[col] = 'belief_type'
+                    elif 'belief_details' in clean_col: rename_dict[col] = 'belief_details'
+                    elif 'scientific_source' in clean_col: rename_dict[col] = 'scientific_source'
+                df = df.rename(columns=rename_dict)
+                
+                for index, row in df.iterrows():
+                    s_name = str(row.get('shrine_name', '')).strip()
+                    if not s_name or s_name == "nan" or "shrine_name" in s_name: continue
+                    tags_val = str(row.get('tags', '')).strip()
+                    s_type = str(row.get('shrine_type', 'أضرحة المسلمين')).strip()
+                    hist_val = str(row.get('history_details', 'غير محدد')).strip()
+                    sc_src = str(row.get('scientific_source', 'رواية شفوية ميدانية مأثورة')).strip()
+                    b_type_val = str(row.get('belief_type', 'وظائف اجتماعية وقبلية')).strip()
+                    b_details_val = str(row.get('belief_details', 'موثق بالتحقيق الميداني للأطروحة')).strip()
+                    
+                    if "#معجم" in tags_val or "#مصطلحات" in tags_val:
+                        existing_term_row = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
+                        if existing_term_row: cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                        else: cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                    else:
+                        prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
+                        cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
+                        conn.commit()
+                        
+                        prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
+                        if prov_id_row:
+                            prov_id = int(prov_id_row)
+                            era_val = str(row.get('historical_era', 'غير محدد')).strip()
+                            
+                            auto_lat = 31.7917
+                            auto_lon = -7.0926
+                            if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
+                            elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                            elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
+                            
+                            existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
+                            if existing_row:
+                                shrine_id = int(existing_row)
+                                cursor.execute("""
+                                    UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
+                                    (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
+                            else:
+                                cursor.execute("""
+                                    INSERT INTO shrines (name, type, province_id, exact_location, history_details, daily_activities, annual_activities, historical_era, tags, latitude, longitude, researchers_books, creative_works, web_links, scientific_source) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", 
+                                    (s_name, s_type, prov_id, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), era_val, tags_val, auto_lat, auto_lon, str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), sc_src))
+                                shrine_id = cursor.lastrowid
+                            
+                            cursor.execute("DELETE FROM beliefs_and_functions WHERE shrine_id = ?", (shrine_id,))
+                            cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
+                conn.commit()
+                st.session_state.uploader_counter += 1
+                st.success("📊 تم دمج وضخ كافة المنشآت والكرامات وتنشيط الرسوم بنجاح!")
+                st.rerun()
+            except Exception as e: 
+                st.error(f"❌ خطأ أثناء الاستيراد الميداني: {e}")
+    elif developer_key != "":
+        st.error("⚠️ الرمز السري غير صحيح، يرجى مراجعة حصانة المنظومة السيادية.")
+# ==========================================
+# 🔐 القسم 4 (الجزء الثاني): بناء خريطة روابط السداسية الأفقية ومعالج روابط الـ URL التفاعلية
+# ==========================================
+
+current_page_val = st.query_params.get("page", "home")
+active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
+active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_page_val == "admin" else ""
+
+# حقن الشريط الأفقي السداسي المطور والملتصق بالقمة بنقاء كالمكتبة الشاملة بالمليمتر
+st.markdown(f"""
     <div class='shamel-top-gradient-fixed-ribbon'>
+        <!-- صف روابط المكنز النصية الصافية والمنحوتة بسقف المتصفح لعام 2026 -->
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
         <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
-        <a class='shamel-nav-link' href='?page=about' target='_self' style='color: #10B981 !important; font-weight:900;'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self' style='{active_about_style}'>حول المشروع</a>
         <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
-        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
+        <a class='shamel-nav-link' href='?page=admin' target='_self' style='{active_admin_style}'>🔐 بوابة الإدارة</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #FFFFFF !important;'>🔍 البحث في المكنز</a>
     </div>
 """, unsafe_allow_html=True)
 
-# التقاط معلمات الرابط (URL Parameters) لتشغيل الانبثاق الفوري مائة بالمائة فور نقر زر "حول المشروع"
-query_params = st.query_params
-if query_params.get("page") == "about":
-    st.query_params.clear() # مسح المعلمة الفورية خلف الكواليس لإتاحة خيار العودة بمرونة
+# معالج الاستدعاء الفوري والتحويل التفاعلي للنوافذ بمجرد الضغط على الروابط سحابياً
+if current_page_val == "about":
+    st.query_params.clear()
     show_about_project_popup()
+elif current_page_val == "admin":
+    st.query_params.clear()
+    show_admin_dashboard_popup()
 
 # حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة
 st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
