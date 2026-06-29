@@ -3,12 +3,12 @@ import os
 import base64
 
 # ==========================================
-# 🇲🇦 الجزء 1: إعدادات الشاشة السيادية بعرض المتصفح الكامل 100% لعام 2026
+# 🇲🇦 الجزء 1: إعدادات الشاشة بعرض المتصفح الكامل 100% لعام 2026
 # ==========================================
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
 # ==========================================
-# 🏢 الجزء 2: محرك استدعاء وتجهيز الصورة الملكية بنظام القراءة الفورية الشاملة
+# 🏢 الجزء 2: محرك استدعاء وتجهيز الصورة الملكية بنظام القراءة الفورية
 # ==========================================
 target_banner = None
 for valid_name in ["banner.png", "banner..png", "Banner.png", "banner.PNG", "banner.jpg"]:
@@ -16,24 +16,23 @@ for valid_name in ["banner.png", "banner..png", "Banner.png", "banner.PNG", "ban
         target_banner = valid_name
         break
 
-# تحويل الصورة إلى نص مشفر لإجبار المتصفح على دمجها كخلفية ممتدة بالكامل
 encoded_string = ""
 if target_banner:
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: قالب التنسيق السيادي وعزل شريط الملاحة العلوي النحيف (CSS الشامل)
+# 🎨 الجزء 3: قالب التنسيق السيادي وسحق أزرار الصناديق لتطابق الشاملة (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود شاشة الحاسوب 100% ومقاومة التمرير قسرياً */
+        /* 1. بسط وتثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
-            background-position: center top !important; /* دفع الصورة لتبدأ من القمة بنقاء */
+            background-position: center top !important;
             background-repeat: no-repeat !important;
             background-attachment: fixed !important;
             width: 100vw !important;
@@ -41,13 +40,13 @@ st.markdown(f"""
             height: 100vh !important;
         }}
         
-        /* 2. تصفير الهوامش والبطانات الداخلية للحاويات تماماً لجعل الرؤية فسيحة وبدون حواف بيضاء ميتة */
+        /* تصفير الهوامش والبطانات الخارجية للمنصة لسحق المساحات الميتة */
         div[data-testid="stAppViewBlockContainer"] {{
             max-width: 100% !important;
             width: 100% !important;
             padding: 0rem !important; 
             margin: 0rem !important;
-            background: transparent !important; /* جعل الحاوية شفافة لتظهر الخلفية الملكية من ورائها */
+            background: transparent !important;
         }}
         .main .block-container {{
             max-width: 100% !important;
@@ -56,46 +55,45 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* إلغاء الفراغات العمودية الافتراضية بين المكونات العليا لـ Streamlit */
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 3. حاوية الشريط الأفقي النحيف والعلوي لمنع التراكب وحماية عنوان المكنز وعلم المملكة الشريفة */
+        /* 2. بناء شريط الملاحة الأفقي الملتصق بالقمة الشفاف مائة بالمائة وبأبعاد الشاملة */
         .shamel-top-ribbon {{
             position: fixed !important;
             top: 0px !important;
             right: 0px !important;
             left: 0px !important;
-            height: 65px !important; /* ارتفاع نحيف جداً وراقي يوفر المساحة الشاملة للتصفح بالأسفل */
-            background: rgba(0, 0, 0, 0.45) !important; /* غسق داكن يحمي الحروف ويمنع التداخل البصري */
-            border-bottom: 2px solid rgba(212, 175, 55, 0.4) !important; /* خط ذهبي ملكي رقيق يعكس عراقة التراث */
+            height: 60px !important; /* ارتفاع نحيف جداً وأنيق */
+            background: rgba(0, 0, 0, 0.55) !important; /* Voile غسقي يحمي القراءة ويمنع التداخل */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* خط الشاملة الأفقي الرقيق جداً */
             z-index: 99999 !important;
             display: flex !important;
             align-items: center !important;
-            padding: 0 40px !important;
+            padding: 0 50px !important;
         }}
         
-        /* 4. تنسيق الأزرار الخمسة داخل الشريط العلوي النحيف كروابط رشيقة ومستقلة تطفو بنقاء صوفي كالشاملة */
+        /* 3. الهندسة الجراحية: نسف وسحق الصناديق والحدود والخلفيات الزجاجية لتصبح نصوصاً صافية مائة بالمائة كالشاملة */
         .shamel-nav-btn button {{
-            background: rgba(255, 255, 255, 0.08) !important;
-            color: #FFFFFF !important;
+            background: transparent !important; /* حذف الخلفية تماماً */
+            color: #CDD5E0 !important; /* لون الخط الأبيض العاجي والناعم للشاملة */
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 700 !important;
-            font-size: 15px !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 4px !important;
-            padding: 5px 18px !important;
-            backdrop-filter: blur(5px) !important;
-            transition: all 0.25s ease-in-out !important;
+            font-weight: 500 !important; /* خط نحيف ونقي وغير غليظ */
+            font-size: 16px !important;
+            border: none !important; /* نسف الحدود والخطوط المحيطة بالزر */
+            border-radius: 0px !important;
+            padding: 0px !important; /* إلغاء البطانة الداخلية ليتحول لنص حر */
+            box-shadow: none !important;
+            transition: color 0.2s ease-in-out !important;
             cursor: pointer;
-            margin: 0px !important; /* إلغاء الهوامش لتستقر بانتظام وهدوء داخل الشريط النحيف */
+            margin: 0px !important;
+            text-align: right !important;
         }}
         
+        /* تأثير الHover التفاعلي: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
         .shamel-nav-btn button:hover {{
-            background: #10B981 !important; /* التحول الفوري للأخضر الزمردي التراثي الأصيل للمملكة المغربية الشريفة */
-            color: #FFFFFF !important;
-            border-color: #10B981 !important;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
-            transform: translateY(-1px);
+            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط النشط */
+            background: transparent !important;
+            box-shadow: none !important;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -108,44 +106,49 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: رص وإطلاق خماسية الملاحة صلب الشريط العلوي النحيف والآمن بالقمة الشامخة
+# 📦 الجزء 4: توزيع وهندسة خماسية روابط الشاملة بالتوازي صلب الشريط النحيف بالقمة
 # ==========================================
 st.markdown("<div class='shamel-top-ribbon'>", unsafe_allow_html=True)
 
-# تقسيم الأعمدة بالتوالي لإجبار الأزرار على التراص أفقياً في جهة اليمين بنقاء تام دون تداخل
-menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.6, 4.5])
+# تقسيم الأعمدة بالمليمتر البرمجي: العنوان يميناً، تتلوه الروابط متراصة أفقياً بنحافة، والبحث والاتصال يساراً
+menu_col_title, menu_col_home, menu_col_sec, menu_col_about, menu_col_contact, menu_col_search, _ = st.columns([2.5, 0.9, 1.1, 1.0, 1.0, 1.8, 4.0])
 
-with menu_col_1:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top: 8px;'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="btn_home_modular_v2"):
+with menu_col_title:
+    # اسم المكنز الفخم ناصعاً في قمة اليمين ككلمة "المكتبة الشاملة"
+    st.markdown("<p style='color:#FFFFFF; font-family:\"Tajawal\",sans-serif; font-size:18px; font-weight:900; margin-top:16px; padding-right:10px; cursor:default;'>المكنز الوطني للأضرحة</p>", unsafe_allow_html=True)
+
+with menu_col_home:
+    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
+    if st.button("الرئيسية", key="shamel_btn_home"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_2:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top: 8px;'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="btn_sections_modular_v2"):
+with menu_col_sec:
+    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
+    if st.button("أقسام المكنز", key="shamel_btn_sections"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_3:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top: 8px;'>", unsafe_allow_html=True)
-    if st.button("حول المكنز", key="btn_about_modular_v2"):
+with menu_col_about:
+    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
+    if st.button("حول المشروع", key="shamel_btn_about"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_4:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top: 8px;'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="btn_contact_modular_v2"):
+with menu_col_contact:
+    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
+    if st.button("اتصل بنا", key="shamel_btn_contact"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_5:
-    st.markdown("<div class='shamel-nav-btn' style='margin-top: 8px;'>", unsafe_allow_html=True)
-    if st.button("🔍 شعار البحث في المكنز", key="btn_search_modular_v2"):
+with menu_col_search:
+    # أيقونة وشعار البحث مستقلة ومصاحبة في الجناح الأيسر للشريط المتناسق
+    st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
+    if st.button("🔍 البحث في المكنز", key="shamel_btn_search"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# حقن فراغ وهمي مريح بالأسفل لتهيئة استقبال وتدفق أي محتوى قادم بسلام تحت نطاق البانر المضيء
-st.markdown("<div style='margin-top: 75px;'></div>", unsafe_allow_html=True)
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة
+st.markdown("<div style='margin-top: 70px;'></div>", unsafe_allow_html=True)
