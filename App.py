@@ -64,7 +64,7 @@ st.markdown(f"""
             right: 0px !important;
             left: 0px !important;
             height: 60px !important; /* ارتفاع نحيف جداً وأنيق */
-            background: rgba(0, 0, 0, 0.55) !important; /* Voile غسقي يحمي القراءة ويمنع التداخل */
+            background: rgba(0, 0, 0, 0.45) !important; /* Voile غسقي يحمي القراءة ويمنع التداخل */
             border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* خط الشاملة الأفقي الرقيق جداً */
             z-index: 99999 !important;
             display: flex !important;
@@ -72,7 +72,7 @@ st.markdown(f"""
             padding: 0 50px !important;
         }}
         
-        /* 3. الهندسة الجراحية: نسف وسحق الصناديق والحدود والخلفيات الزجاجية لتصبح نصوصاً صافية مائة بالمائة كالشاملة */
+        /* 3. الهندسة الجراحية: نسف وسحق الصناديق والحدود والخلفيات تماماً لتصبح نصوصاً صافية ونحيفة مائة بالمائة كالشاملة */
         .shamel-nav-btn button {{
             background: transparent !important; /* حذف الخلفية تماماً */
             color: #CDD5E0 !important; /* لون الخط الأبيض العاجي والناعم للشاملة */
@@ -106,45 +106,40 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: توزيع وهندسة خماسية روابط الشاملة بالتوازي صلب الشريط النحيف بالقمة
+# 📦 الجزء 4: توزيع روابط الشاملة النحيفة صلب الشريط النحيف بالقمة (بعد حذف المكنز الوطني للأضرحة)
 # ==========================================
 st.markdown("<div class='shamel-top-ribbon'>", unsafe_allow_html=True)
 
-# تقسيم الأعمدة بالمليمتر البرمجي: العنوان يميناً، تتلوه الروابط متراصة أفقياً بنحافة، والبحث والاتصال يساراً
-menu_col_title, menu_col_home, menu_col_sec, menu_col_about, menu_col_contact, menu_col_search, _ = st.columns([2.5, 0.9, 1.1, 1.0, 1.0, 1.8, 4.0])
-
-with menu_col_title:
-    # اسم المكنز الفخم ناصعاً في قمة اليمين ككلمة "المكتبة الشاملة"
-    st.markdown("<p style='color:#FFFFFF; font-family:\"Tajawal\",sans-serif; font-size:18px; font-weight:900; margin-top:16px; padding-right:10px; cursor:default;'>المكنز الوطني للأضرحة</p>", unsafe_allow_html=True)
+# تم ضبط تقسيم الأعمدة وتزحيفها بالتساوي أفقياً لتتراص الروابط بنحافة مطلقة من اليمين إلى اليسار
+menu_col_home, menu_col_sec, menu_col_about, menu_col_contact, menu_col_search, _ = st.columns([0.8, 1.1, 1.1, 1.0, 1.8, 6.0])
 
 with menu_col_home:
     st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="shamel_btn_home"):
+    if st.button("الرئيسية", key="shamel_btn_home_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_sec:
     st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="shamel_btn_sections"):
+    if st.button("أقسام المكنز", key="shamel_btn_sections_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_about:
     st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("حول المشروع", key="shamel_btn_about"):
+    if st.button("حول المشروع", key="shamel_btn_about_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_contact:
     st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="shamel_btn_contact"):
+    if st.button("اتصل بنا", key="shamel_btn_contact_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_search:
-    # أيقونة وشعار البحث مستقلة ومصاحبة في الجناح الأيسر للشريط المتناسق
     st.markdown("<div class='shamel-nav-btn' style='margin-top:16px;'>", unsafe_allow_html=True)
-    if st.button("🔍 البحث في المكنز", key="shamel_btn_search"):
+    if st.button("🔍 البحث في المكنز", key="shamel_btn_search_v2"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
