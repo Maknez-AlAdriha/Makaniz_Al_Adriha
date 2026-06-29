@@ -180,11 +180,11 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 # ==========================================
-# 🏢 القسم 4: بوابات الحقن التفاعلي والنافذة المنبثقة المظهرة لمعلومات الأطروحة الشريفة
+# 🏢 القسم 4 المطور: إعادة كتابة النص مع تطهير وحذف الجملة من الترويسة العليا كلياً
 # ==========================================
 
-# 🟢 التطوير الجراحي: تفريغ التسمية التلقائية من الترويسة العليا لمنع التكرار البصري
-@st.dialog("")
+# 🟢 التثبيت الاستراتيجي: ضبط عنوان النافذة الرسمي الصافي "نبذة عن المشروع" وسحق العبارة السابقة
+@st.dialog("نبذة عن المشروع")
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
@@ -196,7 +196,7 @@ def show_about_project_popup():
         <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_final"):
+    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_final_v3"):
         st.rerun()
 
 # حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط تدرج القمة اللامع بالسقف
