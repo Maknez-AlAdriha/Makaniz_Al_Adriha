@@ -180,7 +180,7 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 # ==========================================
-# 🔐 القسم 4 (الجزء الأول): دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية
+# 🔐 القسم 4 (الجزء الأول المطور كلياً): دالات النوافذ المنبثقة التفاعلية مع سحق خطأ الـ tuple نهائياً
 # ==========================================
 
 # 1. 🎓 الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع
@@ -196,14 +196,14 @@ def show_about_project_popup():
         <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v4"):
+    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v4_final_ تحيين"):
         st.rerun()
 
-# 2. 🔐 الدالة المنبثقة السيادية لبوابة الإدارة وضخ ملفات الـ CSV برقم السير MAROC_2026
+# 2. 🔐 الدالة المنبثقة السيادية لبوابة الإدارة وضخ ملفات الـ CSV المحصنة من شتى الانهيارات
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي</div>", unsafe_allow_html=True)
-    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key")
+    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v4")
     
     if developer_key == "MAROC_2026":
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
@@ -212,7 +212,7 @@ def show_admin_dashboard_popup():
         if "uploader_counter" not in st.session_state: 
             st.session_state.uploader_counter = 0
             
-        uploaded_csv = st.file_uploader("اختر ملف الأضرحة والمزارات الشامل بصيغة (.csv):", type=["csv"], key=f"popup_csv_uploader_{st.session_state.uploader_counter}")
+        uploaded_csv = st.file_uploader("اختر ملف الأضرحة والمزارات الشامل بصيغة (.csv):", type=["csv"], key=f"popup_csv_uploader_fixed_v4_{st.session_state.uploader_counter}")
         
         if uploaded_csv is not None:
             try:
@@ -247,8 +247,10 @@ def show_admin_dashboard_popup():
                     
                     if "#معجم" in tags_val or "#مصطلحات" in tags_val:
                         existing_term_row = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
-                        if existing_term_row: cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
-                        else: cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                        if existing_term_row: 
+                            cursor.execute("UPDATE thesaurus_terms SET category=?, definition=? WHERE term=?", (s_type, hist_val, s_name))
+                        else: 
+                            cursor.execute("INSERT INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
                     else:
                         prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
@@ -256,18 +258,20 @@ def show_admin_dashboard_popup():
                         
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            prov_id = int(prov_id_row)
+                            # 🟢 سحق خطأ الـ tuple الجغرافي: استخراج القيمة الرقمية الصافية الصافية قسرياً بالفهرس 0
+                            prov_id = int(prov_id_row[0])
                             era_val = str(row.get('historical_era', 'غير محدد')).strip()
                             
                             auto_lat = 31.7917
                             auto_lon = -7.0926
                             if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                            elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                            elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                             elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                             
                             existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                             if existing_row:
-                                shrine_id = int(existing_row)
+                                # 🟢 سحق خطأ الـ tuple المزاراتي: استخراج الرقم الصحيح الصافي لتأمين التحديث التراكمي الفولاذي
+                                shrine_id = int(existing_row[0])
                                 cursor.execute("""
                                     UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
                                     (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
@@ -288,7 +292,7 @@ def show_admin_dashboard_popup():
     elif developer_key != "":
         st.error("⚠️ الرمز السري غير صحيح، يرجى مراجعة حصانة المنظومة السيادية.")
 # ==========================================
-# 🔐 القسم 4 (الجزء الثاني): بناء خريطة روابط السداسية الأفقية ومعالج روابط الـ URL التفاعلية
+# 🔐 القسم 4 (الجزء الثاني المطور): بناء خريطة روابط الملاحة السداسية ومعالج روابط الـ URL السحابية
 # ==========================================
 
 current_page_val = st.query_params.get("page", "home")
@@ -298,7 +302,7 @@ active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_pa
 # حقن الشريط الأفقي السداسي المطور والملتصق بالقمة بنقاء كالمكتبة الشاملة بالمليمتر
 st.markdown(f"""
     <div class='shamel-top-gradient-fixed-ribbon'>
-        <!-- صف روابط المكنز النصية الصافية والمنحوتة بسقف المتصفح لعام 2026 -->
+        <!-- صف روابط المكنز النصية الصافية والنحيفة بسقف المتصفح لعام 2026 مائة بالمائة -->
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
         <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
         <a class='shamel-nav-link' href='?page=about' target='_self' style='{active_about_style}'>حول المشروع</a>
@@ -316,5 +320,5 @@ elif current_page_val == "admin":
     st.query_params.clear()
     show_admin_dashboard_popup()
 
-# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة المكتملة
 st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
