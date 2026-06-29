@@ -49,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -125,7 +125,7 @@ st.markdown(f"""
             left: 0px !important;
             height: 55px !important;
             background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
-            border-bottom: 2px solid #D4AF37 !important; /* line ذهبي مريني عريق يحدد حافة الشريط النحيف */
+            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
             z-index: 9999999 !important; /* أعلى درجة نفاذ برمجية تمنع أي حجب سحابي نهائياً */
             display: flex !important;
             align-items: center !important;
@@ -173,7 +173,7 @@ st.markdown(f"""
             direction: rtl;
         }}
 
-        /* 🟢 الحل البرمجي الحاسم والموحد: تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
+        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
         div[data-testid="stDialog"], 
         div[data-testid="stDialog"] > div, 
         div[data-testid="stDialog"] .stForm, 
@@ -241,7 +241,7 @@ def show_about_project_popup():
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.rerun()
 
-# 2. 🟢 اللحام الفولاذي المحدث: فرض العرض الأفقي العريض (width="large") لارتفاع زر الإرسال أمام العين فورا سحابياً
+# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -262,7 +262,7 @@ def show_contact_us_popup():
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
         # زر الإرسال الممتد أفقياً بنجاح وثبات
-        submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وصياغة محرك الرد الفوري", use_container_width=True)
+        submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وإرسال التذكير", use_container_width=True)
         
         if submit_clicked:
             if c_sender_email and c_sender_message:
@@ -276,20 +276,9 @@ def show_contact_us_popup():
                 
                 st.success("🔔 تم إرسال رسالة تذكير بنجاح إلى الموقع! يرجى من الدكتور رشيد الجانبي تفقد بريده الإلكتروني للاطلاع على التفاصيل الكاملة للمراسلة.")
                 st.toast("📨 تم قذف رسالة التذكير بنجاح!", icon="🔔")
-                
-                subject_reply = urllib.parse.quote(f"رد تلقائي من المكنز الوطني: حول مراسلتكم ({c_sender_subject})")
-                body_reply = urllib.parse.quote(f"المرسل الكريم {c_sender_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
-                mailto_link = f"mailto:{c_sender_email}?subject={subject_reply}&body={body_reply}"
-                
-                st.markdown(f"""
-                    <a href="{mailto_link}" target="_blank" style="text-decoration:none;">
-                        <div style="background: linear-gradient(135deg, #15803D, #16A34A); color: white; text-align: center; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; margin-top: 15px; box-shadow: 0 4px 10px rgba(22,163,74,0.35);">
-                            ✉️ اضغط هنا لتفعيل الرد الآلي السريع وإرسال الجواب لبريد المرسل فوراً
-                        </div>
-                    </a>
-                """, unsafe_allow_html=True)
+                st.rerun()
             else:
-                st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
+                st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
 # 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للملفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
@@ -300,7 +289,7 @@ def show_admin_dashboard_popup():
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
         
-        # صعود صندوق الرسائل والملاحظات هنا بالأعلى ليكون مرئياً فوراً أمام الدكتور رشيد دون تمرير
+        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً دون تمرير
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
         
@@ -317,10 +306,10 @@ def show_admin_dashboard_popup():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # محرك الرد السريع والأوتوماتيكي بضغطة واحدة من داخل الصندوق
+                # استخدام target='_self' لمنع فتح أي صفحة بيضاء "بلا عنوان" نهائياً صلب المتصفح عند الرد
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}"
-                st.markdown(f'<a href="{mailto_link}" target="_blank" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px; box-shadow: 0 2px 5px rgba(22,163,74,0.2);">✉️ رد سريع ومباشر لبريد المرسل</div></a>', unsafe_allow_html=True)
+                st.markdown(f'<a href="{mailto_link}" target="_self" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px; box-shadow: 0 2px 5px rgba(22,163,74,0.2);">✉️ رد سريع ومباشر لبريد المرسل</div></a>', unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h4>", unsafe_allow_html=True)
@@ -392,7 +381,7 @@ def show_admin_dashboard_popup():
                                     auto_lat = 31.7917
                                     auto_lon = -7.0926
                                     if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                                     elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
