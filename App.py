@@ -41,7 +41,7 @@ def init_ultimate_db():
         researchers_books TEXT,
         creative_works TEXT,
         web_links TEXT,
-        historical_era TEXT DEFAULT 'غير مححدد', 
+        historical_era TEXT DEFAULT 'غير محدد', 
         tags TEXT DEFAULT '',                    
         latitude REAL DEFAULT 31.7917,   
         longitude REAL DEFAULT -7.0926,
@@ -89,7 +89,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 4: تلوين الحاوية الأفقية الأصلية بالتدرج اللوني وسحق الصناديق كلياً (CSS الشامل الشامخ)
+# 🎨 الجزء 4: تلوين وتثبيت الحاوية بالتدرج اللوني وسحق الصناديق (CSS الشامل والنهائي)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -122,28 +122,31 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* حجب رأس الصفحة الافتراضي لمنع الحجب البصري */
+        /* تصفير وحجب رأس الصفحة الافتراضي لمنع التداخل البصري */
         div[data-testid="stHeader"] {{
             background: transparent !important;
             height: 0px !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }}
+        
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. 🟢 الحل الجراحي المعترف به سحابياً: تلوين حاوية الكتل الأصلية لبايثون بالتدرج اللوني وتثبيتها بالقمة قسرياً */
+        /* 2. 🟢 التصحيح الفولاذي: صبغ الحاوية الأفقية الأصلية بالتدرج اللوني وتثبيتها قسرياً بالقمة مرئية 100% */
         div[data-testid="stHorizontalBlock"] {{
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي التراثي الأصيل */
-            position: fixed !important; /* تثبيت مطلق صلب سقف المتصفح لضمان عدم الاختفاء */
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي التراثي */
+            position: fixed !important; /* تثبيت مطلق صلب سقف المتصفح لضمان عدم الاختفاء سحابياً */
             top: 0px !important;
             right: 0px !important;
             left: 0px !important;
             width: 100vw !important;
-            height: 55px !important; /* ارتفاع رصين ومطابق للشاملة */
-            display: flex !important;
+            height: 55px !important; /* ارتفاع رصين ونحيف مطابق للشاملة */
+            display: flex !important; /* تفعيل العرض المرئي قسرياً للكتلة */
             align-items: center !important;
             padding: 0px 60px !important;
-            direction: rtl !important;
+            margin: 0px !important;
             z-index: 99999 !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
             border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد الحافة */
         }}
         
@@ -181,40 +184,39 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 5: إطلاق ورص خماسية أزرار بايثون الملقاة صلب شريط التدرج اللوني العالي (الظهور الفوري الحتمي)
+# 📦 الجزء 5: إطلاق خماسية أزرار بايثون الأصلية والمنقحة صلب شريط التدرج اللوني بالقمة
 # ==========================================
-# استخدمنا هنا قنوات بايثون الأصلية المعترف بها من السيرفر مع عزل الأزرار بالـ CSS لمنع الصناديق البيضاء
+# قنوات بايثون الأصلية المعترف بها سحابياً مع تفعيل عزل الكتل لمنع الصناديق البيضاء الميتة
 menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.8, 4.5])
 
 with menu_col_1:
     st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="btn_shamel_native_home_fixed"):
+    if st.button("الرئيسية", key="btn_shamel_native_home_final"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_2:
     st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="btn_shamel_native_sections_fixed"):
+    if st.button("أقسام المكنز", key="btn_shamel_native_sections_final"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_3:
-    st.markdown("<div class='shamel-nav-btn' style='display:none;'>", unsafe_allow_html=True) # إخفاء وهمي للكتلة الميتة
-    st.markdown("</div>", unsafe_allow_html=True)
     st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("حول المشروع", key="btn_shamel_native_about_fixed"):
+    if st.button("حول المشروع", key="btn_shamel_native_about_final"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_4:
     st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="btn_shamel_native_contact_fixed"):
+    if st.button("اتصل بنا", key="btn_shamel_native_contact_final"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
 with menu_col_5:
     st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("🔍 البحث في المكنز", key="btn_shamel_native_search_fixed"):
+    if st.button("🔍 البحث في المكنز", key="btn_shamel_native_search_final"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
 
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
