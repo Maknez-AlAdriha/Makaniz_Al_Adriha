@@ -1,5 +1,11 @@
 import streamlit as st
+import sqlite3
+import pandas as pd
 import os
+import datetime
+import shutil
+import io
+import urllib.parse
 import base64
 
 # ==========================================
@@ -7,8 +13,69 @@ import base64
 # ==========================================
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
+# الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
+conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
+cursor = conn.cursor()
+
 # ==========================================
-# 🏢 الجزء 2: محرك استدعاء وتجهيز الصورة الملكية بنظام القراءة الفورية
+# 🏢 الجزء 2: البناء المعماري الموثق لجداول قاعدة البيانات لضمان استقرار السيرفر
+# ==========================================
+def init_ultimate_db():
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS geography (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        region TEXT NOT NULL,
+        province TEXT NOT NULL UNIQUE
+    )""")
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS shrines (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        type TEXT CHECK(type IN ('أضرحة المسلمين', 'مزارات اليهود')) NOT NULL,
+        province_id INTEGER,
+        exact_location TEXT,
+        history_details TEXT,
+        daily_activities TEXT,
+        annual_activities TEXT,
+        researchers_books TEXT,
+        creative_works TEXT,
+        web_links TEXT,
+        historical_era TEXT DEFAULT 'غير محدد', 
+        tags TEXT DEFAULT '',                    
+        latitude REAL DEFAULT 31.7917,   
+        longitude REAL DEFAULT -7.0926,
+        FOREIGN KEY (province_id) REFERENCES geography(id),
+        UNIQUE (name, province_id)
+    )""")
+    
+    try:
+        cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
+    except sqlite3.OperationalError:
+        pass
+        
+    cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
+    
+    provinces_data = [
+        ('جهة طنجة - تطوان - الحسيمة', 'إقليم شفشاون'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم تطوان'),
+        ('جهة طنجة - تطوان - الحسيمة', 'عمالة طنجة أصيلة'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم العرائش'),
+        ('جهة طنجة - تطوان - الحسيمة', 'إقليم الفحص أنجرة'), ('جهة مراكش أسفي', 'إقليم آسفي'),
+        ('جهة مراكش أسفي', 'عمالة مراكش'), ('جهة الرباط سلا القنيطرة', 'عمالة سلا'),
+        ('جهة بني ملال خنيفرة', 'إقليم خنيفرة'), ('جهة بني ملال خنيفرة', 'إقليم بني ملال'),
+        ('جهة الدار البيضاء السطات', 'إقليم السطات'), ('جهة الدار البيضاء السطات', 'إقليم الجديدة'),
+        ('جهة فاس مكناس', 'عمالة مكناس'), ('جهة فاس مكناس', 'عمالة فاس'), 
+        ('جهة درعة تافيلالت', 'إقليم الرشيدية'), ('جهة سوس ماسة', 'إقليم تارودانت')
+    ]
+    for r, p in provinces_data:
+        cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", (r, p))
+    conn.commit()
+
+init_ultimate_db()
+
+# ==========================================
+# 🏢 الجزء 3: محرك استدعاء وتجهيز الصورة الملكية بنظام القراءة الفورية
 # ==========================================
 target_banner = None
 for valid_name in ["banner.png", "banner..png", "Banner.png", "banner.PNG", "banner.jpg"]:
@@ -22,7 +89,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: قالب التنسيق السيادي وسحق أشرطة وصناديق الأزرار كلياً (CSS الشامل)
+# 🎨 الجزء 4: قالب التنسيق السيادي وتحصين تمركز الشريط الملتصق بالقمة (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -55,17 +122,15 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* نسف حوايج وبطانات أدوات الكتل التلقائية لبايثون لعدم تداخل المربعات */
         div[data-testid="stHeader"], div[data-testid="stHorizontalBlock"] {{
             background: transparent !important;
             padding: 0 !important;
             margin: 0 !important;
-            display: none !important; /* إخفاء الكتلة القديمة التي تسببت في صناديق بيضاء */
         }}
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. 🟢 بناء شريط الملاحة الأفقي الملتصق بالقمة بالتدرج اللوني الأصيل لعمارة وصورة المكنز */
+        /* 2. بناء شريط الملاحة الأفقي الملتصق بالقمة بالتدرج اللوني اللامع لعمارة وصورة المكنز */
         .shamel-top-gradient-ribbon {{
             position: fixed !important;
             top: 0px !important;
@@ -82,7 +147,7 @@ st.markdown(f"""
             box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
         }}
         
-        /* 3. 🟢 الهندسة الجراحية: الروابط النصية الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
+        /* 3. الهندسة الجراحية: الروابط النصية الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
         .shamel-nav-link {{
             color: #FFFFFF !important; /* لون الخط الأبيض الناصع والمضيء للوضوح المطلق */
             font-family: 'Tajawal', sans-serif !important;
@@ -111,7 +176,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط التدرج اللوني العالي
+# 📦 الجزء 5: حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط التدرج اللوني العالي
 # ==========================================
 st.markdown("""
     <div class='shamel-top-gradient-ribbon'>
