@@ -125,7 +125,7 @@ st.markdown(f"""
             left: 0px !important;
             height: 55px !important;
             background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
-            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
+            border-bottom: 2px solid #D4AF37 !important; /* line ذهبي مريني عريق يحدد حافة الشريط النحيف */
             z-index: 9999999 !important; /* أعلى درجة نفاذ برمجية تمنع أي حجب سحابي نهائياً */
             display: flex !important;
             align-items: center !important;
@@ -241,8 +241,8 @@ def show_about_project_popup():
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.rerun()
 
-# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع ببريدك المعتمد (محصنة مائة بالمائة)
-@st.dialog("دفتر التواصل الرقمي مع إدارة المكنز")
+# 2. 🟢 اللحام الفولاذي المحدث: فرض العرض الأفقي العريض (width="large") لارتفاع زر الإرسال أمام العين فورا سحابياً
+@st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
     
@@ -261,7 +261,7 @@ def show_contact_us_popup():
         
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
-        # زراعة زر الإرسال الأصلي المرتبط بالاستمارة قسرياً وبأحرف دقيقة لسحق الخطأ الأحمر كلياً
+        # زر الإرسال الممتد أفقياً بنجاح وثبات
         submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وصياغة محرك الرد الفوري", use_container_width=True)
         
         if submit_clicked:
@@ -392,7 +392,7 @@ def show_admin_dashboard_popup():
                                     auto_lat = 31.7917
                                     auto_lon = -7.0926
                                     if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                                    elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                                     elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
