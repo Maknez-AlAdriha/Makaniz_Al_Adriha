@@ -180,7 +180,7 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 # محرك الدالة المنبثقة التفاعلية (Dialog) لعرض معطيات حول المشروع كالشاملة بالمليمتر الجغرافي
-@st.dialog("المكتبة الشاملة للمكنز")
+
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
