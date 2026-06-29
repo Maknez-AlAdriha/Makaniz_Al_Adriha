@@ -179,8 +179,12 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-# محرك الدالة المنبثقة التفاعلية (Dialog) لعرض معطيات حول المشروع كالشاملة بالمليمتر الجغرافي
+# ==========================================
+# 🏢 القسم 4: بوابات الحقن التفاعلي والنافذة المنبثقة المظهرة لمعلومات الأطروحة الشريفة
+# ==========================================
 
+# 🟢 التطوير الجراحي: تفريغ التسمية التلقائية من الترويسة العليا لمنع التكرار البصري
+@st.dialog("")
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
@@ -192,10 +196,10 @@ def show_about_project_popup():
         <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("إغلاق", use_container_width=True, key="close_popup_btn"):
+    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_final"):
         st.rerun()
 
-# حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط التدرج اللوني العالي بالسقف
+# حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط تدرج القمة اللامع بالسقف
 st.markdown("""
     <div class='shamel-top-gradient-fixed-ribbon'>
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
