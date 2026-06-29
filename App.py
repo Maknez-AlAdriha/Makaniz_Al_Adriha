@@ -22,7 +22,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: قالب التنسيق السيادي وسحق أشرطة وصناديق الأزرار كلياً (CSS الشامل)
+# 🎨 الجزء 3: قالب التنسيق السيادي وتضخيم الروابط النصية لتصبح بيضاء مضيئة (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -57,15 +57,15 @@ st.markdown(f"""
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. بناء شريط الملاحة الأفقي الملتصق بالقمة الشفاف مائة بالمائة وبأبعاد الشاملة */
+        /* 2. بناء شريط الملاحة الأفقي الملتصق بالقمة الشفاف مائة بالمائة وبأبعاد الشاملة المحدثة */
         .shamel-top-ribbon {{
             position: fixed !important;
             top: 0px !important;
             right: 0px !important;
             left: 0px !important;
             height: 60px !important; /* ارتفاع نحيف جداً وراقي يوفر كامل المساحة بالتصفح بالأسفل */
-            background: rgba(0, 0, 0, 0.55) !important; /* غسق داكن يحمي الحروف ويمنع التداخل البصري */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* خط الشاملة الأفقي الرقيق جداً */
+            background: rgba(0, 0, 0, 0.6) !important; /* غسق داكن واقي يحمي الحروف ويمنع التداخل البصري */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important; /* خط الشاملة الأفقي الرقيق جداً */
             z-index: 99999 !important;
             display: flex !important;
             align-items: center !important;
@@ -73,23 +73,25 @@ st.markdown(f"""
             direction: rtl !important;
         }}
         
-        /* 3. الهندسة الجراحية: الروابط النصية الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
+        /* 3. الهندسة الجراحية: الروابط النصية الصافية المضيئة باللون الأبيض الناصع مائة بالمائة */
         .shamel-nav-link {{
-            color: #CDD5E0 !important; /* لون الخط الأبيض العاجي والناعم للمكتبة الشاملة */
+            color: #FFFFFF !important; /* 🟢 التطوير الحاسم: جعل الخطوط بيضاء ناصعة ومضيئة مائة بالمائة لتدمر الاختفاء */
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 500 !important; /* خط نحيف ونقي تماماً */
-            font-size: 16px !important;
-            text-decoration: none !important; /* حذف أي خطوط تحت النص */
-            padding: 0 15px !important;
-            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
+            font-weight: 700 !important; /* تضخيم فخم ورشيق للروابط ليبرز وضوحها */
+            font-size: 17px !important; /* حجم رصين واحترافي */
+            text-decoration: none !important; /* حذف أي خطوط ميتة تحت النص */
+            padding: 0 25px !important; /* توسيع المسافة الأفقية المريحة بين الكلمات */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important; /* حقن ظلال سوداء خلف الحروف لتبرز فوق السحاب */
+            transition: color 0.25s ease-in-out, transform 0.25s ease-in-out !important;
             cursor: pointer !important;
             display: inline-block !important;
         }}
         
-        /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي الشريف للمملكة عند تمرير الفأرة */
+        /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
         .shamel-nav-link:hover {{
-            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط */
+            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة الحية للرابط */
             transform: translateY(-1px) !important;
+            text-shadow: 0px 0px 8px rgba(16, 185, 129, 0.6) !important;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -102,17 +104,16 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: حقن خماسية روابط الـ HTML النصية الصافية والمنحوتة صلب شريط القمة (تقليد دقيق للشاملة)
+# 📦 الجزء 4: حقن خماسية روابط الـ HTML النصية الصافية والبيضاء الناصعة صلب شريط القمة (الشاملة مائة بالمائة)
 # ==========================================
-# قمنا هنا باستخدام كود الـ HTML الصافي مائة بالمائة لكسر حلقة الصناديق البيضاء التلقائية لبايثون
 st.markdown("""
     <div class='shamel-top-ribbon'>
-        <!-- روابط الشاملة تتراص أفقياً بمرونة متناهية ونحافة مطلقة من اليمين إلى اليسار -->
+        <!-- روابط الشاملة المضيئة تتراص أفقياً بمرونة مطلقة من اليمين إلى اليسار لعام 2026 -->
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
         <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
         <a class='shamel-nav-link' href='?page=about' target='_self'>حول المشروع</a>
         <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
-        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 700;'>🔍 البحث في المكنز</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
     </div>
 """, unsafe_allow_html=True)
 
