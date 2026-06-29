@@ -11,7 +11,7 @@ import base64
 # ==========================================
 # 🇲🇦 الجزء 1: إعدادات الشاشة بعرض المتصفح الكامل 100% لعام 2026
 # ==========================================
-st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="collapsed")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
@@ -89,7 +89,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 4: تدمير وحجب الصناديق كلياً صلب الشريط الجانبي (CSS الشامل والنهائي)
+# 🎨 الجزء 4: تحصين وتثبيت الشريط المتدرج في السقف الأعلى تماماً (CSS الشامل الشامخ)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -99,7 +99,7 @@ st.markdown(f"""
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
-            background-position: center top !important;
+            background-position: center 55px !important; /* إزاحة طفيفة للصورة للأسفل لتبدأ تحت الشريط الفخم */
             background-repeat: no-repeat !important;
             background-attachment: fixed !important;
             width: 100vw !important;
@@ -122,43 +122,53 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* حجب رأس الصفحة الافتراضي لمنع التداخل البصري */
+        /* 🟢 الحسم التكنولوجي: نسف وحظر مقبض هيدر السيرفر الأصلي الذي كان يتسبب في حجب الأشرطة */
         div[data-testid="stHeader"] {{
-            background: transparent !important;
+            display: none !important;
             height: 0px !important;
         }}
         
-        /* 2. تلوين وتطهير شريط الملاحة الجانبي الأيمن بالتدرج اللوني وتثبيته قسرياً بالقمة */
-        [data-testid="stSidebar"] {{
-            background: linear-gradient(180deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي التراثي الأصيل */
-            border-left: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط الجانبي */
-            direction: rtl !important;
-        }}
-        
-        /* نسف وحجب أزرار بايثون التلقائية التي قد تظهر كصناديق بيضاء داخل السايدبار */
-        [data-testid="stSidebar"] button {{
+        /* إغلاق وحجب أشرطة بايثون التلقائية لمنع كسر الهيكل الصافي */
+        div[data-testid="stHorizontalBlock"] {{
             display: none !important;
         }}
         
-        /* 3. 🟢 الهندسة الجراحية: نحت الروابط النصية الصافية والنحيفة مائة بالمائة صلب السايدبار */
-        .shamel-sidebar-link {{
+        div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
+        
+        /* 2. 🟢 بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتدرج اللوني اللامع لعمارة وصورة المكنز */
+        .shamel-top-gradient-fixed-ribbon {{
+            position: fixed !important;
+            top: 0px !important; /* الالتصاق التام والصريح بسقف الشاشة فوق حافة الصورة العلوية */
+            right: 0px !important;
+            left: 0px !important;
+            height: 55px !important; /* ارتفاع نحيف وراقي جداً يوفر مساحة التصفح */
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
+            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد الحافة */
+            z-index: 999999 !important; /* أعلى درجة نفاذ برمجية لكسر أي حجب سحابي */
+            display: flex !important;
+            align-items: center !important;
+            padding: 0 60px !important;
+            direction: rtl !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+        }}
+        
+        /* 3. الهندسة الجراحية: روابط نصوص الشاملة الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
+        .shamel-nav-link {{
             color: #FFFFFF !important; /* لون الخط الأبيض الناصع والمضيء للوضوح المطلق فوق التدرج */
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 700 !important; /* خط نحيف ورصين واحترافي */
-            font-size: 18px !important;
+            font-weight: 700 !important; /* خط نحيف ونقي تماماً ورصين */
+            font-size: 16px !important;
             text-decoration: none !important; /* حذف أي خطوط تحت النص */
-            padding: 12px 30px !important; /* بطانة داخلية مريحة ومتناسقة */
-            margin: 15px 0 !important;
-            display: block !important; /* جعل الرابط يشمل السطر كاملاً ممتداً */
+            padding: 0 25px !important; /* مسافات أفقية مريحة ومتناسقة بين العناصر كالشاملة */
             transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
-            text-align: right !important;
             cursor: pointer !important;
+            display: inline-block !important;
         }}
         
         /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
-        .shamel-sidebar-link:hover {{
+        .shamel-nav-link:hover {{
             color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط */
-            transform: translateX(-5px) !important; /* تزحيف رشيق لليسار عند ملامسته */
+            transform: translateY(-1px) !important;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -171,17 +181,18 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 5: حقن خماسية روابط الـ HTML النصية الصافية والمضيئة داخل الجناح الأيمن (الشاملة بالمليمتر)
+# 📦 الجزء 5: حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط القمة الملتصق بالسقف
 # ==========================================
-st.sidebar.markdown("<h2 style='text-align: center; color: #D4AF37; font-family:\"Reem Kufi\",serif; font-size: 26px; font-weight:900; margin-top:25px; margin-bottom:35px;'>🏛️ أبواب المكنز</h2>", unsafe_allow_html=True)
-
-# نحت الروابط الخمسة الصافية والعارية كلياً من المربعات والحدود صلب الحاوية الجانبية المعزولة
-st.sidebar.markdown("""
-    <div style='display: flex; flex-direction: column; width: 100%;'>
-        <a class='shamel-sidebar-link' href='?page=home' target='_self'>🏠 الرئيسية</a>
-        <a class='shamel-sidebar-link' href='?page=sections' target='_self'>🏛️ أقسام المكنز</a>
-        <a class='shamel-sidebar-link' href='?page=about' target='_self'>🎓 حول المشروع</a>
-        <a class='shamel-sidebar-link' href='?page=contact' target='_self'>📬 اتصل بنا</a>
-        <a class='shamel-sidebar-link' href='?page=search' target='_self' style='font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
+st.markdown("""
+    <div class='shamel-top-gradient-fixed-ribbon'>
+        <!-- الكلمات تتراص بنحافة مطلقة من اليمين إلى اليسار صلب خلفية التدرج اللوني الشامخة لعام 2026 -->
+        <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
+        <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
     </div>
 """, unsafe_allow_html=True)
+
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
+st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
