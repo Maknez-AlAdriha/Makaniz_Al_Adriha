@@ -7,6 +7,9 @@ import shutil
 import io
 import urllib.parse
 import base64
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 # 🇲🇦 إعدادات الشاشة بعرض المتصفح الكامل 100% الشامل للمملكة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="collapsed")
@@ -117,7 +120,7 @@ st.markdown(f"""
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
+        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتجهيز السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
             top: 0px !important; /* الالتصاق التام والصريح بسقف الشاشة فوق حافة الصورة العلوية */
@@ -221,17 +224,12 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-# ==========================================
-# دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية الفولاذية
-# ==========================================
-
 # 1. الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع بعد التحيين المنقح وصفر أخطاء ترتيب
-@st.dialog("نبذة عن المشروع")
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class='popup-content-text'>
-        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية, تاريخية, بيبليوغرافية, وأنثروبولوجية متعلقة بالمنشآت الروحية, الأضرحة, والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
+        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
         <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
         <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
         <p style='text-align: center; font-weight: bold; color: #1E3A8A;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
@@ -239,7 +237,7 @@ def show_about_project_popup():
     </div>
     """, unsafe_allow_html=True)
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
-        st.rerun()
+        st.st.rerun()
 
 # 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
@@ -279,11 +277,30 @@ def show_contact_us_popup():
                 st.rerun()
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للملفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
+# دالة سيادية باف بايثون لإرسال البريد أوتوماتيكياً وصامتاً من السيرفر مباشرة دون فتح برامج إضافية
+def send_instant_email_from_server(to_email, subject, message_body):
+    from_email = "rachid.janebi@gmail.com"  # بريدك المعتمد للإرسال
+    app_password = "xxxx xxxx xxxx xxxx"    # رمز أمان التطبيقات المولد من حساب جوجل الخاص بك
+    
+    msg = MIMEText(message_body, 'plain', 'utf-8')
+    msg['Subject'] = Header(subject, 'utf-8')
+    msg['From'] = from_email
+    msg['To'] = to_email
+    
+    try:
+        server = smtplib.SMTP("://gmail.com", 587)
+        server.starttls()
+        server.login(from_email, app_password)
+        server.sendmail(from_email, [to_email], msg.as_string())
+        server.quit()
+        return True
+    except Exception as e:
+        return False
+# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
-    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v14")
+    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v15")
     
     if developer_key == "MAROC_2026":
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
@@ -306,10 +323,18 @@ def show_admin_dashboard_popup():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # استخدام target='_self' لمنع فتح أي صفحة بيضاء "بلا عنوان" نهائياً صلب المتصفح عند الرد
-                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
-                mailto_link = f"mailto:{f_email}?subject={subject_reply}"
-                st.markdown(f'<a href="{mailto_link}" target="_self" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:6px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px; box-shadow: 0 2px 5px rgba(22,163,74,0.2);">✉️ رد سريع ومباشر لبريد المرسل</div></a>', unsafe_allow_html=True)
+                # تشغيل زر الإرسال التلقائي الفوري كأداة بايثون (st.button) صلب الواجهة الإدارية
+                btn_key = f"send_auto_reply_btn_{index}"
+                if st.button(f"✉️ رد تلقائي فوري وصامت لبريد الباحث {f_name}", key=btn_key, use_container_width=True):
+                    reply_subject = f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})"
+                    reply_body = f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم فحص ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي"
+                    
+                    with st.spinner("جاري قذف الرسالة وتمريرها عبر السيرفر بأمان..."):
+                        is_sent = send_instant_email_from_server(f_email, reply_subject, reply_body)
+                        if is_sent:
+                            st.success(f"🚀 طار البريد بنجاح واستقر في صندوق بريد الباحث ({f_email}) تلقائياً!")
+                        else:
+                            st.warning("⚠️ لم يكتمل القذف التلقائي، يرجى تفعيل رمز أمان التطبيقات (App Password) داخل حساب Gmail الخاص بك ليعبر السيرفر بأمان.")
 
         st.markdown("---")
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h4>", unsafe_allow_html=True)
@@ -321,7 +346,7 @@ def show_admin_dashboard_popup():
             "اختر ملفات الأضرحة والمصطلحات الشاملة بصيغة (.csv) [يمكنك اختيار ملفات متعددة معاً]:", 
             type=["csv"], 
             accept_multiple_files=True,
-            key=f"popup_csv_uploader_multi_v14_{st.session_state.uploader_counter}"
+            key=f"popup_csv_uploader_multi_v15_{st.session_state.uploader_counter}"
         )
         
         if uploaded_csv_list:
@@ -374,19 +399,17 @@ def show_admin_dashboard_popup():
                                 
                                 prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                                 if prov_id_row:
-                                    # سحق الـ tuple الجغرافي الأول: استخلاص المعرف الصافي بالفهرس 0
                                     prov_id = int(prov_id_row)
                                     era_val = str(row.get('historical_era', 'غير محدد')).strip()
                                     
                                     auto_lat = 31.7917
                                     auto_lon = -7.0926
                                     if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                                    elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                                     elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                                     if existing_row:
-                                        # سحق الـ tuple المزاراتي الثاني: استخلاص المعرف الصافي بالفهرس 0 لتأمين التراكم
                                         shrine_id = int(existing_row)
                                         cursor.execute("""
                                             UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
@@ -402,8 +425,6 @@ def show_admin_dashboard_popup():
                                     cursor.execute("INSERT INTO beliefs_and_functions (shrine_id, function_type, details) VALUES (?, ?, ?)", (shrine_id, b_type_val, b_details_val))
                     conn.commit()
                     st.session_state.uploader_counter += 1
-                    
-                    # قذف تقرير التغذية الرقمية التفصيلي والناجع مائة بالمائة صلب المنظومة الوطنية
                     success_msg = f"📊 تم استيراد عدد {files_count} من الملفات بنجاح؛ تمت إضافة عدد {added_shrines} من الأضرحة الجديدة، وعدد {added_terms} من المصطلحات المعجمية صلب المنظومة."
                     st.success(success_msg)
                     st.toast(success_msg, icon="🎉")
@@ -411,7 +432,6 @@ def show_admin_dashboard_popup():
                     st.error(f"❌ خطأ أثناء الاستيراد الميداني التراكمي: {e}")
     elif developer_key != "":
         st.error("⚠️ الرمز السري غير صحيح، يرجى مراجعة حصانة المنظومة السيادية.")
-
 # نحت صف روابط المكنز النصية صلب الشريط المتدرج بالقمة (ترتيب تتابعي محمي بنسبة 100% عازل للحظر سحابياً)
 current_page_val = st.query_params.get("page", "home")
 active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
@@ -419,7 +439,6 @@ active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_pa
 
 st.markdown(f"""
     <div class='shamel-top-gradient-fixed-ribbon'>
-        <!-- صف روابط المكنز النصية الصافية ونحيفة بسقف المتصفح لعام 2026 مائة بالمائة -->
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
         <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
         <a class='shamel-nav-link' href='?page=about' target='_self' style='{active_about_style}'>حول المشروع</a>
@@ -428,11 +447,7 @@ st.markdown(f"""
         <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #FFFFFF !important;'>🔍 البحث في المكنز</a>
     </div>
 """, unsafe_allow_html=True)
-# ==========================================
-# معالج الاستدعاء الفوري والتحويل التفاعلي للنوافذ سحابياً (بسطام محمي وصفر أخطاء ترتيب)
-# ==========================================
 
-# بايثون يمرر الاستدعاء بسلام مطلق لأن شرح وهندسة كافة الدالات تم قراءته مسبقاً في البلوكات العليا
 if current_page_val == "about":
     st.query_params.clear()
     show_about_project_popup()
