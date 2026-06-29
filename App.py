@@ -78,7 +78,7 @@ encoded_string = ""
 if target_banner:
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
-# قالب التنسيق السيادي وتحصين تمركز الشريط المتدرج وحواف النافذة (CSS الشامل الشامخ)
+# قالب التنسيق السيادي وتحصين تمركز الشريط وتفعيل التمرير العمودي للنوافذ (CSS الشامل الشامخ)
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
@@ -168,6 +168,22 @@ st.markdown(f"""
             color: #1F2937;
             text-align: justify;
             direction: rtl;
+        }}
+
+        /* 🟢 تفعيل شريط التمرير العمودي الداخلي للنافذة المنبثقة لمنع الحجب البصري لزر الإرسال */
+        div[data-testid="stdialog"] {{
+            max-height: 80vh !important; /* تقييد الارتفاع الكلي بـ 80% من مساحة الشاشة لتوفير فسحة رؤية */
+            overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند زيادة الحقول */
+            padding-bottom: 20px !important;
+        }}
+        
+        /* ضبط وتجميل شكل مقبض شريط التمرير الداخلي للنافذة ليتناسق بصرياً مع الموقع */
+        div[data-testid="stdialog"]::-webkit-scrollbar {{
+            width: 8px !important;
+        }}
+        div[data-testid="stdialog"]::-webkit-scrollbar-thumb {{
+            background-color: #1E3A8A !important;
+            border-radius: 4px !important;
         }}
 
         /* تلوين وتغيير وسم التذييل التلقائي ليحمل توقيع الدكتور رشيد الجانبي بوقار علمي ملوكي */
@@ -358,7 +374,7 @@ def show_admin_dashboard_popup():
                                 prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                                 if prov_id_row:
                                     # 🟢 سحق الـ tuple الجغرافي الأول: استخلاص المعرف الصافي بالفهرس 0
-                                    prov_id = int(prov_id_row[0])
+                                    prov_id = int(prov_id_row)
                                     era_val = str(row.get('historical_era', 'غير محدد')).strip()
                                     
                                     auto_lat = 31.7917
@@ -370,7 +386,7 @@ def show_admin_dashboard_popup():
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                                     if existing_row:
                                         # 🟢 سحق الـ tuple المزاراتي الثاني: استخلاص المعرف الصافي بالفهرس 0 لتأمين التراكم
-                                        shrine_id = int(existing_row[0])
+                                        shrine_id = int(existing_row)
                                         cursor.execute("""
                                             UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
                                             (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
