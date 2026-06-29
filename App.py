@@ -78,7 +78,7 @@ encoded_string = ""
 if target_banner:
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
-# قالب التنسيق السيادي وتحصين تمركز الشريط وتفعيل التمرير العمودي للنوافذ (CSS الشامل الشامخ)
+# قالب التنسيق السيادي وتحصين تمركز الشريط وتفعيل التمرير العمودي لجميع النوافذ (CSS الشامل الشامخ)
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
@@ -170,18 +170,18 @@ st.markdown(f"""
             direction: rtl;
         }}
 
-        /* 🟢 تفعيل شريط التمرير العمودي الداخلي للنافذة المنبثقة لمنع الحجب البصري لزر الإرسال */
-        div[data-testid="stdialog"] {{
-            max-height: 80vh !important; /* تقييد الارتفاع الكلي بـ 80% من مساحة الشاشة لتوفير فسحة رؤية */
-            overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند زيادة الحقول */
-            padding-bottom: 20px !important;
+        /* 🟢 تفعيل شريط التمرير الـ Scroll اليدوي المرن لكلا النافذتين قسرياً وبأحرف دقيقة متناسقة مع أمان السيرفر السحابي */
+        div[data-testid="stDialog"] {{
+            max-height: 82vh !important; /* تحديد الارتفاع الأقصى بـ 82% من مساحة الشاشة لتوفير فسحة تصفح */
+            overflow-y: auto !important; /* توليد وحقن شريط تمرير عمودي مرن فوراً عند تمدد وتراكم الخانات */
+            padding-bottom: 25px !important;
         }}
         
-        /* ضبط وتجميل شكل مقبض شريط التمرير الداخلي للنافذة ليتناسق بصرياً مع الموقع */
-        div[data-testid="stdialog"]::-webkit-scrollbar {{
+        /* ضبط وتجميل مظهر مقبض شريط التمرير الـ Scroll الداخلي للنافذة ليتناسق مع المكنز */
+        div[data-testid="stDialog"]::-webkit-scrollbar {{
             width: 8px !important;
         }}
-        div[data-testid="stdialog"]::-webkit-scrollbar-thumb {{
+        div[data-testid="stDialog"]::-webkit-scrollbar-thumb {{
             background-color: #1E3A8A !important;
             border-radius: 4px !important;
         }}
@@ -232,7 +232,7 @@ def show_about_project_popup():
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.rerun()
 
-# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع ببريدك المعتمد
+# 2. الدالة المنبثقة التفاعلية لدفتر التواصل والمراسلة الفورية المضمونة ومحرك الرد الآلي السريع ببريدك المعتمد (محصنة مائة بالمائة)
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -252,7 +252,10 @@ def show_contact_us_popup():
         
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
-        if st.form_submit_button("🚀 إرسال الرسالة بنجاح وصياغة محرك الرد الفوري", use_container_width=True):
+        # 🟢 زراعة زر الإرسال الأصلي المرتبط بالاستمارة قسرياً وبأحرف دقيقة لسحق الخطأ الأحمر كلياً
+        submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وصياغة محرك الرد الفوري", use_container_width=True)
+        
+        if submit_clicked:
             if c_sender_email and c_sender_message:
                 now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
                 
