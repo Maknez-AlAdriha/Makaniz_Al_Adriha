@@ -8,18 +8,13 @@ import io
 import urllib.parse
 import base64
 
-# ==========================================
-# 🇲🇦 الجزء 1: إعدادات الشاشة بعرض المتصفح الكامل 100% لعام 2026
-# ==========================================
+# 🇲🇦 إعدادات الشاشة بعرض المتصفح الكامل 100% الشامل للمملكة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="collapsed")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
-
-# ==========================================
-# 🏢 الجزء 2: البناء المعماري الموثق لجداول قاعدة البيانات لضمان استقرار السيرفر
-# ==========================================
+# بناء ومراقبة جداول الأطروحة لضمان ثبات السيرفر السحابي ومقاومة التصفير
 def init_ultimate_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS geography (
@@ -74,9 +69,7 @@ def init_ultimate_db():
 
 init_ultimate_db()
 
-# ==========================================
-# 🏢 الجزء 3: محرك استدعاء وتجهيز الصورة الملكية بنظام القراءة الفورية
-# ==========================================
+# محرك استدعاء وتشفير البانر لفرضه كخلفية فسيحة ثابتة تملأ كامل عرض وارتفاع الشاشة 100%
 target_banner = None
 for valid_name in ["banner.png", "banner..png", "Banner.png", "banner.PNG", "banner.jpg"]:
     if os.path.exists(valid_name):
@@ -87,19 +80,15 @@ encoded_string = ""
 if target_banner:
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
-
-# ==========================================
-# 🎨 الجزء 4: تحصين وتثبيت الشريط المتدرج في السقف الأعلى تماماً (CSS الشامل الشامخ)
-# ==========================================
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً */
+        /* تثبيت الصورة كخلفية ممتدة بالكامل وتلتصق بحدود شاشة الحاسوب ومقاومة التمرير قسرياً */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
-            background-position: center 55px !important; /* إزاحة طفيفة للصورة للأسفل لتبدأ تحت الشريط الفخم */
+            background-position: center top !important;
             background-repeat: no-repeat !important;
             background-attachment: fixed !important;
             width: 100vw !important;
@@ -122,29 +111,20 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* 🟢 الحسم التكنولوجي: نسف وحظر مقبض هيدر السيرفر الأصلي الذي كان يتسبب في حجب الأشرطة */
-        div[data-testid="stHeader"] {{
-            display: none !important;
-            height: 0px !important;
-        }}
-        
-        /* إغلاق وحجب أشرطة بايثون التلقائية لمنع كسر الهيكل الصافي */
-        div[data-testid="stHorizontalBlock"] {{
-            display: none !important;
-        }}
-        
+        div[data-testid="stHeader"] {{ display: none !important; height: 0px !important; }}
+        div[data-testid="stHorizontalBlock"] {{ display: none !important; }}
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. 🟢 بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتدرج اللوني اللامع لعمارة وصورة المكنز */
+        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتدرج اللوني اللامع لعمارة وصورة المكنز */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
-            top: 0px !important; /* الالتصاق التام والصريح بسقف الشاشة فوق حافة الصورة العلوية */
+            top: 0px !important;
             right: 0px !important;
             left: 0px !important;
-            height: 55px !important; /* ارتفاع نحيف وراقي جداً يوفر مساحة التصفح */
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
-            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد الحافة */
-            z-index: 999999 !important; /* أعلى درجة نفاذ برمجية لكسر أي حجب سحابي */
+            height: 55px !important;
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important;
+            border-bottom: 2px solid #D4AF37 !important;
+            z-index: 999999 !important;
             display: flex !important;
             align-items: center !important;
             padding: 0 60px !important;
@@ -152,23 +132,43 @@ st.markdown(f"""
             box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
         }}
         
-        /* 3. الهندسة الجراحية: روابط نصوص الشاملة الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
+        /* روابط نصوص الشاملة الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
         .shamel-nav-link {{
-            color: #FFFFFF !important; /* لون الخط الأبيض الناصع والمضيء للوضوح المطلق فوق التدرج */
+            color: #FFFFFF !important;
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 700 !important; /* خط نحيف ونقي تماماً ورصين */
+            font-weight: 700 !important;
             font-size: 16px !important;
-            text-decoration: none !important; /* حذف أي خطوط تحت النص */
-            padding: 0 25px !important; /* مسافات أفقية مريحة ومتناسقة بين العناصر كالشاملة */
+            text-decoration: none !important;
+            padding: 0 25px !important;
             transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
             cursor: pointer !important;
             display: inline-block !important;
         }}
         
-        /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
         .shamel-nav-link:hover {{
-            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط */
+            color: #10B981 !important;
             transform: translateY(-1px) !important;
+        }}
+
+        /* تنسيق وتفخيم محتوى النافذة المنبثقة التراثية لتطابق نموذج المكتبة الشاملة */
+        .popup-header-title {{
+            font-family: "Reem Kufi", serif !important;
+            color: #1E3A8A;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 2px solid #D4AF37;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }}
+        
+        .popup-content-text {{
+            font-family: 'Tajawal', sans-serif !important;
+            font-size: 17px;
+            line-height: 1.8;
+            color: #1F2937;
+            text-align: justify;
+            direction: rtl;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -179,20 +179,38 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
+# محرك الدالة المنبثقة التفاعلية (Dialog) لعرض معطيات حول المشروع كالشاملة بالمليمتر الجغرافي
+@st.dialog("المكتبة الشاملة للمكنز")
+def show_about_project_popup():
+    st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class='popup-content-text'>
+        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
+        <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
+        <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
+        <p style='text-align: center; font-weight: bold; color: #1E3A8A;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
+        <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
+    </div>
+    """, unsafe_allow_html=True)
+    if st.button("إغلاق", use_container_width=True, key="close_popup_btn"):
+        st.rerun()
 
-# ==========================================
-# 📦 الجزء 5: حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط القمة الملتصق بالسقف
-# ==========================================
+# حقن خماسية روابط الـ HTML النصية الصافية والبيضاء صلب شريط التدرج اللوني العالي بالسقف
 st.markdown("""
     <div class='shamel-top-gradient-fixed-ribbon'>
-        <!-- الكلمات تتراص بنحافة مطلقة من اليمين إلى اليسار صلب خلفية التدرج اللوني الشامخة لعام 2026 -->
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
         <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
-        <a class='shamel-nav-link' href='?page=about' target='_self'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self' style='color: #10B981 !important; font-weight:900;'>حول المشروع</a>
         <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
         <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
     </div>
 """, unsafe_allow_html=True)
 
-# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
+# التقاط معلمات الرابط (URL Parameters) لتشغيل الانبثاق الفوري مائة بالمائة فور نقر زر "حول المشروع"
+query_params = st.query_params
+if query_params.get("page") == "about":
+    st.query_params.clear() # مسح المعلمة الفورية خلف الكواليس لإتاحة خيار العودة بمرونة
+    show_about_project_popup()
+
+# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة
 st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
