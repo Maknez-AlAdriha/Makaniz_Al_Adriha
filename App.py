@@ -11,7 +11,7 @@ import base64
 # ==========================================
 # 🇲🇦 الجزء 1: إعدادات الشاشة بعرض المتصفح الكامل 100% لعام 2026
 # ==========================================
-st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
+st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="expanded")
 
 # الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
@@ -89,7 +89,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 4: تلوين وتثبيت الحاوية بالتدرج اللوني وسحق الصناديق (CSS الشامل والنهائي)
+# 🎨 الجزء 4: قالب التنسيق السيادي وتطهير الشريط الجانبي الأيمن بنقاء الشاملة (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -122,56 +122,43 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* تصفير وحجب رأس الصفحة الافتراضي لمنع التداخل البصري */
+        /* حجب رأس الصفحة الافتراضي لمنع التداخل البصري */
         div[data-testid="stHeader"] {{
             background: transparent !important;
             height: 0px !important;
-            padding: 0 !important;
-            margin: 0 !important;
         }}
         
-        div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
-        
-        /* 2. 🟢 التصحيح الفولاذي: صبغ الحاوية الأفقية الأصلية بالتدرج اللوني وتثبيتها قسرياً بالقمة مرئية 100% */
-        div[data-testid="stHorizontalBlock"] {{
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي التراثي */
-            position: fixed !important; /* تثبيت مطلق صلب سقف المتصفح لضمان عدم الاختفاء سحابياً */
-            top: 0px !important;
-            right: 0px !important;
-            left: 0px !important;
-            width: 100vw !important;
-            height: 55px !important; /* ارتفاع رصين ونحيف مطابق للشاملة */
-            display: flex !important; /* تفعيل العرض المرئي قسرياً للكتلة */
-            align-items: center !important;
-            padding: 0px 60px !important;
-            margin: 0px !important;
-            z-index: 99999 !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
-            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد الحافة */
+        /* 2. تلوين وتطهير شريط الملاحة الجانبي الأيمن بالتدرج اللوني لقبلة المكنز ومنع كسر العناصر سحابياً */
+        [data-testid="stSidebar"] {{
+            background: linear-gradient(180deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
+            border-left: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط الجانبي */
+            direction: rtl !important;
         }}
         
-        /* 3. 🟢 تدمير وسحق الصناديق والمربعات البيضاء لأزرار بايثون تماماً وتحويلها لنصوص حرة ونحيفة كالشاملة */
-        .shamel-nav-native-btn button {{
-            background: transparent !important; /* سحق الخلفية البيضاء والحواف كلياً */
-            color: #FFFFFF !important; /* خط أبيض ناصع ومضيء مائة بالمائة للوضوح المطلق */
+        /* 3. تدمير وسحق الصناديق والمربعات البيضاء للأزرار الجانبية تماماً وتحويلها لنصوص حرة ونحيفة كالشاملة */
+        .shamel-sidebar-btn button {{
+            background: transparent !important; /* سحق الخلفية البيضاء كلياً */
+            color: #FFFFFF !important; /* خط أبيض ناصع ومضيء مائة بالمائة */
             font-family: 'Tajawal', sans-serif !important;
             font-weight: 700 !important; /* تضخيم رصين واحترافي للحروف */
-            font-size: 16px !important;
+            font-size: 17px !important;
             border: none !important; /* نسف الحدود والخطوط المحيطة بالزر */
             border-radius: 0px !important;
-            padding: 4px 15px !important;
+            padding: 10px 20px !important;
             box-shadow: none !important;
-            transition: color 0.2s ease-in-out !important;
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
             cursor: pointer !important;
-            margin: 0px auto !important;
-            display: block !important;
+            margin: 10px 0 !important;
+            text-align: right !important;
+            width: 100% !important;
         }}
         
         /* تأثير الHover التفاعلي للشاملة: الوميض الفوري للأخضر الزمردي التراثي للمملكة عند تمرير الفأرة */
-        .shamel-nav-native-btn button:hover {{
-            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط */
+        .shamel-sidebar-btn button:hover {{
+            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط النشط */
             background: transparent !important;
             box-shadow: none !important;
+            transform: translateX(-3px) !important; /* حركة تزحيف رشيقة لليمين */
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -184,40 +171,33 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 5: إطلاق خماسية أزرار بايثون الأصلية والمنقحة صلب شريط التدرج اللوني بالقمة
+# 📦 الجزء 5: حقن خماسية أزرار بايثون الأصلية صلب الشريط الجانبي المحصن والمضمون 100%
 # ==========================================
-# قنوات بايثون الأصلية المعترف بها سحابياً مع تفعيل عزل الكتل لمنع الصناديق البيضاء الميتة
-menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.8, 4.5])
+st.sidebar.markdown("<h2 style='text-align: center; color: #D4AF37; font-family:\"Reem Kufi\",serif; font-size: 24px; font-weight:900; margin-top:20px; margin-bottom:30px;'>🏛️ أبواب المكنز</h2>", unsafe_allow_html=True)
 
-with menu_col_1:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("الرئيسية", key="btn_shamel_native_home_final"):
+with st.sidebar.container():
+    st.markdown("<div class='shamel-sidebar-btn'>", unsafe_allow_html=True)
+    if st.button("🏠 الرئيسية", key="sidebar_btn_home"):
+        st.session_state.current_page = "search"
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_2:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("أقسام المكنز", key="btn_shamel_native_sections_final"):
+    st.markdown("<div class='shamel-sidebar-btn'>", unsafe_allow_html=True)
+    if st.button("🏛️ أقسام المكنز", key="sidebar_btn_sections"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_3:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("حول المشروع", key="btn_shamel_native_about_final"):
+    st.markdown("<div class='shamel-sidebar-btn'>", unsafe_allow_html=True)
+    if st.button("🎓 حول المشروع", key="sidebar_btn_about"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_4:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("اتصل بنا", key="btn_shamel_native_contact_final"):
+    st.markdown("<div class='shamel-sidebar-btn'>", unsafe_allow_html=True)
+    if st.button("📬 اتصل بنا", key="sidebar_btn_contact"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
     
-with menu_col_5:
-    st.markdown("<div class='shamel-nav-native-btn'>", unsafe_allow_html=True)
-    if st.button("🔍 البحث في المكنز", key="btn_shamel_native_search_final"):
+    st.markdown("<div class='shamel-sidebar-btn'>", unsafe_allow_html=True)
+    if st.button("🔍 البحث في المكنز", key="sidebar_btn_search"):
         st.rerun()
     st.markdown("</div>", unsafe_allow_html=True)
-
-# حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
-st.markdown("", unsafe_allow_html=True)
