@@ -150,6 +150,21 @@ st.markdown(f"""
             transform: translateY(-1px) !important;
         }}
 
+        /* 🟢 الحل الحاسم لمنع المستطيلات البيضاء الميتة: حظر فرض التمرير الإجباري على جميع النوافذ بشكل أعمى */
+        div[data-testid="stDialog"] {{
+            max-height: 85vh !important;
+            background: #FFFFFF !important;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3) !important;
+        }}
+        
+        /* 🟢 تفعيل شريط التمرير الـ Scroll الداخلي قسرياً وحصرياً لنوافذ الاستمارات الممتدة دون تشويه النبذة */
+        div[data-testid="stDialog"] .stForm {{
+            max-height: 380px !important;
+            overflow-y: auto !important;
+            padding-left: 10px !important;
+        }}
+
         /* سحق التداخل كلياً في العناوين والرموز عبر عزل وعرض التبويبات ككتل أفقية صافية ومتباعدة بجاذبية تامة */
         div[data-testid="stTabs"] {{
             background: rgba(255, 255, 255, 0.98) !important;
@@ -191,7 +206,7 @@ st.markdown(f"""
             box-shadow: 0 -2px 10px rgba(0,0,0,0.15) !important;
         }}
         
-        /* تنسيق البطاقة الأنيقة والمرتبة للمعلومات الكاملة داخل الـ Popup الملوكي الفاخر */
+        /* تنسيق البطاقة الأنيقة للمعلومات الكاملة داخل الـ Popup الملوكي */
         .card-shrine-popup {{
             background: #FFFFFF !important;
             border-right: 6px solid #D4AF37 !important;
@@ -210,11 +225,6 @@ st.markdown(f"""
             padding-bottom: 6px;
         }}
         
-        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكافة النوافذ المنبثقة بحرف D الكبير */
-        div[data-testid="stDialog"], div[data-testid="stDialog"] > div, div[data-testid="stDialog"] .stForm, div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 520px !important;
-            overflow-y: auto !important;
-        }}
         div[data-testid="stDialog"]::-webkit-scrollbar {{ width: 8px !important; display: block !important; }}
         div[data-testid="stDialog"]::-webkit-scrollbar-thumb {{ background-color: #1E3A8A !important; border-radius: 4px !important; }}
 
@@ -241,24 +251,24 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-# ==========================================
-# دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية الفولاذية
-# ==========================================
-
+# 1. الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع (محمية ومطهرة بالكامل)
+@st.dialog("نبذة عن المشروع الأكاديمي")
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
-    <div class='popup-content-text'>
+    <div class='popup-content-text' style='padding: 10px 5px;'>
         <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
         <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
         <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
-        <p style='text-align: center; font-weight: bold; color: #1E3A8A;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
+        <p style='text-align: center; font-weight: bold; color: #1E3A8A; margin-bottom:5px;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
         <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🏛️ إغلاق النافذة والعودة للمكنز", use_container_width=True, key="close_about_clean_btn"):
+        st.query_params.clear()
         st.rerun()
-
+# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -294,20 +304,19 @@ def show_contact_us_popup():
                 st.toast("📨 تم قذف رسالة التذكير بنجاح!", icon="🔔")
                 st.rerun()
             else:
-                st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# 🟢 اللحام التكنولوجي السيادي الحاسم: استفراد وسم @st.dialog للبطاقات الفردية لتعمل بنجاح عند نقر أزرار لوحة الأقسام
+                st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
+# اللحام التكنولوجي السيادي الحاسم: استفراد وسم @st.dialog للبطاقات الفردية لتعمل بنجاح عند نقر أزرار لوحة الأقسام
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large")
 def popup_individual_shrine_card(shrine_name):
-    # سحب تفاصيل المزار بالكامل ونحته في قالب المكتبة الشاملة الفاخر
     row = cursor.execute("""
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
     if row:
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'>**🕌 {row[0]}**</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'>🕌 {row[0]}</h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup'>
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {row[3]}</div>
-            <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي M ميداني الدقيق:</b> {row[2]}</div>
+            <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {row[2]}</div>
             <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {row[1]}</div>
             <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية:</b> {row[5]} | {row[6]}</div>
             <div class='card-shrine-field'><b>📚 المصادر والكتب البيبليوغرافية للباحثين:</b> {row[7]}</div>
@@ -390,10 +399,10 @@ def show_admin_dashboard_popup():
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
                 st.markdown(f"<div style='background:#F3F4F6; padding:10px; margin-bottom:5px; border-right:4px solid #1E3A8A;'>📅 {f_date} | <b>👤 {f_name}</b><br>📌 {f_shrine}<br>📝 {f_text}</div>", unsafe_allow_html=True)
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني: ملاحظتكم حول ({f_shrine})")
-                body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
+                body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني لعام 2026.\n\nمع تحيات،\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
-                
                 st.markdown(f'<a href="{mailto_link}" target="_self" style="text-decoration:none;"><div style="background:#15803D; color:white; text-align:center; padding:8px; border-radius:4px; margin-bottom:15px; font-size:14px; font-weight:bold;">✉️ رد سريع ومباشر لبريد الباحث {f_name}</div></a>', unsafe_allow_html=True)
+        
         st.markdown("---")
         st.markdown("<h5>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h5>", unsafe_allow_html=True)
         if "uploader_counter" not in st.session_state: st.session_state.uploader_counter = 0
@@ -441,13 +450,10 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 if current_page_val == "about":
-    st.query_params.clear()
     show_about_project_popup()
 elif current_page_val == "admin":
-    st.query_params.clear()
     show_admin_dashboard_popup()
 elif current_page_val == "contact":
-    st.query_params.clear()
     show_contact_us_popup()
 
 # حقن استدعاء الصفحة الكاملة والديناميكية للأقسام بنجاح ودون تداخل نوافذ
