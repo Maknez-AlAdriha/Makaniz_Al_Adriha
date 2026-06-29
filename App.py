@@ -319,7 +319,7 @@ def show_maknez_sections_dashboard():
     with tab1:
         st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #1E3A8A; padding-right:10px;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>", unsafe_allow_html=True)
         shrines_m = cursor.execute("SELECT name, id FROM shrines WHERE type = 'أضرحة المسلمين' ORDER BY id DESC").fetchall()
-        if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً.")
+        if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(3)
             for idx, (name, s_id) in enumerate(shrines_m):
@@ -329,7 +329,7 @@ def show_maknez_sections_dashboard():
     with tab2:
         st.markdown("<h4 style='color:#064E3B; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #064E3B; padding-right:10px;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>", unsafe_allow_html=True)
         shrines_j = cursor.execute("SELECT name, id FROM shrines WHERE type = 'مزارات اليهود' ORDER BY id DESC").fetchall()
-        if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً.")
+        if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(3)
             for idx, (name, s_id) in enumerate(shrines_j):
@@ -339,7 +339,7 @@ def show_maknez_sections_dashboard():
     with tab3:
         st.markdown("<h4 style='color:#0F5132; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #0F5132; padding-right:10px;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>", unsafe_allow_html=True)
         terms = cursor.execute("SELECT term, id FROM thesaurus_terms ORDER BY term ASC").fetchall()
-        if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً.")
+        if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(4)
             for idx, (term, t_id) in enumerate(terms):
@@ -394,42 +394,70 @@ def show_shamel_search_engine_page():
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
                 if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_{s_id}_{idx}", use_container_width=True): popup_individual_shrine_card(s_name)
-# 🟢 المكون السيادي المبتكر: دالة أطلس المكنز التفاعلي لعرض جغرافية الأولياء رقمياً لعام 2026
+# 🟢 المكون السيادي المبتكر المحين لعام 2026: محرك أطلس المكنز ومستطيل الملاحة والتركيب الفوري للبطاقة الجغرافية الكاملة
 def show_maknez_atlas_interactive_map_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #1E3A8A;'>
             <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>🗺️ أطلس المكنز الوطني للأضرحة والمزارات الشريفة</h2>
-            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>الجغرافيا الرقمية التفاعلية لمعالم ومعاهد صلحاء المملكة المغربية</p>
+            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>الملاحة الجغرافية الفورية والتركيز التلقائي فوق إحداثيات المعالم والصلحاء</p>
         </div>
     """, unsafe_allow_html=True)
     
-    # سحب إحداثيات المعالم الترابية حياً من قاعدة البيانات للتمركز فوق الخريطة
-    sh_map_data = cursor.execute("SELECT name, latitude, longitude, type, id FROM shrines").fetchall()
+    # سحب الإحداثيات الجغرافية والمعطيات الترابية حياً بالكامل مائة بالمائة من مكنز الأطروحة
+    sh_map_data = cursor.execute("""
+        SELECT shrines.name, shrines.latitude, shrines.longitude, shrines.type, geography.province, geography.region, shrines.exact_location 
+        FROM shrines 
+        JOIN geography ON shrines.province_id = geography.id""").fetchall()
     
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية الحاوية على خطوط الطول والعرض من بوابة الإدارة.")
     else:
-        # تجهيز مصفوفة البيانات لمحرك خرائط Streamlit الافتراضي الخفيف والمحصن سحابياً لعام 2026
+        # 🟢 1. إنشاء مربع البحث الفوري في الخريطة بأي حرف (Live Map Search)
+        st.markdown("<h4 style='color:#1E3A8A; font-weight:bold;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة:</h4>", unsafe_allow_html=True)
+        search_map_input = st.text_input("اكتب اسم الضريح أو جزءاً منه (مثال: فيفي، العيساوي...):", placeholder="ابدأ بكتابة الحروف للقفز الجغرافي الفوري صلب الموضوع...")
+        
+        # تصفية المعطيات بناء على الحروف المكتوبة في مربع البحث
+        filtered_data = [item for item in sh_map_data if search_map_input.lower() in item[0].lower()] if search_query := search_map_input.strip() else sh_map_data
+        
+        # تجهيز مصفوفة الرسم البياني للخريطة
         map_list = []
-        for name, lat, lon, s_type, s_id in sh_map_data:
-            # تخصيص لوني للدبابيس: أزرق ملكي للمسلمين وأخضر زمردي لليهود لضمان روعة الجمالية والفرز البصري
-            p_color = [30, 58, 138, 200] if s_type == "أضرحة المسلمين" else [6, 78, 59, 200]
-            map_list.append({"name": name, "latitude": lat, "longitude": lon, "color": p_color, "type": s_type})
+        for name, lat, lon, s_type, prov, reg, loc_det in filtered_data:
+            p_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#064E3B"
+            map_list.append({"name": name, "latitude": lat, "longitude": lon, "color": p_color})
             
         df_map = pd.DataFrame(map_list)
         
-        # إطلاق وعرض الخريطة التفاعلية الفسيحة والممتدة أفقياً بصفر تعارضات سحابية
-        st.map(df_map, latitude="latitude", longitude="longitude", size=50, color="color", use_container_width=True)
+        # 🟢 2. حساب نقطة التركيز التلقائي (Auto-Zoom & Center) بناءً على البحث أو التموضع الافتراضي للمملكة الشريفة
+        if search_query and not df_map.empty:
+            # القفز الفوري لأول نتيجة مطابقة للبحث المكتوب بالبكسل
+            center_lat = float(df_map.iloc[0]["latitude"])
+            center_lon = float(df_map.iloc[0]["longitude"])
+            map_zoom = 11  # زووم مكثف وعالي الدقة لمشاهدة الدوار والجماعة بوضوح
+        else:
+            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 5  # التمركز البانورامي المعتمد لكامل خريطة المملكة المغربية
+            
+        # إطلاق وعرض خريطة الأطلس التفاعلية بنسقها العريض والذكي المتمركز تلقائياً
+        st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
-        st.markdown("<br><h4 style='color:#1E3A8A; font-weight:bold;'>📍 كشاف التدقيق والالتقاط الفوري من الخريطة:</h4>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#6B7280; font-size:14px;'>اختر اسم الضريح الذي حددته في الأعلى بالفأرة لتنبثق لك بطاقته الأكاديمية الكاملة بنقاء مطلق:</p>", unsafe_allow_html=True)
-        
-        # قائمة اختيار ذكية ومطابقة لموقع الدبابيس تطلق الـ Popup الفردي فورياً بنجاح تام
-        names_list = [item[0] for item in sh_map_data]
-        selected_shrine_marker = st.selectbox("🎯 انقر هنا واكتب اسم الضريح لمعاينة ملفه الميداني كاملاً:", ["--- الرجاء اختيار مَعلم مأثور ---"] + names_list)
-        
-        if selected_shrine_marker != "--- الرجاء اختيار مَعلم مأثور ---":
-            popup_individual_shrine_card(selected_shrine_marker)
+        # 🟢 3. استخراج وعرض البطاقة الترابية الكاملة (الجهة، الإقليم، الجماعة، الدوار، والإحداثيات) أسفل الخريطة فوراً عند المطابقة
+        if search_query and len(filtered_data) > 0:
+            target_sh = filtered_data[0]
+            st.markdown(f"""
+                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
+                    <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
+                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh[0]} ({target_sh[3]})</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالمليمتر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
+                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh[5]}</div>
+                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh[4]}</div>
+                    <div class='card-shrine-field'><b> جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh[6]}</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            # زر إضافي منبثق لتفجير الـ Popup الملوكي الفاخر للنبذة التاريخية من قلب الأطلس
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True):
+                popup_individual_shrine_card(target_sh[0])
+        else:
+            st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # بوابة إدارة وتغذية المكنز الوطني ودعم الاستيراد التراكمي الشامل للمشرف
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
