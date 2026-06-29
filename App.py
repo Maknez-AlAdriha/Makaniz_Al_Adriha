@@ -115,6 +115,7 @@ st.markdown(f"""
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
+                /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
             top: 0px !important;
@@ -190,6 +191,22 @@ st.markdown(f"""
             direction: rtl !important;
         }}
 
+        /* 🟢 حقن وتفخيم صندوق البحث: جعل الخط المكتوب والنص الافتراضي بالوسط مائة بالمائة وبلون أزرق غليظ ملكي */
+        div[data-testid="stTextInput"] input {{
+            text-align: center !important; /* قسر التمركز في الوسط تماماً */
+            font-size: 18px !important; /* تكبير مقاس الخط لسهولة تصفح طالب العلم */
+            font-weight: 900 !important; /* جعل الخط غليظاً جداً وبصلابة تامة */
+            color: #1E3A8A !important; /* تلوين النص المكتوب بالأزرق الملكي الجذاب */
+        }}
+        
+        /* تلوين النص المؤقت (Placeholder) بالأزرق الغليظ ليتناسق مع حقل البحث */
+        div[data-testid="stTextInput"] input::placeholder {{
+            text-align: center !important;
+            color: #1E3A8A !important;
+            font-weight: bold !important;
+            opacity: 0.7 !important;
+        }}
+
         .card-shrine-popup {{
             background: #FFFFFF !important;
             border-right: 6px solid #D4AF37 !important;
@@ -230,6 +247,19 @@ st.markdown(f"""
             text-align: right !important;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.6) !important;
         }}
+
+
+
+
+
+
+
+
+
+
+
+
+
     </style>
 """, unsafe_allow_html=True)
 # ==========================================
