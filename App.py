@@ -196,7 +196,7 @@ st.markdown(f"""
             direction: rtl !important;
         }}
 
-        /* تنسيق وتفخيم البطاقة الأنيقة للمعلومات الفردية المفتوحة داخل الـ Popup */
+        /* 🟢 تعديل الاتجاه الحاسم وقسر المحاذاة من اليمين إلى اليسار لكافة الحقول والنصوص داخل الـ Popup لمنع الانجراف الأجنبي */
         .card-shrine-popup {{
             background: #FFFFFF !important;
             border-right: 6px solid #D4AF37 !important;
@@ -204,7 +204,8 @@ st.markdown(f"""
             border-radius: 8px !important;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
             margin-top: 12px !important;
-            direction: rtl !important;
+            direction: rtl !important; /* فرض الاتجاه العربي */
+            text-align: right !important; /* قسر التموضع لليمين مائة بالمائة */
         }}
         .card-shrine-field {{
             font-size: 16px !important;
@@ -213,6 +214,8 @@ st.markdown(f"""
             color: #1F2937 !important;
             border-bottom: 1px dashed #E5E7EB;
             padding-bottom: 6px;
+            direction: rtl !important; /* حماية حقول التفاصيل الفردية */
+            text-align: right !important;
         }}
         
         /* التحصين الجراحي لمنع المستطيلات البيضاء الميتة في النبذة والتحقق */
@@ -237,12 +240,14 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-# 1. الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع (محمية ومطهرة بالكامل)
-@st.dialog("نبذة عن المشروع الأكاديمي")
+# ==========================================
+# دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية الفولاذية
+# ==========================================
+
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
-    <div class='popup-content-text' style='padding: 10px 5px;'>
+    <div class='popup-content-text' style='padding: 10px 5px; direction: rtl; text-align: right;'>
         <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
         <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
         <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
@@ -255,29 +260,39 @@ def show_about_project_popup():
         st.query_params.clear()
         st.rerun()
 
-# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
+    
     st.markdown("""
-    <div style='background-color: #F8FAFC; border-right: 5px solid #1E3A8A; padding: 15px; border-radius: 4px; margin-bottom: 20px;'>
+    <div style='background-color: #F8FAFC; border-right: 5px solid #1E3A8A; padding: 15px; border-radius: 4px; margin-bottom: 20px; direction: rtl; text-align: right;'>
         <p style='margin:0; font-weight:700; color:#1E3A8A; font-size:16px;'>📞 للاتصال المباشر مع الدكتور رشيد الجانبي:</p>
         <p style='margin:5px 0 0 0; font-weight:900; color:#10B981; font-size:18px; direction:ltr; text-align:right;'>+212 666-271681</p>
     </div>
     """, unsafe_allow_html=True)
+    
     with st.form("shamel_contact_secure_form", clear_on_submit=True):
         c_sender_name = st.text_input("اسم الباحث / المرسل الكريم:", placeholder="اكتب اسمك الكامل هنا...")
         c_sender_email = st.text_input("البريد الإلكتروني للمرسل (لاستقبال الرد الآلي السريع):", placeholder="example@domain.com")
         c_sender_subject = st.text_input("موضوع المراسلة صلب الموضوع:", placeholder="مثال: تصويب علمي، إغناء بيبليوغرافي...")
         c_sender_message = st.text_area("نص الرسالة أو الملاحظة الترابية بالكامل:")
+        
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
+        
         submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وإرسال التذكير", use_container_width=True)
+        
         if submit_clicked:
             if c_sender_email and c_sender_message:
                 now_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-                cursor.execute("INSERT INTO visitor_feedback (visitor_name, visitor_email, shrine_related, feedback_text, submission_date) VALUES (?, ?, ?, ?, ?)", (c_sender_name, c_sender_email, c_sender_subject, c_sender_message, now_str))
+                
+                cursor.execute("""
+                    INSERT INTO visitor_feedback (visitor_name, visitor_email, shrine_related, feedback_text, submission_date) 
+                    VALUES (?, ?, ?, ?, ?)""", 
+                    (c_sender_name, c_sender_email, c_sender_subject, c_sender_message, now_str))
                 conn.commit()
+                
                 st.success("🔔 تم إرسال رسالة تذكير بنجاح إلى الموقع!")
+                st.toast("📨 تم قذف رسالة التذكير بنجاح!", icon="🔔")
                 st.rerun()
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
@@ -288,9 +303,10 @@ def popup_individual_shrine_card(shrine_name):
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
     if row:
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>🕌 {row[0]}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {row[0]}</b></h3>", unsafe_allow_html=True)
+        # حقن الـ direction والـ text-align الملوكي في الكتل النصية لفرض المحاذاة اليمنى الصارمة
         st.markdown(f"""
-        <div class='card-shrine-popup'>
+        <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {row[3]}</div>
             <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {row[2]}</div>
             <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {row[1]}</div>
@@ -306,12 +322,12 @@ def popup_individual_term_card(term_name):
     if row:
         st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'>📖 مصطلح: {row[0]}</h3>", unsafe_allow_html=True)
         st.markdown(f"""
-        <div class='card-shrine-popup' style='border-right-color:#064E3B;'>
+        <div class='card-shrine-popup' style='border-right-color:#064E3B; direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>🗂️ الفئة الأنثروبولوجية صلب الأطروحة:</b> {row[1]}</div>
             <div class='card-shrine-field' style='font-size:18px !important; line-height:2; border-bottom:none;'><b>📚 التعريف العلمي المعتمد الأكاديمي:</b><br>{row[2]}</div>
         </div>
         """, unsafe_allow_html=True)
-# لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل ومزودة بميزة الـ Popup الفردي لكل زر
+# لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل والمزودة بميزة الـ Popup الفردي لكل زر
 def show_maknez_sections_dashboard():
     st.markdown("""
         <div class='shamel-dashboard-container'>
@@ -351,7 +367,7 @@ def show_maknez_sections_dashboard():
             for idx, (term, t_id) in enumerate(terms):
                 with cols[idx % 4]:
                     if st.button(f"📖 {term}", key=f"term_btn_{t_id}", use_container_width=True): popup_individual_term_card(term)
-# 🟢 التطوير الاستراتيجي الفائق: صفحة البحث المتقدم والمتقاطع المستوحاة بالكامل من خصائص المكتبة الشاملة العريقة
+# صفحة البحث المتقدم والمتقاطع المستوحاة بالكامل من خصائص المكتبة الشاملة العريقة
 def show_shamel_search_engine_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #064E3B;'>
@@ -360,7 +376,6 @@ def show_shamel_search_engine_page():
         </div>
     """, unsafe_allow_html=True)
     
-    # تفجير كتل الفلاتر المتقدمة في صف أفقي أنيق لمنع التداخل البصري مائة بالمائة
     f_col1, f_col2, f_col3 = st.columns(3)
     
     with f_col1:
@@ -368,13 +383,11 @@ def show_shamel_search_engine_page():
     with f_col2:
         type_filter = st.selectbox("🗂️ فرز حسب الرواق المعلمي:", ["الكل كحزمة واحدة", "أضرحة المسلمين", "مزارات اليهود"])
     with f_col3:
-        # جلب قائمة الأقاليم التاريخية ديناميكياً من قاعدة البيانات لضمان المزامنة التراكمية
         all_provinces = ["كل الأقاليم الترابية"] + [p[0] for p in cursor.execute("SELECT province FROM geography ORDER BY province ASC").fetchall()]
         province_filter = st.selectbox("📍 فرز حسب الإقليم التاريخي للمملكة:", all_provinces)
         
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 15px 0;'>", unsafe_allow_html=True)
     
-    # بناء استعلام SQL الذكي والديناميكي المتقاطع
     sql_base = """
         SELECT shrines.name, geography.province, shrines.historical_era, shrines.type, shrines.id 
         FROM shrines 
@@ -403,16 +416,14 @@ def show_shamel_search_engine_page():
     if not results:
         st.info("لا توجد نتائج تطابق خيارات البحث الحالية صلب قاعدة البيانات التاريخية.")
     else:
-        # عرض نتائج البحث في شبكة بطاقات تفاعلية جذابة بألوان ملوكية، بنقرة تفتح الـ Popup المكتمل
         r_cols = st.columns(3)
         for idx, (s_name, p_name, era_name, s_type, s_id) in enumerate(results):
             with r_cols[idx % 3]:
-                # تلوين حواف البطاقات حسب فئة الضريح لإضافة البهجة والجمالية الجاذبة للعين
                 border_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#064E3B"
                 card_html = f"""
-                    <div style='background:#FFFFFF; padding:15px; border-radius:8px; border-right: 5px solid {border_color}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom:10px;'>
+                    <div style='background:#FFFFFF; padding:15px; border-radius:8px; border-right: 5px solid {border_color}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom:10px; direction: rtl; text-align: right;'>
                         <span style='font-size:12px; color:#6B7280; font-weight:bold;'>📌 {s_type}</span><br>
-                        <b style='color:#1F2937; font-size:16px;'>🕌 {s_name}</b><br>
+                        <b style='color:#1F2937; font-size:16px;'>  🕌 {s_name}</b><br>
                         <span style='font-size:13px; color:#4B5563;'>📍 {p_name} | ⏳ {era_name}</span>
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
@@ -432,7 +443,7 @@ def show_admin_dashboard_popup():
         if not feedbacks: st.info("الصندوق فارغ حالياً.")
         else:
             for index, (f_name, f_email, f_shrine, f_text, f_date) in enumerate(feedbacks):
-                st.markdown(f"<div style='background:#F3F4F6; padding:10px; margin-bottom:5px; border-right:4px solid #1E3A8A;'>📅 {f_date} | <b>👤 {f_name}</b><br>📌 {f_shrine}<br>📝 {f_text}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='background:#F3F4F6; padding:10px; margin-bottom:5px; border-right:4px solid #1E3A8A; direction: rtl; text-align: right;'>📅 {f_date} | <b>👤 {f_name}</b><br>📌 {f_shrine}<br>📝 {f_text}</div>", unsafe_allow_html=True)
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني: ملاحظتكم حول ({f_shrine})")
                 body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني لعام 2026.\n\nمع تحيات،\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
