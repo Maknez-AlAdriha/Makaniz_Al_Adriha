@@ -2,10 +2,10 @@ import streamlit as st
 import os
 import base64
 
-# 🇲🇦 1. إعدادات الشاشة بعرض المتصفح الكامل 100% وبدون هوامش ميتة
+# 🇲🇦 1. إعدادات الشاشة بعرض المتصفح الكامل 100% وبدون هوامش ميتة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide")
 
-# 🎨 2. حقن كود الـ CSS المطور لرفع الأزرار للأعلى وجعل التنسيق زجاجياً منسجماً
+# 🎨 2. حقن كود الـ CSS الجراحي لإجبار الأزرار على الصعود إلى أعلى قمة الصورة زجاجياً
 st.markdown("""
     <style>
         @import url('https://googleapis.com');
@@ -20,9 +20,18 @@ st.markdown("""
         /* إلغاء الفراغات العمودية التلقائية بين مكونات هيدر التطبيق */
         div[data-testid="stVerticalBlock"] { gap: 0rem !important; }
         
-        /* التنسيق الجمالي للأزرار الخمسة العائمة في أعلى الصورة بتأثير زجاجي فخم */
+        /* الحاوية المطلقة لإجبار صف الأزرار على الصعود إلى أعلى السقف قسرياً */
+        .shamel-menu-container {
+            position: absolute !important;
+            top: 15px !important;
+            right: 40px !important;
+            left: 40px !important;
+            z-index: 99999 !important;
+        }
+        
+        /* التنسيق الجمالي للأزرار الخمسة العائمة بتأثير زجاجي فخم منسجم مع العمارة المغربية */
         .shamel-nav-btn button {
-            background: rgba(0, 0, 0, 0.45) !important; /* خلفية داكنة خفيفة تبرز الحروف بوضوح */
+            background: rgba(0, 0, 0, 0.45) !important; /* خلفية داكنة خفيفة تبرز الحروف بوضوح فوق السحاب */
             color: #FFFFFF !important; /* خط أبيض ناصع وبارز */
             font-family: 'Tajawal', sans-serif !important;
             font-weight: 700 !important;
@@ -66,46 +75,44 @@ if target_banner:
     with open(target_banner, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode()
     
-    # بسط الصورة الملكية لتملأ الشاشة
+    # 🟢 غلق اللحام: وضع الصورة والأزرار بداخل حاوية نسبية واحدة تمنع انفصالهما أو هبوط الأزرار للأسفل
     st.markdown(f"""
     <div style='position: relative; width: 100%; text-align: center; margin: 0; padding: 0;'>
         <img src='data:image/png;base64,{encoded_string}' style='width: 100%; height: auto; display: block; margin: 0; padding: 0;'>
     </div>
     """, unsafe_allow_html=True)
     
-    # تثبيت حاوية الملاحة الخماسية العائمة في أعلى قمة الصورة بالمليمتر البرمجي الدقيق
-    st.markdown("<div style='position: absolute; top: 25px; right: 50px; left: 50px; z-index: 99999;'>", unsafe_allow_html=True)
-    
-    # رص الأزرار الخمسة أفقياً بالتوالي في جهة اليمين لمنع حجب العلم والخريطة
+    # استدعاء الحاوية الفولاذية العلوية لرص الأزرار الخمسة أفقياً في القمة الشامخة
+    st.markdown("<div class='shamel-menu-container'>", unsafe_allow_html=True)
     menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.1, 1.3, 1.3, 1.2, 1.7, 3.5])
     
     with menu_col_1:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("الرئيسية", key="btn_home_v4"):
+        if st.button("الرئيسية", key="btn_home_v5"):
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
     with menu_col_2:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("أقسام المكنز", key="btn_sections_v4"):
+        if st.button("أقسام المكنز", key="btn_sections_v5"):
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
     with menu_col_3:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("حول المكنز", key="btn_about_v4"):
+        if st.button("حول المكنز", key="btn_about_v5"):
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
     with menu_col_4:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("اتصل بنا", key="btn_contact_v4"):
+        if st.button("اتصل بنا", key="btn_contact_v5"):
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
     with menu_col_5:
         st.markdown("<div class='shamel-nav-btn'>", unsafe_allow_html=True)
-        if st.button("🔍 شعار البحث في المكنز", key="btn_search_v4"):
+        if st.button("🔍 شعار البحث في المكنز", key="btn_search_v5"):
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
         
