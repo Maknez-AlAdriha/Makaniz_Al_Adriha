@@ -22,13 +22,13 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: سحق الجزء الأبيض وصبغ شريط القمة بالتدرج اللوني لقبلة المكنز (CSS الشامل)
+# 🎨 الجزء 3: قالب التنسيق السيادي وإزاحة شريط القمة ليكون مرئياً بالكامل (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. 🟢 الحل الجراحي الحاسم: نسف الفراغ والجزء الأبيض بالقمة تماماً والتصاق المكونات بسقف الشاشة */
+        /* 1. تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -40,7 +40,7 @@ st.markdown(f"""
             height: 100vh !important;
         }}
         
-        /* سحق كافة البطانات والاتساعات الهامشية الافتراضية لمنع أي بياض عازل */
+        /* تصفير الهوامش والبطانات الخارجية للمنصة لسحق المساحات الميتة والجوانب البيضاء كلياً */
         div[data-testid="stAppViewBlockContainer"] {{
             max-width: 100% !important;
             width: 100% !important;
@@ -55,44 +55,48 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* تثبيت أمان سقف حاوية التطبيق الرئيسية لإلغاء الفراغ وهمياً */
+        /* 🟢 تصحيح حاسم: إعطاء رأس الصفحة مساحة آمنة لمنع اختفاء شريط الأزرار بالقمة */
         div[data-testid="stHeader"] {{
             background: transparent !important;
-            height: 0px !important;
+            height: 55px !important; /* حجز مساحة مرئية ثابتة للشريط في قمة المتصفح */
+            z-index: 99998 !important;
         }}
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. 🟢 الخلفية المتدرجة الساحرة: دمج ألوان الصورة (الأزرق الملكي للزاوية والأخضر الزمردي لعلم المملكة الشريفة) */
-        div[data-testid="stHorizontalBlock"] {{
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج لوني انسيابي يمنع تداخل الحروف */
-            position: fixed !important;
-            top: 0px !important; /* الارتفاع الفوري للقمة وسحق الجزء الأبيض تماماً */
+        /* 2. الخلفية المتدرجة الساحرة: إزاحة موضع التمركز (top) ليكون مكشوفاً مائة بالمائة تحت حافة الشاشة */
+        .shamel-top-gradient-ribbon {{
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important;
+            position: absolute !important; /* تحويل التموضع إلى نسبي للحاوية لمنع الهروب خلف أشرطة جوجل كروم */
+            top: 0px !important; /* الالتصاق التام والمرئي بالمليمتر في الجزء المخصص له */
             right: 0px !important;
             left: 0px !important;
             width: 100vw !important;
-            padding: 12px 60px !important;
-            margin: 0 !important;
+            height: 55px !important; /* ارتفاع رصين ومطابق للشاملة */
+            display: flex !important;
+            align-items: center !important;
+            padding: 0 60px !important;
+            direction: rtl !important;
             z-index: 99999 !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important; /* ظلال ناعمة تزيد الهيبة البصرية */
-            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد الحافة */
         }}
         
-        /* 3. النصوص الصافية المضيئة كالشاملة مائة بالمائة */
+        /* 3. النصوص الصافية المضيئة كالشاملة صلب شريط التدرج */
         .shamel-nav-text p {{
             color: #FFFFFF !important; /* خط أبيض ناصع مائة بالمائة للوضوح المطلق */
             font-family: 'Tajawal', sans-serif !important;
             font-weight: 700 !important; /* تضخيم رصين واحترافي للحروف */
-            font-size: 17px !important;
+            font-size: 16px !important;
             text-align: center !important;
             margin: 0 !important;
-            padding: 4px 0 !important;
+            padding: 2px 0 !important;
             cursor: pointer !important;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important;
             transition: color 0.2s ease-in-out !important;
         }}
         
-        /* تأثير الوميض الزمردي عند تحريك الفأرة فوق النصوص المحدثة */
+        /* تأثير الوميض الزمردي عند تحريك الفأرة */
         .shamel-nav-text p:hover {{
             color: #10B981 !important; 
         }}
@@ -107,8 +111,11 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: إطلاق روابط الشاملة صلب شريط التدرج اللوني الملتصق بالقمة تماماً
+# 📦 الجزء 4: حقن روابط الشاملة صلب شريط التدرج اللوني الموجه برمجياً للظهور الصريح
 # ==========================================
+# تغليف الروابط الخمسة داخل الحاوية المصححة والمكشوفة للمتصفح تلقائياً
+st.markdown("<div class='shamel-top-gradient-ribbon'>", unsafe_allow_html=True)
+
 menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.8, 4.5])
 
 with menu_col_1:
@@ -126,5 +133,7 @@ with menu_col_4:
 with menu_col_5:
     st.markdown("<div class='shamel-nav-text'><p style='font-weight:900; color:#D4AF37 !important;'>🔍 البحث في المكنز</p></div>", unsafe_allow_html=True)
 
-# مسافة أمان ترابية مريحة لدفع الصورة بالأسفل لتبدأ بنقاء تحت حافة الشريط المتدرج
-st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
+
+# مسافة أمان ترابية مريحة لدفع الصورة بالأسفل لتبدأ بنقاء تحت حافة الشريط المتدرج المرئي
+st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
