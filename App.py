@@ -7,9 +7,6 @@ import shutil
 import io
 import urllib.parse
 import base64
-import smtplib
-from email.mime.text import MIMEText
-from email.header import Header
 
 # 🇲🇦 إعدادات الشاشة بعرض المتصفح الكامل 100% الشامل للمملكة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="collapsed")
@@ -52,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -120,7 +117,7 @@ st.markdown(f"""
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتجهيز السيادي المطلق العازل للحظر سحابياً */
+        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
             top: 0px !important; /* الالتصاق التام والصريح بسقف الشاشة فوق حافة الصورة العلوية */
@@ -176,12 +173,12 @@ st.markdown(f"""
             direction: rtl;
         }}
 
-        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
+        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير الصريح للمتصفحات */
         div[data-testid="stDialog"], 
         div[data-testid="stDialog"] > div, 
         div[data-testid="stDialog"] .stForm, 
         div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد المتصفح */
+            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد متصفح كروم */
             overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند تمدد وتراكم الخانات */
         }}
         
@@ -224,6 +221,10 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
+# ==========================================
+# دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية الفولاذية
+# ==========================================
+
 # 1. الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع بعد التحيين المنقح وصفر أخطاء ترتيب
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
@@ -239,7 +240,7 @@ def show_about_project_popup():
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
         st.st.rerun()
 
-# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين
+# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين بصفر تعارض عمودي
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -257,9 +258,9 @@ def show_contact_us_popup():
         c_sender_subject = st.text_input("موضوع المراسلة صلب الموضوع:", placeholder="مثال: تصويب علمي، إغناء بيبليوغرافي...")
         c_sender_message = st.text_area("نص الرسالة أو الملاحظة الترابية بالكامل:")
         
-        st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="ba9at.almaarifa@gmail.com", disabled=True)
+        st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
-        # زر الإرسال الممتد أفقياً بنجاح وثبات
+        # زر الإرسال الممتد أفقياً بنجاح وثبات كامل
         submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وإرسال التذكير", use_container_width=True)
         
         if submit_clicked:
@@ -277,26 +278,7 @@ def show_contact_us_popup():
                 st.rerun()
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# دالة سيادية باف بايثون لإرسال البريد أوتوماتيكياً وصامتاً من السيرفر مباشرة دون فتح برامج إضافية
-def send_instant_email_from_server(to_email, subject, message_body):
-    from_email = "ba9at.almaarifa@gmail.com"  # بريدك المعتمد للإرسال
-    app_password = "xxxx xxxx xxxx xxxx"    # رمز أمان التطبيقات المولد من حساب جوجل الخاص بك
-    
-    msg = MIMEText(message_body, 'plain', 'utf-8')
-    msg['Subject'] = Header(subject, 'utf-8')
-    msg['From'] = from_email
-    msg['To'] = to_email
-    
-    try:
-        server = smtplib.SMTP("://gmail.com", 587)
-        server.starttls()
-        server.login(from_email, app_password)
-        server.sendmail(from_email, [to_email], msg.as_string())
-        server.quit()
-        return True
-    except Exception as e:
-        return False
-# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً
+# 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للملفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
@@ -306,7 +288,7 @@ def show_admin_dashboard_popup():
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
         
-        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً دون تمرير
+        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً أمام الدكتور رشيد دون أي تحذيرات صفراء
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
         
@@ -323,18 +305,12 @@ def show_admin_dashboard_popup():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # تشغيل زر الإرسال التلقائي الفوري كأداة بايثون (st.button) صلب الواجهة الإدارية
-                btn_key = f"send_auto_reply_btn_{index}"
-                if st.button(f"✉️ رد تلقائي فوري وصامت لبريد الباحث {f_name}", key=btn_key, use_container_width=True):
-                    reply_subject = f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})"
-                    reply_body = f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم فحص ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي"
-                    
-                    with st.spinner("جاري قذف الرسالة وتمريرها عبر السيرفر بأمان..."):
-                        is_sent = send_instant_email_from_server(f_email, reply_subject, reply_body)
-                        if is_sent:
-                            st.success(f"🚀 طار البريد بنجاح واستقر في صندوق بريد الباحث ({f_email}) تلقائياً!")
-                        else:
-                            st.warning("⚠️ لم يكتمل القذف التلقائي، يرجى تفعيل رمز أمان التطبيقات (App Password) داخل حساب Gmail الخاص بك ليعبر السيرفر بأمان.")
+                # 🟢 العودة الجراحية الناجحة مائة بالمائة صلب محادثتنا: فتح الـ Gmail وحقن البيانات تلقائياً بأمر الملاحة الصافي الصرف المانع للصفحة البيضاء
+                subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
+                body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
+                mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
+                
+                st.markdown(f'<a href="{mailto_link}" target="_self" style="text-decoration:none;"><div style="background:linear-gradient(135deg, #15803D, #16A34A); color:white; text-align:center; padding:8px; border-radius:6px; font-size:14px; font-weight:bold; margin-bottom:20px; box-shadow: 0 2px 5px rgba(22,163,74,0.2);">✉️ رد سريع ومباشر لبريد الباحث {f_name}</div></a>', unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h4>", unsafe_allow_html=True)
@@ -346,7 +322,7 @@ def show_admin_dashboard_popup():
             "اختر ملفات الأضرحة والمصطلحات الشاملة بصيغة (.csv) [يمكنك اختيار ملفات متعددة معاً]:", 
             type=["csv"], 
             accept_multiple_files=True,
-            key=f"popup_csv_uploader_multi_v15_{st.session_state.uploader_counter}"
+            key=f"popup_csv_uploader_multi_v14_{st.session_state.uploader_counter}"
         )
         
         if uploaded_csv_list:
