@@ -173,12 +173,12 @@ st.markdown(f"""
             direction: rtl;
         }}
 
-        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير الصريح للمتصفحات */
+        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
         div[data-testid="stDialog"], 
         div[data-testid="stDialog"] > div, 
         div[data-testid="stDialog"] .stForm, 
         div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد متصفح كروم */
+            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد المتصفح */
             overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند تمدد وتراكم الخانات */
         }}
         
@@ -230,7 +230,7 @@ def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
     <div class='popup-content-text'>
-        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
+        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية, تاريخية, بيبليوغرافية, وأنثروبولوجية متعلقة بالمنشآت الروحية, الأضرحة, والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
         <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
         <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
         <p style='text-align: center; font-weight: bold; color: #1E3A8A;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
@@ -238,7 +238,7 @@ def show_about_project_popup():
     </div>
     """, unsafe_allow_html=True)
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
-        st.st.rerun()
+        st.rerun()
 
 # 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين بصفر تعارض عمودي
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
@@ -282,13 +282,13 @@ def show_contact_us_popup():
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
-    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v15")
+    developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v14")
     
     if developer_key == "MAROC_2026":
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
         
-        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً أمام الدكتور رشيد دون أي تحذيرات صفراء
+        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً دون تمرير
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
         
@@ -305,7 +305,7 @@ def show_admin_dashboard_popup():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # 🟢 العودة الجراحية الناجحة مائة بالمائة صلب محادثتنا: فتح الـ Gmail وحقن البيانات تلقائياً بأمر الملاحة الصافي الصرف المانع للصفحة البيضاء
+                # استخدام target='_self' لمنع فتح أي صفحة بيضاء "بلا عنوان" نهائياً صلب المتصفح عند الرد المباشر المستقر
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
                 body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
@@ -381,7 +381,7 @@ def show_admin_dashboard_popup():
                                     auto_lat = 31.7917
                                     auto_lon = -7.0926
                                     if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                                     elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
