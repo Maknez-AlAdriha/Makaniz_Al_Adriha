@@ -252,17 +252,28 @@ else:
 
 # تأمين وفتح الفسحة المريحة لبطاقات التصفح والأطلس بالأسفل
 st.markdown("<div style='padding: 2rem;'>", unsafe_allow_html=True)
+
+
+
+
+
+
+
+# ==========================================
+# 📊 حزمة 7: استخراج العدادات الإحصائية الصافية بشكل صحيح (سحق خطأ TypeError)
+# ==========================================
+# 🟢 التصحيح الحاسم: استخراج الفهرس [0] من المصفوفة لتحويل الرقم بنجاح دون أي تضارب
 t_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-total_shrines = int(t_res_raw) if t_res_raw else 0
+total_shrines = int(t_res_raw[0]) if t_res_raw else 0
 
 m_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-muslim_count = int(m_res_raw) if m_res_raw else 0
+muslim_count = int(m_res_raw[0]) if m_res_raw else 0
 
 j_res_raw = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-jewish_count = int(j_res_raw) if j_res_raw else 0
+jewish_count = int(j_res_raw[0]) if j_res_raw else 0
 
 term_res_raw = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
-total_terms = int(term_res_raw) if term_res_raw else 0
+total_terms = int(term_res_raw[0]) if term_res_raw else 0
 
 stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
 with stat_col1: st.metric("📊 المعالم الروحية الموثقة", total_shrines)
@@ -280,6 +291,10 @@ else:
     if st.session_state.current_page == "about": menu = "🎓 حول المكنز الأكاديمي"
     elif st.session_state.current_page == "contact": menu = "📬 دفتر التواصل"
     else: menu = "🔍 محرك البحث الشامل والتحليلات"
+
+# ==========================================
+# 📦 حزمة 8: لوحة الرسوم البيانية للكرامات الأنثروبولوجية وشجرة العلاقات اللغوية
+# ==========================================
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     st.markdown("### 📊 لوحة التحليلات والمؤشرات الأنثروبولوجية لصلحاء المملكة المغربية")
     analysis_col1, analysis_col2 = st.columns(2)
@@ -301,6 +316,15 @@ if menu == "🔍 محرك البحث الشامل والتحليلات":
             elif "هيلولة" in quick_word or "ربيين" in quick_word: st.info("🔗 **مفاهيم هرمية ذات صلة عبرية مقترحة:** مزارات اليهود ⟵ زيارة جماعية ⟵ تبادل القداسة ⟵ الصنف التجاري")
             else: st.caption("المصطلح نشط، وسيتم استدعاء شجرته الهرمية الكبرى فور تغذية الخزانة اللغوية.")
     st.write("---")
+
+
+
+
+
+
+
+
+
 if menu == "🔍 محرك البحث الشامل والتحليلات":
     if "search_panel_visible" not in st.session_state:
         st.session_state.search_panel_visible = True
