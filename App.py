@@ -22,13 +22,13 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: قالب التنسيق السيادي وتلوين حاوية الأزرار بالأسود المصمت (CSS الشامل)
+# 🎨 الجزء 3: سحق الجزء الأبيض وصبغ شريط القمة بالتدرج اللوني لقبلة المكنز (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* 1. تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً */
+        /* 1. 🟢 الحل الجراحي الحاسم: نسف الفراغ والجزء الأبيض بالقمة تماماً والتصاق المكونات بسقف الشاشة */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -40,7 +40,7 @@ st.markdown(f"""
             height: 100vh !important;
         }}
         
-        /* تصفير الهوامش والبطانات الخارجية للمنصة لالتصاق الشريط الأسود بسقف المتصفح تماماً */
+        /* سحق كافة البطانات والاتساعات الهامشية الافتراضية لمنع أي بياض عازل */
         div[data-testid="stAppViewBlockContainer"] {{
             max-width: 100% !important;
             width: 100% !important;
@@ -55,34 +55,46 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* إلغاء الفراغات العمودية التلقائية بين المكونات العليا */
-        div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
-        
-        /* 2. قسر الحاوية الأفقية العلوية لتتحول إلى شريط أسود مصمت مائة بالمائة يمتد بعرض الشاشة */
-        div[data-testid="stHorizontalBlock"] {{
-            background-color: #000000 !important; /* 🟢 صبغ الشريط بالأسود المصمت والكامل قسرياً */
-            border-bottom: 2px solid #1E3A8A !important; /* خط أزرق ملكي رقيق يعزل عمارة الصورة */
-            width: 100vw !important;
-            padding: 10px 60px !important;
-            margin: 0 !important;
+        /* تثبيت أمان سقف حاوية التطبيق الرئيسية لإلغاء الفراغ وهمياً */
+        div[data-testid="stHeader"] {{
+            background: transparent !important;
+            height: 0px !important;
         }}
         
-        /* 3. الهندسة الجراحية: الروابط النصية الصافية والبيضاء الناصعة مائة بالمائة كالشاملة بدون أي مربعات */
+        div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
+        
+        /* 2. 🟢 الخلفية المتدرجة الساحرة: دمج ألوان الصورة (الأزرق الملكي للزاوية والأخضر الزمردي لعلم المملكة الشريفة) */
+        div[data-testid="stHorizontalBlock"] {{
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج لوني انسيابي يمنع تداخل الحروف */
+            position: fixed !important;
+            top: 0px !important; /* الارتفاع الفوري للقمة وسحق الجزء الأبيض تماماً */
+            right: 0px !important;
+            left: 0px !important;
+            width: 100vw !important;
+            padding: 12px 60px !important;
+            margin: 0 !important;
+            z-index: 99999 !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important; /* ظلال ناعمة تزيد الهيبة البصرية */
+            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
+        }}
+        
+        /* 3. النصوص الصافية المضيئة كالشاملة مائة بالمائة */
         .shamel-nav-text p {{
-            color: #FFFFFF !important; /* خط أبيض ناصع مائة بالمائة للوضوح المطلق فوق الأسود */
+            color: #FFFFFF !important; /* خط أبيض ناصع مائة بالمائة للوضوح المطلق */
             font-family: 'Tajawal', sans-serif !important;
             font-weight: 700 !important; /* تضخيم رصين واحترافي للحروف */
             font-size: 17px !important;
             text-align: center !important;
             margin: 0 !important;
-            padding: 5px 0 !important;
+            padding: 4px 0 !important;
             cursor: pointer !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important;
             transition: color 0.2s ease-in-out !important;
         }}
         
-        /* تأثير الوميض الزمردي الشريف عند تمرير مؤشر الفأرة */
+        /* تأثير الوميض الزمردي عند تحريك الفأرة فوق النصوص المحدثة */
         .shamel-nav-text p:hover {{
-            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة للرابط النشط */
+            color: #10B981 !important; 
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -95,9 +107,8 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: إطلاق ورص خماسية الروابط النصية صلب الشريط الأسود الأصلي لبايثون بالقمة
+# 📦 الجزء 4: إطلاق روابط الشاملة صلب شريط التدرج اللوني الملتصق بالقمة تماماً
 # ==========================================
-# استخدمنا هنا توزيع قنوات بايثون الأصلية المعترف بها من السيرفر لضمان الانبثاق الفوري مائة بالمائة
 menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.8, 4.5])
 
 with menu_col_1:
@@ -115,5 +126,5 @@ with menu_col_4:
 with menu_col_5:
     st.markdown("<div class='shamel-nav-text'><p style='font-weight:900; color:#D4AF37 !important;'>🔍 البحث في المكنز</p></div>", unsafe_allow_html=True)
 
-# حقن مسافة الأمان تحت الشريط الأسود لتبدأ الصورة بالأسفل بانتظام ونقاء
-st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+# مسافة أمان ترابية مريحة لدفع الصورة بالأسفل لتبدأ بنقاء تحت حافة الشريط المتدرج
+st.markdown("<div style='margin-top: 25px;'></div>", unsafe_allow_html=True)
