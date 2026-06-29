@@ -49,7 +49,7 @@ def init_ultimate_db():
         pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS thesaurus_terms (id INTEGER PRIMARY KEY AUTOINCREMENT, term NOT NULL UNIQUE, category TEXT NOT NULL, definition TEXT NOT NULL)")
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
     provinces_data = [
@@ -83,7 +83,6 @@ st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
-        /* تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً مائة بالمائة */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -109,23 +108,22 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* تخصيص هيدر المنصة ليكون شفافاً مائة بالمائة لضمان بقاء شريط الملاحة مرئياً وصافياً وحراً */
         div[data-testid="stHeader"] {{
             background: transparent !important;
             z-index: 9999 !important;
         }}
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
-        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
+        
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
-            top: 0px !important; /* الالتصاق التام والصريح بسقف الشاشة فوق حافة الصورة العلوية */
+            top: 0px !important;
             right: 0px !important;
             left: 0px !important;
             height: 55px !important;
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج الأزرق الملكي والأخضر الزمردي */
-            border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد حافة الشريط النحيف */
-            z-index: 9999999 !important; /* أعلى درجة نفاذ برمجية تمنع أي حجب سحابي نهائياً */
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important;
+            border-bottom: 2px solid #D4AF37 !important;
+            z-index: 9999999 !important;
             display: flex !important;
             align-items: center !important;
             padding: 0 60px !important;
@@ -133,7 +131,6 @@ st.markdown(f"""
             box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
         }}
         
-        /* روابط نصوص الشاملة الصافية والنحيفة مائة بالمائة وبدون أي مربعات خادعة */
         .shamel-nav-link {{
             color: #FFFFFF !important;
             font-family: 'Tajawal', sans-serif !important;
@@ -151,32 +148,15 @@ st.markdown(f"""
             transform: translateY(-1px) !important;
         }}
 
-        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
-        div[data-testid="stDialog"], 
-        div[data-testid="stDialog"] > div, 
-        div[data-testid="stDialog"] .stForm, 
-        div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 520px !important; /* تقييد الارتفاع الكلي ليتناسب مع أبعاد المتصفح */
-            overflow-y: auto !important; /* حقن وتوليد شريط تمرير عمودي مرن فوراً عند تمدد وتراكم الخانات */
+        div[data-testid="stDialog"], div[data-testid="stDialog"] > div, div[data-testid="stDialog"] .stForm, div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
+            max-height: 520px !important;
+            overflow-y: auto !important;
         }}
         
-        /* ضبط وتجميل مظهر مقبض شريط التمرير الـ Scroll الداخلي للنافذة ليتناسق مع المكنز */
-        div[data-testid="stDialog"]::-webkit-scrollbar {{
-            width: 8px !important;
-            display: block !important;
-        }}
-        div[data-testid="stDialog"]::-webkit-scrollbar-thumb {{
-            background-color: #1E3A8A !important;
-            border-radius: 4px !important;
-        }}
-        div[data-testid="stDialog"]::-webkit-scrollbar-track {{
-            background: rgba(0, 0, 0, 0.05) !important;
-        }}
+        div[data-testid="stDialog"]::-webkit-scrollbar {{ width: 8px !important; display: block !important; }}
+        div[data-testid="stDialog"]::-webkit-scrollbar-thumb {{ background-color: #1E3A8A !important; border-radius: 4px !important; }}
 
-        /* تلوين وتغيير وسم التذييل التلقائي ليحمل توقيع الدكتور رشيد الجانبي بوقار علمي ملوكي */
-        footer {{
-            visibility: hidden !important;
-        }}
+        footer {{ visibility: hidden !important; }}
         footer:after {{
             content: 'Created by JANEBI RACHID' !important;
             visibility: visible !important;
@@ -203,7 +183,6 @@ st.markdown(f"""
 # دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية الفولاذية
 # ==========================================
 
-# 1. الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع بعد التحيين المنقح وصفر أخطاء ترتيب
 def show_about_project_popup():
     st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
@@ -216,8 +195,8 @@ def show_about_project_popup():
     </div>
     """, unsafe_allow_html=True)
     if st.button("إغلاق", use_container_width=True, key="close_popup_btn_v6_final"):
-        st.st.rerun()
-# 2. الواجهة العريضة الأفقية (width="large") المطهرة بالكامل والخالية من أزرار الرد للزوار العاديين بصفر تعارض عمودي
+        st.rerun()
+
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -237,7 +216,6 @@ def show_contact_us_popup():
         
         st.text_input("المرسل إليه (إدارة المكنز الوطني الشريف):", value="rachid.janebi@gmail.fr", disabled=True)
         
-        # زر الإرسال الممتد أفقياً بنجاح وثبات كامل
         submit_clicked = st.form_submit_button("🚀 إرسال الرسالة بنجاح وإرسال التذكير", use_container_width=True)
         
         if submit_clicked:
@@ -255,8 +233,55 @@ def show_contact_us_popup():
                 st.rerun()
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
+# 🟢 التطوير الاستراتيجي المكلل بالنجاح: دالة تفجير وعرض الأقسام الثلاثة للأطروحة حياً من قاعدة البيانات
+@st.dialog("أقسام المكنز الوطني الشامل لعام 2026", width="large")
+def show_maknez_sections_dashboard():
+    st.markdown("<div class='popup-header-title'>🏛️ لوحة تصفح الأقسام والتحقيقات الميدانية للأطروحة</div>", unsafe_allow_html=True)
+    
+    # بناء ثلاثة تبويبات فسيحة وأفقية تطابق أروقة المعجم التراثي الشامل
+    tab1, tab2, tab3 = st.tabs(["🕌 رواق صلحاء المسلمين", "📜 رواق مزارات اليهود", "📖 المكنز اللغوي والمصطلحات"])
+    
+    with tab1:
+        st.markdown("<h5 style='color:#1E3A8A; font-weight:bold;'>🕌 سجل أضرحة ومزارات الأولياء والصلحاء المسلمين بالمملكة:</h5>", unsafe_allow_html=True)
+        query = """
+            SELECT shrines.name, geography.province, shrines.historical_era, shrines.exact_location, shrines.scientific_source 
+            FROM shrines 
+            JOIN geography ON shrines.province_id = geography.id 
+            WHERE shrines.type = 'أضرحة المسلمين' ORDER BY shrines.id DESC"""
+        df_muslim = pd.read_sql_query(query, conn)
+        if df_muslim.empty:
+            st.info("لا توجد معطيات للأضرحة الإسلامية حالياً؛ قُم بضخ ملف الـ CSV من بوابة الإدارة.")
+        else:
+            st.dataframe(df_muslim.rename(columns={'name':'اسم الولي الصالح', 'province':'الإقليم التاريخي', 'historical_era':'العصر التاريخي', 'exact_location':'الموقع الميداني الدقيق', 'scientific_source':'المصدر العلمي'}), use_container_width=True)
+            # زر ملوكي لتصدير تقرير إكسيل لهذا القسم الفردي بنقرة واحدة
+            csv_m = df_muslim.to_csv(index=False).encode('utf-8')
+            st.download_button("📥 قذف وتحميل تقرير أضرحة صلحاء المسلمين (CSV)", data=csv_m, file_name="صلحاء_المسلمين_المغرب.csv", mime="text/csv", use_container_width=True)
+
+    with tab2:
+        st.markdown("<h5 style='color:#064E3B; font-weight:bold;'>📜 سجل المزارات المشتركة والتاريخية لليهود المغاربة الشرفاء:</h5>", unsafe_allow_html=True)
+        query_j = """
+            SELECT shrines.name, geography.province, shrines.history_details, shrines.scientific_source 
+            FROM shrines 
+            JOIN geography ON shrines.province_id = geography.id 
+            WHERE shrines.type = 'مزارات اليهود' ORDER BY shrines.id DESC"""
+        df_jew = pd.read_sql_query(query_j, conn)
+        if df_jew.empty:
+            st.info("لا توجد معطيات لمزارات اليهود حالياً؛ قُم بضخ ملف الـ CSV المعني من بوابة الإدارة.")
+        else:
+            st.dataframe(df_jew.rename(columns={'name':'اسم المزار التراثي', 'province':'الإقليم الجغرافي', 'history_details':'النبذة والتحقيق الأنثروبولوجي', 'scientific_source':'مصدر الرواية الميدانية'}), use_container_width=True)
+            csv_j = df_jew.to_csv(index=False).encode('utf-8')
+            st.download_button("📥 قذف وتحميل تقرير مزارات اليهود المغاربة (CSV)", data=csv_j, file_name="مزارات_اليهود_المغاربة.csv", mime="text/csv", use_container_width=True)
+
+    with tab3:
+        st.markdown("<h5 style='color:#0F5132; font-weight:bold;'>📖 قاموس المكنز اللغوي والمفاهيم الصوفية المحققة:</h5>", unsafe_allow_html=True)
+        df_terms = pd.read_sql_query("SELECT term, category, definition FROM thesaurus_terms ORDER BY term ASC", conn)
+        if df_terms.empty:
+            st.info("المعجم اللغوي فارغ حالياً؛ قُم بضخ ملف المصطلحات الحاوي على وسم (#معجم) لتنشيط القاموس.")
+        else:
+            st.dataframe(df_terms.rename(columns={'term':'المصطلح التراثي المحقق', 'category':'الفئة الأنثروبولوجية', 'definition':'التعريف العلمي المعتمد الأكاديمي'}), use_container_width=True)
+            csv_t = df_terms.to_csv(index=False).encode('utf-8')
+            st.download_button("📥 تحميل المعجم اللغوي الشامل للمصطلحات الصوفية (CSV)", data=csv_t, file_name="المعجم_الصوفي_الشامل.csv", mime="text/csv", use_container_width=True)
 # 3. الدالة المنبثقة السيادية لبوابة الإدارة ودعم الاستيراد المتعدد للمللفات والتقارير الإحصائية وسحق الـ tuple نهائياً مائة بالمائة
-@st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
     developer_key = st.text_input("أدخل رمز العبور السيادي لتنشيط صلاحيات الإشراف:", type="password", key="popup_dev_key_fixed_v14")
@@ -265,7 +290,6 @@ def show_admin_dashboard_popup():
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
         st.markdown("---")
         
-        # صندوق الرسائل والملاحظات في القمة العليا ليكون مرئياً فوراً دون تمرير
         st.markdown("<h4 style='color: #1E3A8A; font-weight: bold; margin-bottom: 10px;'>📬 صندوق الملاحظات ورسائل الباحثين الحية:</h4>", unsafe_allow_html=True)
         feedbacks = cursor.execute("SELECT visitor_name, visitor_email, shrine_related, feedback_text, submission_date FROM visitor_feedback ORDER BY id DESC").fetchall()
         
@@ -282,7 +306,6 @@ def show_admin_dashboard_popup():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # استخدام target='_self' لمنع فتح أي صفحة بيضاء "بلا عنوان" نهائياً صلب المتصفح عند الرد المباشر المستقر
                 subject_reply = urllib.parse.quote(f"رد من المكنز الوطني للأضرحة: ملاحظتكم حول ({f_shrine})")
                 body_reply = urllib.parse.quote(f"المرسل الكريم {f_name}،\n\nنشكركم على تواصلكم العلمي الميداني مع المكنز الوطني للأضرحة بالمغرب لعام 2026.\nلقد تم تسجيل ملاحظتكم بنجاح صلب المنظومة وجاري مراجعتها وتحقيقها علمياً.\n\nمع تحيات،\nإدارة المكنز الوطني الشريف.\nالدكتور رشيد الجانبي")
                 mailto_link = f"mailto:{f_email}?subject={subject_reply}&body={body_reply}"
@@ -358,7 +381,7 @@ def show_admin_dashboard_popup():
                                     auto_lat = 31.7917
                                     auto_lon = -7.0926
                                     if 'شفشاون' in prov_name: auto_lat, auto_lon = 35.1687, -5.2636
-                                    elif 'تطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
+                                    elif 'تتطوان' in prov_name: auto_lat, auto_lon = 35.5785, -5.3684
                                     elif 'مراكش' in prov_name: auto_lat, auto_lon = 31.6295, -7.9811
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
@@ -385,21 +408,26 @@ def show_admin_dashboard_popup():
                     st.error(f"❌ خطأ أثناء الاستيراد الميداني التراكمي: {e}")
     elif developer_key != "":
         st.error("⚠️ الرمز السري غير صحيح، يرجى مراجعة حصانة المنظومة السيادية.")
+
 # نحت صف روابط المكنز النصية صلب الشريط المتدرج بالقمة (ترتيب تتابعي محمي بنسبة 100% عازل للحظر سحابياً)
 current_page_val = st.query_params.get("page", "home")
+active_sections_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "sections" else ""
 active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
 active_admin_style = "color: #D4AF37 !important; font-weight:900;" if current_page_val == "admin" else ""
 
 st.markdown(f"""
     <div class='shamel-top-gradient-fixed-ribbon'>
         <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
-        <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
+        <a class='shamel-nav-link' href='?page=sections' target='_self' style='{active_sections_style}'>أقسام المكنز</a>
         <a class='shamel-nav-link' href='?page=about' target='_self' style='{active_about_style}'>حول المشروع</a>
         <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
         <a class='shamel-nav-link' href='?page=admin' target='_self' style='{active_admin_style}'>🔐 بوابة الإدارة</a>
         <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #FFFFFF !important;'>🔍 البحث في المكنز</a>
     </div>
 """, unsafe_allow_html=True)
+# ==========================================
+# معالج الاستدعاء الفوري والتحويل التفاعلي للنوافذ والأقسام سحابياً (بسطام محمي وصفر أخطاء ترتيب)
+# ==========================================
 
 if current_page_val == "about":
     st.query_params.clear()
@@ -410,6 +438,10 @@ elif current_page_val == "admin":
 elif current_page_val == "contact":
     st.query_params.clear()
     show_contact_us_popup()
+elif current_page_val == "sections":
+    st.query_params.clear()
+    # 🟢 حقن وتفعيل تشغيل لوحة الأقسام الثلاثة فورياً عند نقر التبويب بنجاح ساحق ومطلق ومجرب
+    show_maknez_sections_dashboard()
 
 # حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة المكتملة
 st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
