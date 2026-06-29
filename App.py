@@ -279,7 +279,7 @@ def show_contact_us_popup():
                 st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
 # دالة سيادية باف بايثون لإرسال البريد أوتوماتيكياً وصامتاً من السيرفر مباشرة دون فتح برامج إضافية
 def send_instant_email_from_server(to_email, subject, message_body):
-    from_email = "rachid.janebi@gmail.com"  # بريدك المعتمد للإرسال
+    from_email = "ba9at.almaarifa@gmail.com"  # بريدك المعتمد للإرسال
     app_password = "xxxx xxxx xxxx xxxx"    # رمز أمان التطبيقات المولد من حساب جوجل الخاص بك
     
     msg = MIMEText(message_body, 'plain', 'utf-8')
