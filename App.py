@@ -22,7 +22,7 @@ if target_banner:
         encoded_string = base64.b64encode(image_file.read()).decode()
 
 # ==========================================
-# 🎨 الجزء 3: قالب التنسيق السيادي وإزاحة شريط القمة ليكون مرئياً بالكامل (CSS الشامل)
+# 🎨 الجزء 3: قالب التنسيق السيادي وتحصين تمركز الشريط المتدرج (CSS الشامل)
 # ==========================================
 st.markdown(f"""
     <style>
@@ -55,20 +55,18 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
-        /* 🟢 تصحيح حاسم: إعطاء رأس الصفحة مساحة آمنة لمنع اختفاء شريط الأزرار بالقمة */
         div[data-testid="stHeader"] {{
             background: transparent !important;
-            height: 55px !important; /* حجز مساحة مرئية ثابتة للشريط في قمة المتصفح */
-            z-index: 99998 !important;
+            height: 0px !important;
         }}
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
         
-        /* 2. الخلفية المتدرجة الساحرة: إزاحة موضع التمركز (top) ليكون مكشوفاً مائة بالمائة تحت حافة الشاشة */
+        /* 2. قسر الشريط العلوي على التدرج اللوني اللامع والثبات البصري في قمة الشاشة */
         .shamel-top-gradient-ribbon {{
-            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important;
-            position: absolute !important; /* تحويل التموضع إلى نسبي للحاوية لمنع الهروب خلف أشرطة جوجل كروم */
-            top: 0px !important; /* الالتصاق التام والمرئي بالمليمتر في الجزء المخصص له */
+            background: linear-gradient(90deg, #1E3A8A 0%, #064E3B 50%, #0F5132 100%) !important; /* تدرج لوني انسيابي مأخوذ من عمق وعمارة الصورة */
+            position: fixed !important; /* تثبيت مطلق صلب سقف المتصفح لضمان عدم التحرك */
+            top: 0px !important;
             right: 0px !important;
             left: 0px !important;
             width: 100vw !important;
@@ -82,23 +80,23 @@ st.markdown(f"""
             border-bottom: 2px solid #D4AF37 !important; /* خط ذهبي مريني عريق يحدد الحافة */
         }}
         
-        /* 3. النصوص الصافية المضيئة كالشاملة صلب شريط التدرج */
-        .shamel-nav-text p {{
-            color: #FFFFFF !important; /* خط أبيض ناصع مائة بالمائة للوضوح المطلق */
+        /* 3. الهندسة الجراحية: الروابط النصية الصافية والبيضاء الناصعة المنحوتة داخل التدرج */
+        .shamel-nav-link {{
+            color: #FFFFFF !important; /* خط أبيض ناصع ومضيء مائة بالمائة للوضوح المطلق */
             font-family: 'Tajawal', sans-serif !important;
             font-weight: 700 !important; /* تضخيم رصين واحترافي للحروف */
             font-size: 16px !important;
-            text-align: center !important;
-            margin: 0 !important;
-            padding: 2px 0 !important;
+            text-decoration: none !important; /* نسف الخطوط التحتية الميتة */
+            padding: 0 25px !important; /* مسافات أفقية مريحة ومتناسقة بين العناصر كالشاملة */
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
             cursor: pointer !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5) !important;
-            transition: color 0.2s ease-in-out !important;
+            display: inline-block !important;
         }}
         
-        /* تأثير الوميض الزمردي عند تحريك الفأرة */
-        .shamel-nav-text p:hover {{
-            color: #10B981 !important; 
+        /* تأثير الوميض الزمردي الشريف عند تمرير مؤشر الفأرة فوق النص المتدرج */
+        .shamel-nav-link:hover {{
+            color: #10B981 !important; /* لون الإضاءة الخضراء الشريفة الحية للرابط */
+            transform: translateY(-1px) !important;
         }}
 
         html, body, .stMarkdown, p, span, label {{
@@ -111,29 +109,19 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 📦 الجزء 4: حقن روابط الشاملة صلب شريط التدرج اللوني الموجه برمجياً للظهور الصريح
+# 📦 الجزء 4: نحت روابط الـ HTML النصية الصافية والبيضاء صلب شريط التدرج اللوني (الشاملة بالمليمتر)
 # ==========================================
-# تغليف الروابط الخمسة داخل الحاوية المصححة والمكشوفة للمتصفح تلقائياً
-st.markdown("<div class='shamel-top-gradient-ribbon'>", unsafe_allow_html=True)
+# قمنا هنا بحقن النصوص كروابط HTML صافية بداخل حاوية الشريط المتدرج مباشرة لضمان الانبثاق الفوري مائة بالمائة
+st.markdown("""
+    <div class='shamel-top-gradient-ribbon'>
+        <!-- الكلمات تتراص بنحافة مطلقة من اليمين إلى اليسار صلب خلفية التدرج اللوني الشامخة لعام 2026 -->
+        <a class='shamel-nav-link' href='?page=home' target='_self'>الرئيسية</a>
+        <a class='shamel-nav-link' href='?page=sections' target='_self'>أقسام المكنز</a>
+        <a class='shamel-nav-link' href='?page=about' target='_self'>حول المشروع</a>
+        <a class='shamel-nav-link' href='?page=contact' target='_self'>اتصل بنا</a>
+        <a class='shamel-nav-link' href='?page=search' target='_self' style='margin-right: auto; font-weight: 900; color: #D4AF37 !important;'>🔍 البحث في المكنز</a>
+    </div>
+""", unsafe_allow_html=True)
 
-menu_col_1, menu_col_2, menu_col_3, menu_col_4, menu_col_5, _ = st.columns([1.0, 1.2, 1.2, 1.1, 1.8, 4.5])
-
-with menu_col_1:
-    st.markdown("<div class='shamel-nav-text'><p>الرئيسية</p></div>", unsafe_allow_html=True)
-    
-with menu_col_2:
-    st.markdown("<div class='shamel-nav-text'><p>أقسام المكنز</p></div>", unsafe_allow_html=True)
-    
-with menu_col_3:
-    st.markdown("<div class='shamel-nav-text'><p>حول المشروع</p></div>", unsafe_allow_html=True)
-    
-with menu_col_4:
-    st.markdown("<div class='shamel-nav-text'><p>اتصل بنا</p></div>", unsafe_allow_html=True)
-    
-with menu_col_5:
-    st.markdown("<div class='shamel-nav-text'><p style='font-weight:900; color:#D4AF37 !important;'>🔍 البحث في المكنز</p></div>", unsafe_allow_html=True)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# مسافة أمان ترابية مريحة لدفع الصورة بالأسفل لتبدأ بنقاء تحت حافة الشريط المتدرج المرئي
-st.markdown("<div style='margin-top: 60px;'></div>", unsafe_allow_html=True)
+# مسافة أمان ترابية مريحة لدفع الصورة بالأسفل لتبدأ بنقاء تحت حافة الشريط المتدرج
+st.markdown("<div style='margin-top: 65px;'></div>", unsafe_allow_html=True)
