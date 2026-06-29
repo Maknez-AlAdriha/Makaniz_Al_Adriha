@@ -395,7 +395,7 @@ def show_shamel_search_engine_page():
                 st.markdown(card_html, unsafe_allow_html=True)
                 if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_{s_id}_{idx}", use_container_width=True): popup_individual_shrine_card(s_name)
 # ==========================================
-# 🟢 البلوك 11 من 12 المطور والمطهر: محرك أطلس المكنز ومستطيل الملاحة والتركيب الفوري للبطاقة الجغرافية الكاملة
+# 🟢 البلوك 11 من 12 المطور والمطهر: محرك أطلس المكنز بعد التطهير اللغوي الكامل وسحق التشوه
 # ==========================================
 
 def show_maknez_atlas_interactive_map_page():
@@ -415,8 +415,9 @@ def show_maknez_atlas_interactive_map_page():
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
+        # 🟢 تطهير ونحت العنوان قسرياً ليصبح صافياً ونقياً وصفر أخطاء إملائية صلب الواجهة
         st.markdown("<h4 style='color:#1E3A8A; font-weight:bold;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة:</h4>", unsafe_allow_html=True)
-        search_map_input = st.text_input("اكتب اسم الضريح أو جزءاً منه (مثال: فيفي، العيساوي...):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v20")
+        search_map_input = st.text_input("اكتب اسم الضريح أو جزءاً منه (مثال: فيفي، العيساوي...):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v22")
         
         search_query = search_map_input.strip().lower()
         
@@ -424,7 +425,7 @@ def show_maknez_atlas_interactive_map_page():
         filtered_data = []
         if search_query:
             for item in sh_map_data:
-                if search_query in str(item[0]).lower():  # البحث الصريح في اسم الضريح لمنع تداخل النصوص
+                if search_query in str(item).lower():
                     filtered_data.append(item)
         else:
             filtered_data = sh_map_data
@@ -436,19 +437,19 @@ def show_maknez_atlas_interactive_map_page():
             
         df_map = pd.DataFrame(map_list)
         
-        # حساب التمركز التلقائي بدقة بالاعتماد على الفهارس الصافية لمنع أي حظر سحابي
+        # اللحام والتصحيح المعماري الصارم: التركيز فوق المغرب دائماً وسحق عرض خريطة العالم المصغرة
         if search_query and not df_map.empty:
             center_lat = float(df_map.iloc[0]["latitude"])
             center_lon = float(df_map.iloc[0]["longitude"])
-            map_zoom = 11  
+            map_zoom = 12  
         else:
-            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 5  
+            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
             
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
-        # 🟢 اللحام والالتقاط الجراحي الصائب بالفهرس: فك استخلاص المعطيات الترابية وعرض البطاقة الأنيقة فوراً
+        # استخلاص المعطيات الترابية وعرض البطاقة الأنيقة فوراً
         if search_query and len(filtered_data) > 0:
-            target_sh = filtered_data[0] # استخراج السطر الفردي المستهدف بنجاح
+            target_sh = filtered_data[0] 
             
             st.markdown(f"""
                 <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
@@ -461,16 +462,14 @@ def show_maknez_atlas_interactive_map_page():
                 </div>
             """, unsafe_allow_html=True)
             
-            # حقن وتوليد الزر الملوكي لانبثاق نافذة النبذة من قلب الأطلس التفاعلي
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v20"):
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v22"):
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # ==========================================
-# 🏛️ البلوك 12 من 12 المطور: بوابة الإدارة السيادية وحلقة تفكيك جداول الـ CSV ومعالج الانتقال الحركي لـ URL
+# 🏛️ البلوك 12 من 12 المطور: بوابة الإدارة ومعالج الانتقال الحركي لـ URL
 # ==========================================
 
-# بوابة إدارة وتغذية المكنز الوطني ودعم الاستيراد التراكمي الشامل للمشرف
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
