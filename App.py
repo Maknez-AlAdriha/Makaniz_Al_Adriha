@@ -220,3 +220,4 @@ with menu_col_5:
     st.markdown("</div>", unsafe_allow_html=True)
 
 # حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل
+st.markdown("", unsafe_allow_html=True)
