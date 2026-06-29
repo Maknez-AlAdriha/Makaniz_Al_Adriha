@@ -83,6 +83,7 @@ st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
+        /* تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً مائة بالمائة */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -108,13 +109,14 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
+        /* تخصيص هيدر المنصة ليكون شفافاً مائة بالمائة لضمان بقاء شريط الملاحة مرئياً وصافياً وحراً */
         div[data-testid="stHeader"] {{
             background: transparent !important;
             z-index: 9999 !important;
         }}
         
         div[data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
-        
+        /* بناء شريط الملاحة الأفقي الملتصق بالقمة قسرياً بالتوجيه السيادي المطلق العازل للحظر سحابياً */
         .shamel-top-gradient-fixed-ribbon {{
             position: fixed !important;
             top: 0px !important;
@@ -148,9 +150,47 @@ st.markdown(f"""
             transform: translateY(-1px) !important;
         }}
 
+        /* تقييد الارتفاع بالبكسل الثابت وتفعيل الـ Scroll قسرياً لكلا النافذتين وعناصرهما الداخلية بحرف D الكبير */
         div[data-testid="stDialog"], div[data-testid="stDialog"] > div, div[data-testid="stDialog"] .stForm, div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 520px !important;
+            max-height: 540px !important;
             overflow-y: auto !important;
+        }}
+        
+        /* 🟢 حقن مخصص وعالي الدقة لتسوية اصطفاف التبويبات الثلاثة أفقياً بنقاء كامل بألوان جذابة ومنع تداخلها */
+        div[data-testid="stTabs"] {{
+            direction: rtl !important;
+        }}
+        div[data-testid="stTabScrollList"] {{
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
+            gap: 15px !important;
+            direction: rtl !important;
+            border-bottom: 2px solid #D4AF37 !important;
+            padding-bottom: 8px !important;
+        }}
+        button[data-testid="stTab"] {{
+            font-family: 'Tajawal', sans-serif !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            color: #374151 !important;
+            background: #F3F4F6 !important;
+            padding: 10px 24px !important;
+            border-radius: 8px 8px 0 0 !important;
+            border: 1px solid #E5E7EB !important;
+            border-bottom: none !important;
+            transition: all 0.3s ease !important;
+        }}
+        button[data-testid="stTab"]:hover {{
+            background: #E5E7EB !important;
+            color: #1E3A8A !important;
+        }}
+        button[data-testid="stTab"][aria-selected="true"] {{
+            color: #FFFFFF !important;
+            background: #1E3A8A !important;
+            border-top: 3px solid #D4AF37 !important;
+            font-weight: 900 !important;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1) !important;
         }}
         
         div[data-testid="stDialog"]::-webkit-scrollbar {{ width: 8px !important; display: block !important; }}
@@ -233,16 +273,16 @@ def show_contact_us_popup():
                 st.rerun()
             else:
                 st.error("⚠️ منظومة الأمان تمنع الإرسال, يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# 🟢 التطوير الاستراتيجي المكلل بالنجاح: دالة تفجير وعرض الأقسام الثلاثة للأطروحة حياً من قاعدة البيانات
+# 🟢 الأقسام الثلاثة للأطروحة حياً من قاعدة البيانات بتنسيق جمالي متناسق
 @st.dialog("أقسام المكنز الوطني الشامل لعام 2026", width="large")
 def show_maknez_sections_dashboard():
     st.markdown("<div class='popup-header-title'>🏛️ لوحة تصفح الأقسام والتحقيقات الميدانية للأطروحة</div>", unsafe_allow_html=True)
     
-    # بناء ثلاثة تبويبات فسيحة وأفقية تطابق أروقة المعجم التراثي الشامل
+    # بناء ثلاثة تبويبات فسيحة وأفقية جذابة ومحددة بالخط الملوكي
     tab1, tab2, tab3 = st.tabs(["🕌 رواق صلحاء المسلمين", "📜 رواق مزارات اليهود", "📖 المكنز اللغوي والمصطلحات"])
     
     with tab1:
-        st.markdown("<h5 style='color:#1E3A8A; font-weight:bold;'>🕌 سجل أضرحة ومزارات الأولياء والصلحاء المسلمين بالمملكة:</h5>", unsafe_allow_html=True)
+        st.markdown("<h5 style='color:#1E3A8A; font-weight:bold; margin-bottom: 15px;'>🕌 سجل أضرحة ومزارات الأولياء والصلحاء المسلمين بالمملكة:</h5>", unsafe_allow_html=True)
         query = """
             SELECT shrines.name, geography.province, shrines.historical_era, shrines.exact_location, shrines.scientific_source 
             FROM shrines 
@@ -253,12 +293,11 @@ def show_maknez_sections_dashboard():
             st.info("لا توجد معطيات للأضرحة الإسلامية حالياً؛ قُم بضخ ملف الـ CSV من بوابة الإدارة.")
         else:
             st.dataframe(df_muslim.rename(columns={'name':'اسم الولي الصالح', 'province':'الإقليم التاريخي', 'historical_era':'العصر التاريخي', 'exact_location':'الموقع الميداني الدقيق', 'scientific_source':'المصدر العلمي'}), use_container_width=True)
-            # زر ملوكي لتصدير تقرير إكسيل لهذا القسم الفردي بنقرة واحدة
             csv_m = df_muslim.to_csv(index=False).encode('utf-8')
             st.download_button("📥 قذف وتحميل تقرير أضرحة صلحاء المسلمين (CSV)", data=csv_m, file_name="صلحاء_المسلمين_المغرب.csv", mime="text/csv", use_container_width=True)
 
     with tab2:
-        st.markdown("<h5 style='color:#064E3B; font-weight:bold;'>📜 سجل المزارات المشتركة والتاريخية لليهود المغاربة الشرفاء:</h5>", unsafe_allow_html=True)
+        st.markdown("<h5 style='color:#064E3B; font-weight:bold; margin-bottom: 15px;'>📜 سجل المزارات التاريخية لليهود المغاربة الشرفاء:</h5>", unsafe_allow_html=True)
         query_j = """
             SELECT shrines.name, geography.province, shrines.history_details, shrines.scientific_source 
             FROM shrines 
@@ -273,7 +312,7 @@ def show_maknez_sections_dashboard():
             st.download_button("📥 قذف وتحميل تقرير مزارات اليهود المغاربة (CSV)", data=csv_j, file_name="مزارات_اليهود_المغاربة.csv", mime="text/csv", use_container_width=True)
 
     with tab3:
-        st.markdown("<h5 style='color:#0F5132; font-weight:bold;'>📖 قاموس المكنز اللغوي والمفاهيم الصوفية المحققة:</h5>", unsafe_allow_html=True)
+        st.markdown("<h5 style='color:#0F5132; font-weight:bold; margin-bottom: 15px;'>📖 قاموس المكنز اللغوي والمفاهيم الصوفية المحققة:</h5>", unsafe_allow_html=True)
         df_terms = pd.read_sql_query("SELECT term, category, definition FROM thesaurus_terms ORDER BY term ASC", conn)
         if df_terms.empty:
             st.info("المعجم اللغوي فارغ حالياً؛ قُم بضخ ملف المصطلحات الحاوي على وسم (#معجم) لتنشيط القاموس.")
@@ -375,7 +414,7 @@ def show_admin_dashboard_popup():
                                 
                                 prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                                 if prov_id_row:
-                                    prov_id = int(prov_id_row[0])
+                                    prov_id = int(prov_id_row)
                                     era_val = str(row.get('historical_era', 'غير محدد')).strip()
                                     
                                     auto_lat = 31.7917
@@ -386,7 +425,7 @@ def show_admin_dashboard_popup():
                                     
                                     existing_row = cursor.execute("SELECT id FROM shrines WHERE name = ? AND province_id = ?", (s_name, prov_id)).fetchone()
                                     if existing_row:
-                                        shrine_id = int(existing_row[0])
+                                        shrine_id = int(existing_row)
                                         cursor.execute("""
                                             UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, creative_works=?, web_links=?, historical_era=?, tags=?, latitude=?, longitude=?, scientific_source=? WHERE id=?""", 
                                             (s_type, str(row.get('exact_location', 'ميداني')), hist_val, str(row.get('daily_activities', '')), str(row.get('annual_activities', '')), str(row.get('researchers_books', '')), str(row.get('creative_works', '')), str(row.get('web_links', '')), era_val, tags_val, auto_lat, auto_lon, sc_src, shrine_id))
@@ -440,7 +479,7 @@ elif current_page_val == "contact":
     show_contact_us_popup()
 elif current_page_val == "sections":
     st.query_params.clear()
-    # 🟢 حقن وتفعيل تشغيل لوحة الأقسام الثلاثة فورياً عند نقر التبويب بنجاح ساحق ومطلق ومجرب
+    # حقن وتفعيل تشغيل لوحة الأقسام الثلاثة فورياً عند نقر التبويب بنجاح ساحق ومطلق ومجرب
     show_maknez_sections_dashboard()
 
 # حقن مسافة الأمان تحت الشريط لمنع تداخل المباحث القادمة بالأسفل صلب المنظومة المكتملة
