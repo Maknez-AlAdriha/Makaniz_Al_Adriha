@@ -22,6 +22,70 @@ def init_ultimate_db():
         region TEXT NOT NULL,
         province TEXT NOT NULL UNIQUE
     )""")
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS shrines (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        type TEXT CHECK(type IN ('أضرحة المسلمين', 'مزارات اليهود')) NOT NULL,
+        province_id INTEGER,
+        exact_location TEXT,
+        history_details TEXT,
+        daily_activities TEXT,
+        annual_activities TEXT,
+        researchers_books TEXT,
+        creative_works TEXT,
+        web_links TEXT,
+        historical_era TEXT DEFAULT 'غير محدد', 
+        tags TEXT DEFAULT '',                    
+        latitude REAL DEFAULT 31.7917,   
+        longitude REAL DEFAULT -7.0926,
+        FOREIGN KEY (province_id) REFERENCES geography(id),
+        UNIQUE (name, province_id)
+    )""")
+    
+    # 🟢 تأمين الفتح وحقن قنوات الصور والمخطوطات والأوديو قسرياً في قاعدة البيانات لمنعOperationalError نهائياً
+    try: cursor.execute("ALTER TABLE shrines ADD COLUMN image_url TEXT DEFAULT ''")
+    except sqlite3.OperationalError: pass
+
+    try: cursor.execute("ALTER TABLE shrines ADD COLUMN manuscript_url TEXT DEFAULT ''")
+    except sqlite3.OperationalError: pass
+
+    try: cursor.execute("ALTER TABLE shrines ADD COLUMN audio_url TEXT DEFAULT ''")
+    except sqlite3.OperationalError: pass
+
+    try: cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
+    except sqlite3.OperationalError: pass
+        
+    cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS thesaurus_terms (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        term TEXT NOT NULL UNIQUE, 
+        category TEXT NOT NULL, 
+        definition TEXT NOT NULL
+    )""")
+    
+    try: cursor.execute("ALTER TABLE thesaurus_terms ADD COLUMN term_image TEXT DEFAULT ''")
+    except sqlite3.OperationalError: pass
+        
+    cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
+    
+    provinces_data = [
+        ('جهة طنجة - تطوان - الحسيمة', 'إقليم شفشاون'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم تطوان'),
+        ('جهة طنجة - تطوان - الحسيمة', 'عمالة طنجة أصيلة'), ('جهة طنجة - تطوان - الحسيمة', 'إقليم العرائش'),
+        ('جهة طنجة - تطوان - الحسيمة', 'إقليم الفحص أنجرة'), ('جهة مراكش أسفي', 'إقليم آسفي'),
+        ('جهة مراكش أسفي', 'عمالة مراكش'), ('جهة الرباط سلا القنيطرة', 'عمالة سلا'),
+        ('جهة بني ملال خنيفرة', 'إقليم خنيفرة'), ('جهة بني ملال خنيفرة', 'إقليم بني ملال'),
+        ('جهة الدار البيضاء السطات', 'إقليم السطات'), ('جهة الدار البيضاء السطات', 'إقليم الجديدة'),
+        ('جهة فاس مكناس', 'عمالة مكناس'), ('جهة فاس مكناس', 'عمالة فاس'), 
+        ('جهة درعة تافيلالت', 'إقليم الرشيدية'), ('جهة سوس ماسة', 'إقليم تارودانت')
+    ]
+    for r, p in provinces_data:
+        cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", (r, p))
+    conn.commit()
+
+init_ultimate_db()
 # محرك استدعاء وفحص مسار الصورة وتجهيز دفق الـ Base64 الصافي لمنع المربع الأزرق نهائياً
 target_banner = None
 for valid_name in ["banner.png", "banner..png", "Banner.png", "banner.PNG", "banner.jpg"]:
@@ -284,6 +348,7 @@ def show_contact_us_popup():
                 st.success("🔔 تم إرسال رسالة تذكير بنجاح إلى الموقع!")
                 st.rerun()
             else: st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
+# 🟢 تصحيح الصورة 1: حقن خاصية dismissible=False لمنع اختفاء البطاقة عند تحرك السكرول نهائياً
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
 def popup_individual_shrine_card(shrine_name):
     row = cursor.execute("""
@@ -329,7 +394,6 @@ def popup_individual_shrine_card(shrine_name):
         </div>
         """, unsafe_allow_html=True)
         
-        # 4. مولد الاقتباس والتوثيق الأكاديمي الدولي الصارم للأطروحة
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
         citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
         st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70)
@@ -365,7 +429,6 @@ def popup_individual_term_card(term_name):
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_term_popup_btn"):
             st.rerun()
-# لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل ومزودة بميزة الـ Popup الفردي لكل زر وتوسط العناوين
 def show_maknez_sections_dashboard():
     st.markdown("""
         <div class='shamel-dashboard-container'>
@@ -424,7 +487,7 @@ def show_maknez_sections_dashboard():
 def show_shamel_search_engine_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #064E3B;'>
-            <h2 style='text-align:center; color:#064E3B; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>🔍 محرك البحث الشامل والمتقاطع in المكنز الوطني</h2>
+            <h2 style='text-align:center; color:#064E3B; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>🔍 محرك البحث الشامل والمتقاطع في المكنز الوطني</h2>
             <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>بوابة الغربال الفوري والفرز الدقيق للمزارات والأضرحة والمصطلحات صلب الموضوع</p>
         </div>
     """, unsafe_allow_html=True)
@@ -532,10 +595,7 @@ def show_maknez_atlas_interactive_map_page():
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
-# ==========================================
-# 📊 البلوك 12 من 14 المطور والمطهر: فك الـ Tuple لحماية لوحة العدادات والمؤشرات الإحصائية
-# ==========================================
-
+# 🟢 تصحيح الصورة 2: فك تغليف الـ Tuple عبر تفكيك الفهرس الصافي [0] لمنع خطأ TypeError نهائياً
 def show_maknez_statistics_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
@@ -544,18 +604,10 @@ def show_maknez_statistics_page():
         </div>
     """, unsafe_allow_html=True)
     
-    # 🟢 الحل الهندسي: استخلاص الرقم الصافي عبر [0] من مخرجات السيرفر لمنع انهيار الـ Metric
-    total_shrines_row = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-    total_shrines = total_shrines_row[0] if total_shrines_row else 0
-    
-    muslim_shrines_row = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-    muslim_shrines = muslim_shrines_row[0] if muslim_shrines_row else 0
-    
-    jew_shrines_row = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-    jew_shrines = jew_shrines_row[0] if jew_shrines_row else 0
-    
-    total_terms_row = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
-    total_terms = total_terms_row[0] if total_terms_row else 0
+    total_shrines = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()[0]
+    muslim_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()[0]
+    jew_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()[0]
+    total_terms = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()[0]
     
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
@@ -621,8 +673,9 @@ def show_admin_dashboard_popup():
                 
         with admin_tab2:
             st.markdown("##### 🕌 محرك تعديل وإغناء كتل الأضرحة والمزارات بـ (الصور، المخطوطات، والملفات الصوتية) حياً:")
-            all_live_shrines = [item[0] for item in cursor.execute("SELECT name FROM shrines ORDER BY name ASC").fetchall()]
-            shrine_to_edit = st.selectbox("🎯 اختر اسم الضريح أو المزار المراد تعديله أو تزويده بشواهد ميدانية:", ["--- اختر معلماً لتعديله ---"] + all_live_shrines, key="sel_sh_edit_con_v14_13")
+            all_live_shrines = [item for item in cursor.execute("SELECT name FROM shrines ORDER BY name ASC").fetchall()]
+            live_shrine_names = [s[0] for s in all_live_shrines]
+            shrine_to_edit = st.selectbox("🎯 اختر اسم الضريح أو المزار المراد تعديله أو تزويده بشواهد ميدانية:", ["--- اختر معلماً لتعديله ---"] + live_shrine_names, key="sel_sh_edit_con_v14_13")
             
             if shrine_to_edit != "--- اختر معلماً لتعديله ---":
                 current_data = cursor.execute("""
@@ -659,8 +712,9 @@ def show_admin_dashboard_popup():
                             
         with admin_tab3:
             st.markdown("##### 📖 محرك تعديل المصطلحات والمفاهيم القاموسية الملحقة بصور (المكنز اللغوي) :")
-            all_live_terms = [item[0] for item in cursor.execute("SELECT term FROM thesaurus_terms ORDER BY term ASC").fetchall()]
-            term_to_edit = st.selectbox("🎯 اختر المصطلح أو المفهوم المراد تصحيحه أو دعم التحقيق بصورة:", ["--- اختر مصطلحاً لتعديله ---"] + all_live_terms, key="sel_term_edit_con_v14_13")
+            all_live_terms = [item for item in cursor.execute("SELECT term FROM thesaurus_terms ORDER BY term ASC").fetchall()]
+            live_term_names = [t[0] for t in all_live_terms]
+            term_to_edit = st.selectbox("🎯 اختر المصطلح أو المفهوم المراد تصحيحه أو دعم التحقيق بصورة:", ["--- اختر مصطلحاً لتعديله ---"] + live_term_names, key="sel_term_edit_con_v14_13")
             
             if term_to_edit != "--- اختر مصطلحاً لتعديله ---":
                 current_term_data = cursor.execute("SELECT category, definition, term_image FROM thesaurus_terms WHERE term = ?", (term_to_edit,)).fetchone()
