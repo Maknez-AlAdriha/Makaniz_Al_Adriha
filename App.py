@@ -221,7 +221,7 @@ st.markdown(f"""
             text-align: center !important;
         }}
 
-        /* 🟢 تصحيح الاتجاه وقسر المحاذاة من اليمين إلى اليسار (RTL) لكافة الاستمارات والنوافذ وعناصر المدخلات صلب الواجهة الحية */
+        /* تصحيح الاتجاه وقسر المحاذاة من اليمين إلى اليسار (RTL) لكافة الاستمارات والنوافذ وعناصر المدخلات صلب الواجهة الحية */
         div[data-testid="stDialog"] form, div[data-testid="stDialog"] .stForm, div[data-testid="stDialog"] div[data-testid="stBlock"] {{
             direction: rtl !important;
             text-align: right !important;
@@ -336,7 +336,7 @@ def popup_individual_shrine_card(shrine_name):
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
     if row:
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {row}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  :: 🕌 {row}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {row}</div>
@@ -359,7 +359,7 @@ def popup_individual_term_card(term_name):
             <div class='card-shrine-field' style='font-size:18px !important; line-height:2; border-bottom:none;'><b>📚 التعريف العلمي المعتمد الأكاديمي:</b><br>{row}</div>
         </div>
         """, unsafe_allow_html=True)
-# لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل ومزودة بميزة الـ Popup الفردي لكل زر
+# لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل ومزودة بميزة الـ Popup الفردي لكل زر وتوسط العناوين
 def show_maknez_sections_dashboard():
     st.markdown("""
         <div class='shamel-dashboard-container'>
@@ -371,7 +371,13 @@ def show_maknez_sections_dashboard():
     tab1, tab2, tab3 = st.tabs(["🕌 رواق صلحاء المسلمين", "📜 رواق مزارات اليهود", "📖 المكنز اللغوي والمصطلحات"])
     
     with tab1:
-        st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #1E3A8A; padding-right:10px;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>", unsafe_allow_html=True)
+        # قسر التوسط الصريح والاتجاه العربي لعناوين الرواق الإسلامي
+        st.markdown("""
+            <div style='background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 6px; border-right: 5px solid #1E3A8A; margin-top:15px; margin-bottom:15px; direction: rtl; text-align: center;'>
+                <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>
+            </div>
+        """, unsafe_allow_html=True)
+        
         shrines_m = cursor.execute("SELECT name, id FROM shrines WHERE type = 'أضرحة المسلمين' ORDER BY id DESC").fetchall()
         if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً صلب قاعدة البيانات.")
         else:
@@ -381,7 +387,13 @@ def show_maknez_sections_dashboard():
                     if st.button(f"🕌 {name}", key=f"m_sh_btn_{s_id}", use_container_width=True): popup_individual_shrine_card(name)
 
     with tab2:
-        st.markdown("<h4 style='color:#064E3B; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #064E3B; padding-right:10px;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>", unsafe_allow_html=True)
+        # قسر التوسط الصريح والاتجاه العربي لعناوين رواق المزارات اليهودية
+        st.markdown("""
+            <div style='background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 6px; border-right: 5px solid #064E3B; margin-top:15px; margin-bottom:15px; direction: rtl; text-align: center;'>
+                <h4 style='color:#064E3B; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>
+            </div>
+        """, unsafe_allow_html=True)
+        
         shrines_j = cursor.execute("SELECT name, id FROM shrines WHERE type = 'مزارات اليهود' ORDER BY id DESC").fetchall()
         if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً صلب قاعدة البيانات.")
         else:
@@ -391,7 +403,13 @@ def show_maknez_sections_dashboard():
                     if st.button(f"📜 {name}", key=f"j_sh_btn_{s_id}", use_container_width=True): popup_individual_shrine_card(name)
 
     with tab3:
-        st.markdown("<h4 style='color:#0F5132; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #0F5132; padding-right:10px;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>", unsafe_allow_html=True)
+        # قسر عنوان القاموس المعجمي الأخضر على التوسط التام والاتجاه العربي الصرف وسحق الانحراف الجانبي للأبد
+        st.markdown("""
+            <div style='background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 6px; border-right: 5px solid #0F5132; margin-top:15px; margin-bottom:15px; direction: rtl; text-align: center;'>
+                <h4 style='color:#0F5132; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>
+            </div>
+        """, unsafe_allow_html=True)
+        
         terms = cursor.execute("SELECT term, id FROM thesaurus_terms ORDER BY term ASC").fetchall()
         if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً صلب قاعدة البيانات.")
         else:
@@ -509,7 +527,7 @@ def show_maknez_atlas_interactive_map_page():
             if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v26"):
                 popup_individual_shrine_card(target_sh)
         else:
-            st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة, الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # ==========================================
 # لوحة المؤشرات الإحصائية وتطهير محرك التغذية وسحق كافّة الأخطاء المرصودة بالمليمتر
 # ==========================================
