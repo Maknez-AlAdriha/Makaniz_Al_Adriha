@@ -365,19 +365,23 @@ def show_contact_us_popup():
 # ==========================================
 
 # ==========================================
-# 📦 Le Bloc 9 et 10 Fusionné et Purifié : Éradication définitive de "None" dans les fiches
+# 📦 البلوك 9 و 10 المطور كلياً: التطهير الجراحي النهائي مائة بالمائة وسحق نصوص None حياً
 # ==========================================
 
 @st.dialog("البطاقة العلمية للمصطلح القاموسي المحقق", width="large", dismissible=False)
 def popup_individual_term_card(term_name):
     row = cursor.execute("SELECT term, category, definition, term_image FROM thesaurus_terms WHERE term = ?", (term_name,)).fetchone()
     if row:
-        t_term = str(row[0]).strip() if row[0] and str(row[0]).strip() != "None" else "غير محدد"
-        t_category = str(row[1]).strip() if row[1] and str(row[1]).strip() != "None" else "لازالت المعطيات غير متوفرة"
-        t_definition = str(row[2]).strip() if row[2] and str(row[2]).strip() != "None" else "لازالت المعطيات غير متوفرة"
-        t_img = str(row[3]).strip() if row[3] and str(row[3]).strip() != "None" else ""
+        t_term = str(row[0]).strip() if row[0] else "غير محدد"
+        t_category = str(row[1]).strip() if row[1] else "لازالت المعطيات غير متوفرة"
+        t_definition = str(row[2]).strip() if row[2] else "لازالت المعطيات غير متوفرة"
+        t_img = str(row[3]).strip() if row[3] else ""
         
-        if t_img and t_img != "nan" and t_img != "":
+        # غسيل يدوي صارم للنصوص من الكلمة الميتة
+        if t_category == "None" or t_category == "": t_category = "لازالت المعطيات غير متوفرة"
+        if t_definition == "None" or t_definition == "": t_definition = "لازالت المعطيات غير متوفرة"
+        
+        if t_img and t_img != "nan" and t_img != "None" and t_img != "":
             st.image(t_img, use_container_width=True, caption=f"📸 الرسم التوضيحي/المخطوط للمصطلح: {t_term}")
             
         st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>📖 مصطلح: {t_term}</b></h3>", unsafe_allow_html=True)
@@ -390,7 +394,7 @@ def popup_individual_term_card(term_name):
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
         term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية الشريفة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18_ultimate_secure_fixed")
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18_ultimate_secure_fixed_last")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_term_popup_btn"):
@@ -402,8 +406,10 @@ def popup_individual_shrine_card(shrine_name):
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books, image_url, manuscript_url, audio_url
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
     if row:
-        # 🟢 Extraction stricte par index de colonne pour distribuer correctement les données et intercepter "None"
-        s_name = str(row[0]).strip() if row[0] and str(row[0]).strip() != "None" else "غير محدد"
+        # 🟢 التفكيك الصارم بالفهارس الرقمية المباشرة لمنع خلط المتغيرات صلب بايثون
+        s_name = str(row[0]).strip() if row[0] else "غير محدد"
+        
+        # التقاط وتطهير الشاهد التاريخي والتموضع الترابي
         s_history = str(row[1]).strip() if row[1] and str(row[1]).strip() != "None" else "لازالت المعطيات غير متوفرة"
         s_location = str(row[2]).strip() if row[2] and str(row[2]).strip() != "None" else "لازالت المعطيات غير متوفرة"
         s_era = str(row[3]).strip() if row[3] and str(row[3]).strip() != "None" else "غير محدد"
@@ -411,16 +417,23 @@ def popup_individual_shrine_card(shrine_name):
         
         daily_text = str(row[5]).strip() if row[5] and str(row[5]).strip() != "None" else ""
         annual_text = str(row[6]).strip() if row[6] and str(row[6]).strip() != "None" else ""
+        s_books = str(row[7]).strip() if row[7] and str(row[7]).strip() != "None" else "لازالت المعطيات غير متوفرة"
         
+        s_img = str(row[8]).strip() if row[8] and str(row[8]).strip() != "None" else ""
+        s_manuscript = str(row[9]).strip() if row[9] and str(row[9]).strip() != "None" else ""
+        s_audio = str(row[10]).strip() if row[10] and str(row[10]).strip() != "None" else ""
+        
+        # حقن جملة الضمان التلقائية لغسيل الأنشطة الموسمية واليومية
         if not daily_text and not annual_text:
             s_activities = "لازالت المعطيات غير متوفرة"
         else:
             s_activities = f"{daily_text} | {annual_text}" if daily_text and annual_text else (daily_text if daily_text else annual_text)
             
-        s_books = str(row[7]).strip() if row[7] and str(row[7]).strip() != "None" else "لازالت المعطيات غير متوفرة"
-        s_img = str(row[8]).strip() if row[8] and str(row[8]).strip() != "None" else ""
-        s_manuscript = str(row[9]).strip() if row[9] and str(row[9]).strip() != "None" else ""
-        s_audio = str(row[10]).strip() if row[10] and str(row[10]).strip() != "None" else ""
+        # 🟢 الخط الدفاعي الأخير: تدمير وحرق كلمة None نصياً لو أفلتت من الفلاتر العليا
+        if s_history == "None" or s_history == "": s_history = "لازالت المعطيات غير متوفرة"
+        if s_location == "None" or s_location == "": s_location = "لازالت المعطيات غير متوفرة"
+        if s_books == "None" or s_books == "": s_books = "لازالت المعطيات غير متوفرة"
+        if s_activities.count("None") > 0: s_activities = "لازالت المعطيات غير متوفرة"
         
         if s_img and s_img != "nan" and s_img != "":
             st.image(s_img, use_container_width=True, caption=f"📸 الشاهد البصري الميداني للمزار: {s_name}")
@@ -444,8 +457,10 @@ def popup_individual_shrine_card(shrine_name):
         """, unsafe_allow_html=True)
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
-        citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18_ultimate_secure_fixed")
+        # تصحيح تصفية الاقتباس السفلية
+        citation_location = s_location if s_location != "لازالت المعطيات غير متوفرة" else "الموقع غير محدد بدقة"
+        citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({citation_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18_ultimate_secure_fixed_last_v2")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_shrine_popup_btn"):
