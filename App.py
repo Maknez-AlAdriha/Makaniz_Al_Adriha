@@ -563,6 +563,9 @@ def show_maknez_sections_dashboard():
                 with cols[idx % 4]:
                     if st.button(f"📖 {term}", key=f"term_btn_{t_id}", use_container_width=True): popup_individual_term_card(term)
 # صفحة البحث المتقدم والمتقاطع المستوحاة بالكامل من خصائص المكتبة الشاملة العريقة
+# ==========================================
+# 📦 البلوك 12 من 18 المصحح والمطهر جراحياً: محرك البحث الشامل والمتقاطع ومنع تكرار نص النتائج
+# ==========================================
 def show_shamel_search_engine_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #064E3B;'>
@@ -572,22 +575,20 @@ def show_shamel_search_engine_page():
     """, unsafe_allow_html=True)
     
     f_col1, f_col2, f_col3 = st.columns(3)
-    with f_col1: search_query = st.text_input("🔍 اكتب كلمة البحث (اسم الولي، مَعلم، جزء من نص التاريخ...):", placeholder="اكتب أول الحروف هنا للبحث الحي...")
-    with f_col2: type_filter = st.selectbox("🗂️ فرز حسب الرواق المعلمي:", ["الكل كحزمة واحدة", "أضرحة المسلمين", "مزارات اليهود"])
+    with f_col1: search_query = st.text_input("🔍 اكتب كلمة البحث (اسم الولي، مَعلم، جزء من نص التاريخ...):", placeholder="اكتب أول الحروف هنا للبحث الحي...", key="sh_search_inp_v12_final")
+    with f_col2: type_filter = st.selectbox("🗂️ فرز حسب الرواق المعلمي:", ["الكل كحزمة واحدة", "أضرحة المسلمين", "مزارات اليهود"], key="sh_type_sel_v12_final")
     with f_col3:
-        db_provinces = cursor.execute("SELECT province FROM geography ORDER BY province ASC").fetchall()
-        provinces_list = [p[0] for p in db_provinces]
-        all_provinces = ["كل الأقاليم الترابية"] + provinces_list
-        province_filter = st.selectbox("📍 فرز حسب الإقليم التاريخي للمملكة:", all_provinces)
+        all_provinces = ["كل الأقاليم الترابية"] + [p[0] for p in cursor.execute("SELECT province FROM geography ORDER BY province ASC").fetchall()]
+        province_filter = st.selectbox("📍 فرز حسب الإقليم التاريخي للمملكة الشريفة:", all_provinces, key="sh_prov_sel_v12_final")
         
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 15px 0;'>", unsafe_allow_html=True)
     
     sql_base = "SELECT shrines.name, geography.province, shrines.historical_era, shrines.type, shrines.id FROM shrines JOIN geography ON shrines.province_id = geography.id WHERE 1=1"
     params = []
     if search_query:
-        sql_base += " AND (shrines.name LIKE ? OR shrines.history_details LIKE ? OR shrines.tags LIKE ?)"
+        sql_base += " AND (shrines.name LIKE ? OR shrines.history_details LIKE ?)"
         q_like = f"%{search_query}%"
-        params.extend([q_like, q_like, q_like])
+        params.extend([q_like, q_like])
     if type_filter != "الكل كحزمة واحدة":
         sql_base += " AND shrines.type = ?"
         params.append(type_filter)
@@ -595,11 +596,28 @@ def show_shamel_search_engine_page():
         sql_base += " AND geography.province = ?"
         params.append(province_filter)
         
-    sql_base += " ORDER BY shrines.id DESC"
-    results = cursor.execute(sql_base, params).fetchall()
-    st.markdown(f"<h5>📊 نتائج الغربال الشامل: تم العثور على عدد ({len(results)}) معلم تراثي مطابق للفلاتر</h5>", unsafe_allow_html=True)
+    results = cursor.execute(sql_base + " ORDER BY shrines.id DESC", params).fetchall()
     
-    if not results: st.info("لا توجد نتائج تطابق خيارات البحث الحالية.")
+    # 🟢 حقن وتأمين التصويب البصري الملوكي: يطبع مرة واحدة فقط في المنظومة وبخلفية فخمة موسطة تماماً
+    st.markdown(f"""
+        <div style='background: rgba(255, 255, 255, 0.96); 
+                    padding: 18px 25px; 
+                    border-radius: 8px; 
+                    border-right: 6px solid #064E3B; 
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+                    margin-top: 15px; 
+                    margin-bottom: 25px; 
+                    direction: rtl; 
+                    text-align: center;
+                    width: 100%;'>
+            <h4 style='color: #064E3B; font-family: "Tajawal", sans-serif; font-weight: 900; margin: 0; font-size: 20px; text-align: center;'>
+                📊 نتائج الغربال الشامل: تم العثور على عدد ({len(results)}) معلم تراثي مطابق للفلاتر المحققة
+            </h4>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    if not results:
+        st.info("لا توجد نتائج تطابق خيارات البحث الحالية.")
     else:
         r_cols = st.columns(3)
         for idx, (s_name, p_name, era_name, s_type, s_id) in enumerate(results):
@@ -608,16 +626,13 @@ def show_shamel_search_engine_page():
                 card_html = f"""
                     <div style='background:#FFFFFF; padding:15px; border-radius:8px; border-right: 5px solid {border_color}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom:10px; direction: rtl; text-align: right;'>
                         <span style='font-size:12px; color:#6B7280; font-weight:bold;'>📌 {s_type}</span><br>
-                        <b style='color:#1F2937; font-size:16px;'>  🔑 {s_name}</b><br>
+                        <b style='color:#1F2937; font-size:16px;'>🏛️ {s_name}</b><br>
                         <span style='font-size:13px; color:#4B5563;'>📍 {p_name} | ⏳ {era_name}</span>
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
-              
-              
-              
-              
-              
-                if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_{s_id}_{idx}", use_container_width=True): popup_individual_shrine_card(s_name)
+                if st.button("🔎 افتح البطاقة العلمية الكاملة", key=f"src_sh_btn_final_{s_id}_{idx}", use_container_width=True):
+                    popup_individual_shrine_card(s_name)
+
 # ==========================================
 # 📦 البلوك 13 من 18 الأصلي والمطهر: محرك أطلس المكنز والقفز الجغرافي وحاوية التموضع الترابي
 # ==========================================
