@@ -83,6 +83,7 @@ st.markdown(f"""
     <style>
         @import url('https://googleapis.com');
         
+        /* تثبيت الصورة كخلفية كاملة ممتدة تلتصق بحدود الشاشة ومقاومة التمرير قسرياً مائة بالمائة */
         [data-testid="stAppViewContainer"] {{
             background-image: url("data:image/png;base64,{encoded_string}");
             background-size: cover !important;
@@ -108,6 +109,7 @@ st.markdown(f"""
             background: transparent !important;
         }}
         
+        /* تخصيص هيدر المنصة ليكون شفافاً مائة بالمائة لضمان بقاء شريط الملاحة مرئياً وصافياً وحراً */
         div[data-testid="stHeader"] {{
             background: transparent !important;
             z-index: 9999 !important;
@@ -148,7 +150,7 @@ st.markdown(f"""
             transform: translateY(-1px) !important;
         }}
 
-        /* 🟢 تصحيح الصورة 2 و 3 و 7: إجبار علامات التبويب وكافة القوائم المنسدلة (Dropdowns) على الاتجاه العربي الموسط والتكبير */
+        /* تصحيح الصورة 2 و 3 و 7: إجبار علامات التبويب وكافة القوائم المنسدلة (Dropdowns) على الاتجاه العربي الموسط والتكبير */
         div[data-testid="stTabs"] {{
             background: rgba(255, 255, 255, 0.98) !important;
             padding: 20px !important;
@@ -181,7 +183,7 @@ st.markdown(f"""
             font-weight: 900 !important;
         }}
         
-        /* 🟢 قسر القوائم المنسدلة وصناديق التصفية على التوسط الصريح لمنع انجرافها لليسار */
+        /* قسر القوائم المنسدلة وصناديق التصفية على التوسط الصريح لمنع انجرافها لليسار */
         div[data-testid="stSelectbox"] div[role="button"] {{
             text-align: center !important;
             direction: rtl !important;
@@ -201,6 +203,7 @@ st.markdown(f"""
             direction: rtl !important;
         }}
 
+        /* حقن وتفخيم صندوق البحث: جعل الخط المكتوب والنص الافتراضي بالوسط مائة بالمائة وبلون أزرق غليظ ملكي مصون */
         div[data-testid="stTextInput"] input {{
             text-align: center !important;
             font-size: 18px !important;
@@ -214,6 +217,7 @@ st.markdown(f"""
             opacity: 0.7 !important;
         }}
 
+        /* تخصيص مظهر مؤشرات العدادات الإحصائية (Metrics) لتظهر كبطاقات ذهبية فخمة */
         div[data-testid="stMetric"] {{
             background: #FFFFFF !important;
             border-top: 4px solid #D4AF37 !important;
@@ -265,25 +269,30 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-# ==========================================
-# دالات النوافذ المنبثقة التفاعلية للمشروع وبوابة التغذية الرقمية الفولاذية
-# ==========================================
-
+# 1. الدالة المنبثقة التفاعلية للتعريف بالأطروحة ونبذة عن المشروع (محصنة ومطهرة بالكامل ومغلقة)
+@st.dialog("نبذة عن المشروع الأكاديمي", width="large")
 def show_about_project_popup():
-    st.markdown("<div class='popup-header-title'>🏛️ نبذة عن المشروع الأكاديمي</div>", unsafe_allow_html=True)
     st.markdown("""
-    <div class='popup-content-text' style='padding: 10px 5px; direction: rtl; text-align: right;'>
-        <p>يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.</p>
-        <p>إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.</p>
-        <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 15px 0;'>
-        <p style='text-align: center; font-weight: bold; color: #1E3A8A; margin-bottom:5px;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
-        <p style='text-align: center; font-weight: bold; color: #D4AF37;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
-    </div>
+        <div style='direction: rtl; text-align: right; padding: 10px; background: #FFFFFF; border-radius: 8px;'>
+            <h3 style='color: #1E3A8A; font-family: "Reem Kufi", serif; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; text-align: center; margin-bottom: 15px;'>🏛️ نبذة عن المشروع الأكاديمي والمكنز التراثي</h3>
+            <p style='font-family: "Tajawal", sans-serif; font-size: 16px; line-height: 1.8; color: #1F2937;'>
+                يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.
+            </p>
+            <p style='font-family: "Tajawal", sans-serif; font-size: 16px; line-height: 1.8; color: #1F2937;'>
+                إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.
+            </p>
+            <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 20px 0;'>
+            <p style='text-align: center; font-family: "Tajawal", sans-serif; font-weight: bold; font-size: 16px; color: #1E3A8A; margin-bottom: 5px;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
+            <p style='text-align: center; font-family: "Tajawal", sans-serif; font-weight: bold; font-size: 15px; color: #D4AF37; margin-bottom: 10px;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
+        </div>
     """, unsafe_allow_html=True)
-    if st.button("🏛️ إغلاق النافذة والعودة للمكنز", use_container_width=True, key="close_about_clean_btn"):
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("❌ إغلاق النافذة والعودة للمكنز", use_container_width=True, key="shamel_about_popup_close_secure_v26"):
         st.query_params.clear()
         st.rerun()
 
+# 2. الواجهة العريضة الأفقية لـ دفتر التواصل الرقمي (اتصل بنا)
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
@@ -422,7 +431,7 @@ def show_shamel_search_engine_page():
                 card_html = f"""
                     <div style='background:#FFFFFF; padding:15px; border-radius:8px; border-right: 5px solid {border_color}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom:10px; direction: rtl; text-align: right;'>
                         <span style='font-size:12px; color:#6B7280; font-weight:bold;'>📌 {s_type}</span><br>
-                        <b style='color:#1F2937; font-size:16px;'>  🕌 {s_name}</b><br>
+                        <b style='color:#1F2937; font-size:16px;'>  🔑 {s_name}</b><br>
                         <span style='font-size:13px; color:#4B5563;'>📍 {p_name} | ⏳ {era_name}</span>
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
@@ -444,7 +453,7 @@ def show_maknez_atlas_interactive_map_page():
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
-        search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v25")
+        search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v26")
         
         search_query_fixed = search_map_input.strip().lower()
         
@@ -485,16 +494,15 @@ def show_maknez_atlas_interactive_map_page():
                 </div>
             """, unsafe_allow_html=True)
             
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v25"):
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v26"):
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # ==========================================
-# 🟢 البلوك 12 من 12 المطور والمطهر: لوحة المؤشرات الإحصائية وتطهير العنوان الأزرق بخلفية فخمة
+# لوحة المؤشرات الإحصائية وتطهير محرك التغذية وسحق كافّة الأخطاء المرصودة بالمليمتر
 # ==========================================
 
 def show_maknez_statistics_page():
-    # تصحيح الصورة 1: عزل وحماية كتلة العنوان لمنع التداخل والتشويه البصري مع الـ Banner
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
             <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>📊 لوحة المؤشرات الرقمية والعدادات الإحصائية التراكمية</h2>
@@ -510,12 +518,11 @@ def show_maknez_statistics_page():
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
     with f_col2: st.metric(label="🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
-    with f_col3: st.metric(label="📜 رواق M المزارات اليهودية التاريخية", value=jew_shrines)
+    with f_col3: st.metric(label="📜 رواق المزارات اليهودية التاريخية", value=jew_shrines)
     with f_col4: st.metric(label="📖 المصطلحات والمفاهيم المعجمية", value=total_terms)
     
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 25px 0;'>", unsafe_allow_html=True)
     
-    # 🟢 التطوير البصري الحاسم: وضع العنوان الأزرق في الوسط تماماً ومن اليمين إلى اليسار مع حقن خلفية بيضاء فخمة تمنع التداخل
     st.markdown("""
         <div style='background: rgba(255, 255, 255, 0.95); padding: 15px 25px; border-radius: 8px; border-right: 5px solid #1E3A8A; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; direction: rtl; text-align: center;'>
             <h4 style='color: #1E3A8A; font-family: "Reem Kufi", serif; font-weight: bold; margin: 0;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للمملكة المغربية الشريفة:</h4>
@@ -530,7 +537,6 @@ def show_maknez_statistics_page():
     if geo_df.empty: st.info("الرسوم البيانية بانتظار ضخ ملفات الـ CSV لتفعيل المؤشرات.")
     else: st.bar_chart(geo_df.set_index('الإقليم الترابي'), use_container_width=True)
 
-# بوابة إدارة وتغذية المكنز الوطني ودعم الاستيراد التراكمي الشامل للمشرف
 @st.dialog("بوابة إدارة وتغذية المكنز الوطني")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد التراكمي الشامل</div>", unsafe_allow_html=True)
@@ -570,7 +576,6 @@ def show_admin_dashboard_popup():
             st.session_state.uploader_counter += 1
             st.success("📊 تم الضخ التراكمي وتحديث جداول المكنز بنجاح تام وبصفر شاشات حمراء.")
 
-# نحت صف روابط المكنز النصية صلب الشريط المتدرج بالسقف لعام 2026 مائة بالمائة 
 current_page_val = st.query_params.get("page", "home")
 active_sections_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "sections" else ""
 active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
