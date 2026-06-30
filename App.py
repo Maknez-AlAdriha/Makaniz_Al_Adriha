@@ -490,11 +490,11 @@ def show_maknez_atlas_interactive_map_page():
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # ==========================================
-# 🟢 البلوك 12 من 12 المطور: لوحة المؤشرات الإحصائية وتطهير محرك التغذية وسحق كافّة الأخطاء المرصودة بالمليمتر
+# 🟢 البلوك 12 من 12 المطور والمطهر: لوحة المؤشرات الإحصائية وتطهير العنوان الأزرق بخلفية فخمة
 # ==========================================
 
 def show_maknez_statistics_page():
-    # 🟢 تصحيح الصورة 1: عزل وحماية كتلة العنوان لمنع التداخل والتشويه البصري مع الـ Banner
+    # تصحيح الصورة 1: عزل وحماية كتلة العنوان لمنع التداخل والتشويه البصري مع الـ Banner
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
             <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>📊 لوحة المؤشرات الرقمية والعدادات الإحصائية التراكمية</h2>
@@ -509,13 +509,19 @@ def show_maknez_statistics_page():
     
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
-    with f_col2: st.metric(label="%" "🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
-    with f_col3: st.metric(label="📜 رواق المزارات اليهودية التاريخية", value=jew_shrines)
+    with f_col2: st.metric(label="🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
+    with f_col3: st.metric(label="📜 رواق M المزارات اليهودية التاريخية", value=jew_shrines)
     with f_col4: st.metric(label="📖 المصطلحات والمفاهيم المعجمية", value=total_terms)
     
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 25px 0;'>", unsafe_allow_html=True)
     
-    st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-bottom:15px;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للملكة المغربية الشريفة:</h4>", unsafe_allow_html=True)
+    # 🟢 التطوير البصري الحاسم: وضع العنوان الأزرق في الوسط تماماً ومن اليمين إلى اليسار مع حقن خلفية بيضاء فخمة تمنع التداخل
+    st.markdown("""
+        <div style='background: rgba(255, 255, 255, 0.95); padding: 15px 25px; border-radius: 8px; border-right: 5px solid #1E3A8A; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; direction: rtl; text-align: center;'>
+            <h4 style='color: #1E3A8A; font-family: "Reem Kufi", serif; font-weight: bold; margin: 0;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للمملكة المغربية الشريفة:</h4>
+        </div>
+    """, unsafe_allow_html=True)
+    
     geo_df = pd.read_sql_query("""
         SELECT geography.province as 'الإقليم الترابي', COUNT(shrines.id) as 'عدد المعالم الموثقة' 
         FROM shrines JOIN geography ON shrines.province_id = geography.id 
@@ -536,7 +542,6 @@ def show_admin_dashboard_popup():
         if "uploader_counter" not in st.session_state: st.session_state.uploader_counter = 0
         uploaded_csv_list = st.file_uploader("اختر ملفات الـ CSV المحددة:", type=["csv"], accept_multiple_files=True, key=f"pop_csv_u_{st.session_state.uploader_counter}")
         
-        # 🟢 تصحيح الصورة 11 و 13: سحق معضلات الـ Tuple وعلامات الاستفهام الميتة في لغة SQLite نهائياً
         if uploaded_csv_list and st.button("🚀 البدء في معالجة وضخ الملفات دفعة واحدة", use_container_width=True):
             added_shrines, added_terms = 0, 0
             for uploaded_csv in uploaded_csv_list:
@@ -558,7 +563,7 @@ def show_admin_dashboard_popup():
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            prov_id = int(prov_id_row[0]) # 🟢 فك الـ Tuple الصافي بنجاح تام منعاً للـ TypeError
+                            prov_id = int(prov_id_row[0]) 
                             cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, hist_val, lat_val, lon_val))
                             added_shrines += 1
             conn.commit()
