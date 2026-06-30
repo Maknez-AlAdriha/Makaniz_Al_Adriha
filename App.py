@@ -360,15 +360,18 @@ def show_contact_us_popup():
 # 📦 Le Bloc 9 et 10 Fusionné et Rectifié : Élimination définitive de l'alerte à la ligne 446
 # ==========================================
 
+# ==========================================
+# 📦 البلوك 9 و 10 الملحم والمطهر: تصفية وسحق نصوص None وحقن العبارة الأكاديمية المصححة
+# ==========================================
+
 @st.dialog("البطاقة العلمية للمصطلح القاموسي المحقق", width="large", dismissible=False)
 def popup_individual_term_card(term_name):
-    # سحب تفاصيل المفهوم اللغوي من قاعدة البيانات بنقاء كامل
     row = cursor.execute("SELECT term, category, definition, term_image FROM thesaurus_terms WHERE term = ?", (term_name,)).fetchone()
     if row:
-        t_term = str(row[0])
-        t_category = str(row[1])
-        t_definition = str(row[2])
-        t_img = str(row[3]).strip() if row[3] else ""
+        t_term = str(row[0]) if row[0] and str(row[0]).strip() != "None" else "غير محدد"
+        t_category = str(row[1]) if row[1] and str(row[1]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        t_definition = str(row[2]) if row[2] and str(row[2]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        t_img = str(row[3]).strip() if row[3] and str(row[3]).strip() != "None" else ""
         
         if t_img and t_img != "nan" and t_img != "":
             st.image(t_img, use_container_width=True, caption=f"📸 الرسم التوضيحي/المخطوط للمصطلح: {t_term}")
@@ -383,11 +386,67 @@ def popup_individual_term_card(term_name):
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
         term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية الشريفة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18_ultimate")
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18_ultimate_secure")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_term_popup_btn"):
             st.rerun()
+
+@st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
+def popup_individual_shrine_card(shrine_name):
+    row = cursor.execute("""
+        SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books, image_url, manuscript_url, audio_url
+        FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
+    if row:
+        # 🟢 معالجة وتصفية جراحية صارمة: استبدال أي قيمة None بعبارة (لازالت المعطيات غير متوفرة)
+        s_name = str(row[0]) if row[0] and str(row[0]).strip() != "None" else "غير محدد"
+        s_history = str(row[1]) if row[1] and str(row[1]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        s_location = str(row[2]) if row[2] and str(row[2]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        s_era = str(row[3]) if row[3] and str(row[3]).strip() != "None" else "غير محدد"
+        s_source = str(row[4]) if row[4] and str(row[4]).strip() != "None" else "رواية شفوية ميدانية مأثورة"
+        
+        # دمج الأنشطة اليومية والموسمية بذكاء والتحقق من طهارة نصوصها من الـ None
+        daily_text = str(row[5]).strip() if row[5] and str(row[5]).strip() != "None" else "غير متوفرة"
+        annual_text = str(row[6]).strip() if row[6] and str(row[6]).strip() != "None" else "غير متوفرة"
+        if daily_text == "غير متوفرة" and annual_text == "غير متوفرة":
+            s_activities = "لازالت المعطيات غير متوفرة"
+        else:
+            s_activities = f"{daily_text} | {annual_text}"
+            
+        s_books = str(row[7]) if row[7] and str(row[7]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        s_img = str(row[8]).strip() if row[8] and str(row[8]).strip() != "None" else ""
+        s_manuscript = str(row[9]).strip() if row[9] and str(row[9]).strip() != "None" else ""
+        s_audio = str(row[10]).strip() if row[10] and str(row[10]).strip() != "None" else ""
+        
+        if s_img and s_img != "nan" and s_img != "":
+            st.image(s_img, use_container_width=True, caption=f"📸 الشاهد البصري الميداني للمزار: {s_name}")
+            
+        if s_manuscript and s_manuscript != "nan" and s_manuscript != "":
+            st.image(s_manuscript, use_container_width=True, caption=f"📜 الوثيقة التاريخية / الظهير الملحق الشريف لـ {s_name}")
+            
+        if s_audio and s_audio != "nan" and s_audio != "":
+            st.audio(s_audio, format="audio/mp3")
+            
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {s_name}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
+            <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {s_era}</div>
+            <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {s_location}</div>
+            <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {s_history}</div>
+            <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية وطبيعة الإشراف:</b> {s_activities}</div>
+            <div class='card-shrine-field'><b>📚 المصادر والكتب البيبليوغرافية للباحثين والمؤرخين:</b> {s_books}</div>
+            <div class='card-shrine-field' style='color:#064E3B; font-weight:bold; border-bottom:none;'><b>🔬 المصدر العلمي المعتمد للأطروحة:</b> {s_source}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
+        citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18_ultimate_secure")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_shrine_popup_btn"):
+            st.rerun()
+
 
 @st.dialog("البطاقة العلمية الكاملة للمَعلم T التراثي المحقق", width="large", dismissible=False)
 def popup_individual_shrine_card(shrine_name):
@@ -623,6 +682,9 @@ def show_shamel_search_engine_page():
 # ==========================================
 # 📦 Le Bloc 13 de 18 Corrigé : Atlas du thésaurus et carte interactive avec variable rectifiée
 # ==========================================
+# ==========================================
+# 📦 البلوك 13 من 18 الأصلي والمعاير: محرك أطلس المكنز واستخراج بطاقة الجماعات والدواوير الحية
+# ==========================================
 def show_maknez_atlas_interactive_map_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #1E3A8A;'>
@@ -631,6 +693,7 @@ def show_maknez_atlas_interactive_map_page():
         </div>
     """, unsafe_allow_html=True)
     
+    # استرجاع سداسي موثق لكافة الأعمدة الجغرافية والميدانية الصافية من قاعدة بيانات الأطروحة
     sh_map_data = cursor.execute("""
         SELECT shrines.name, shrines.latitude, shrines.longitude, shrines.type, geography.province, geography.region, shrines.exact_location 
         FROM shrines 
@@ -639,19 +702,24 @@ def show_maknez_atlas_interactive_map_page():
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
-        st.markdown("<div style='direction: rtl; text-align: right;'><b style='font-family:\"Tajawal\"; font-size:16px; color:#1E3A8A;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة واستخراج بطاقته الترابية حياً:</b></div>", unsafe_allow_html=True)
+        st.markdown("<div style='direction: rtl; text-align: right;'><b style='font-family:\"Tajawal\"; font-size:17px; color:#1E3A8A;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة واستخراج بطاقته الترابية حياً:</b></div>", unsafe_allow_html=True)
         search_map_input = st.text_input("", placeholder="اكتب اسم الضريح أو الولي هنا للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v2026")
         
         search_query_fixed = search_map_input.strip().lower()
         
         filtered_data = []
+        target_row_data = None
+        
         if search_query_fixed:
             for row in sh_map_data:
                 if search_query_fixed in str(row).lower():
                     filtered_data.append(row)
+                    if target_row_data is None:
+                        target_row_data = row # التقاط المصفوفة الأصلية المفككة للمعلم المستهدف
         else:
             filtered_data = sh_map_data
         
+        # بناء المصفوفة الرقمية الصافية وتوزيع المتغيرات الجغرافية لمنع الانهيار
         map_list = []
         for name, lat, lon, s_type, prov, reg, loc_det in filtered_data:
             p_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#064E3B"
@@ -664,40 +732,42 @@ def show_maknez_atlas_interactive_map_page():
             
         df_map = pd.DataFrame(map_list)
         
+        # تشغيل محرك التمركز التلقائي (Auto-Zoom) المجهري فوق المعلم الترابي المستهدف وسحق التشتت الكوني
         if search_query_fixed and not df_map.empty:
             center_lat = float(df_map.iloc[0]["latitude"])
             center_lon = float(df_map.iloc[0]["longitude"])
-            map_zoom = 13  
+            map_zoom = 13  # قفز مجهري فوري فوق الدوار والجماعة المستهدفة
         else:
-            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
+            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  # التمركز الطبيعي الشامخ فوق خريطة المملكة المغربية الشريفة
             
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
-        # 🟢 Correction de la variable : Utilisation stricte de filtered_data à la place de results
-        if search_query_fixed and len(filtered_data) > 0:
-            target_sh = filtered_data[0][0]  
-            target_lat = filtered_data[0][1]
-            target_lon = filtered_data[0][2]
-            target_prov = filtered_data[0][4]
-            target_reg = filtered_data[0][5]
-            target_loc = filtered_data[0][6] if filtered_data[0][6] else "غير محدد"
+        # 🟢 استرجاع وعرض حاوية المعطيات الجغرافية الحقيقية المفككة بدقة وسحق نصوص None المقيتة
+        if search_query_fixed and target_row_data:
+            s_name = str(target_row_data[0]) if target_row_data[0] and str(target_row_data[0]).strip() != "None" else "غير محدد"
+            s_prov = str(target_row_data[4]) if target_row_data[4] and str(target_row_data[4]).strip() != "None" else "غير محدد"
+            s_reg = str(target_row_data[5]) if target_row_data[5] and str(target_row_data[5]).strip() != "None" else "جهة طنجة - تطوان - الحسيمة"
+            s_loc = str(target_row_data[6]) if target_row_data[6] and str(target_row_data[6]).strip() != "None" and str(target_row_data[6]).strip() != "nan" else "لازالت المعطيات غير متوفرة"
+            s_lat = str(target_row_data[1])
+            s_lon = str(target_row_data[2])
             
             st.markdown(f"""
-                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
+                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 22px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
                     <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px; font-weight:900;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
-                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh}</div>
-                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_lat} | خط الطول: {target_lon}</div>
-                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_reg}</div>
-                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_prov}</div>
-                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع الميداني:</b> {target_loc}</div>
+                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / M المزار المحقق:</b> {s_name}</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {s_lat} | خط الطول: {s_lon}</div>
+                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {s_reg}</div>
+                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {s_prov}</div>
+                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع الميداني:</b> {s_loc}</div>
                 </div>
             """, unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي الكامل لـ {target_sh}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v2026"):
-                popup_individual_shrine_card(target_sh)
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي الكامل لـ {s_name}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v2026"):
+                popup_individual_shrine_card(s_name)
         else:
-            st.markdown("<p style='color:#6B7280; font-size:15px; font-weight:bold; margin-top:15px; direction: rtl; text-align: right;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#6B7280; font-size:16px; font-weight:bold; margin-top:15px; direction: rtl; text-align: right;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
+
 
 
 
