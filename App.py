@@ -180,13 +180,19 @@ st.markdown(f"""
             font-weight: 900 !important;
         }}
         
-        div[data-testid="stSelectbox"] div[role="button"] {{
-            text-align: center !important;
+        /* 🟢 قسر القوائم المنسدلة وصناديق التصفية التفاعلية على الاتجاه العربي الصرف (RTL) والمحاذاة لليمين */
+        div[data-testid="stSelectbox"] div[role="button"], div[data-testid="stSelectbox"] select, .stSelectbox {{
+            text-align: right !important;
             direction: rtl !important;
             font-family: 'Tajawal', sans-serif !important;
             font-weight: bold !important;
-            font-size: 16px !important;
-            color: #1E3A8A !important;
+            font-size: 15px !important;
+        }}
+        
+        /* ضبط القائمة المنسدلة المفتوحة داخل كتل التصفية الشاملة */
+        div[data-baseweb="select"] {{
+            direction: rtl !important;
+            text-align: right !important;
         }}
         
         .shamel-dashboard-container {{
@@ -221,20 +227,21 @@ st.markdown(f"""
             text-align: center !important;
         }}
 
-        /* تصحيح الاتجاه وقسر المحاذاة من اليمين إلى اليسار (RTL) لكافة الاستمارات والنوافذ وعناصر المدخلات صلب الواجهة الحية */
-        div[data-testid="stDialog"] form, div[data-testid="stDialog"] .stForm, div[data-testid="stDialog"] div[data-testid="stBlock"] {{
+        /* قسر الاتجاه العربي والتموضع لليمين لكافة الاستمارات والنوافذ المنبثقة وعناصر المدخلات */
+        form, .stForm, div[data-testid="stBlock"], div[data-testid="stDialog"] {{
             direction: rtl !important;
             text-align: right !important;
         }}
         
-        div[data-testid="stDialog"] label, div[data-testid="stDialog"] div[data-testid="stWidgetLabel"] p {{
+        label, div[data-testid="stWidgetLabel"] p {{
             text-align: right !important;
             direction: rtl !important;
             width: 100% !important;
             display: block !important;
+            font-family: 'Tajawal', sans-serif !important;
         }}
 
-        div[data-testid="stDialog"] input, div[data-testid="stDialog"] textarea {{
+        input, textarea {{
             text-align: right !important;
             direction: rtl !important;
         }}
@@ -332,23 +339,21 @@ def show_contact_us_popup():
 # استفراد وسم @st.dialog للبطاقات الفردية لتعمل بنجاح عند نقر أزرار لوحة الأقسام أو نتائج البحث أو دبابيس الأطلس
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large")
 def popup_individual_shrine_card(shrine_name):
-    # سحب تفاصيل المزار بالكامل من قاعدة بيانات الأطروحة بالترتيب الصارم للفهارس
     row = cursor.execute("""
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
         
     if row:
-        # تفكيك وعزل عناصر الـ Tuple إلى متغيرات فردية صافية لمنع التكرار العشوائي
-        s_name = row[0]          # اسم الضريح
-        s_history = row[1]       # النبذة والتحقيق الأنثروبولوجي
-        s_location = row[2]      # الموقع الجغرافي الميداني الدقيق
-        s_era = row[3]           # العصر التاريخي المعاصر له
-        s_source = row[4]        # المصدر العلمي المعتمد للأطروحة
-        s_daily = row[5]         # الأنشطة اليومية
-        s_annual = row[6]        # الأنشطة الموسمية
-        s_books = row[7]         # المصادر والكتب البيبليوغرافية للباحثين
+        s_name = row[0]          
+        s_history = row[1]       
+        s_location = row[2]      
+        s_era = row[3]           
+        s_source = row[4]        
+        s_daily = row[5]         
+        s_annual = row[6]        
+        s_books = row[7]         
         
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {s_name}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  Detailed 🕌 {s_name}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {s_era}</div>
@@ -387,7 +392,6 @@ def show_maknez_sections_dashboard():
     tab1, tab2, tab3 = st.tabs(["🕌 رواق صلحاء المسلمين", "📜 رواق مزارات اليهود", "📖 المكنز اللغوي والمصطلحات"])
     
     with tab1:
-        # قسر التوسط الصريح والاتجاه العربي لعناوين الرواق الإسلامي
         st.markdown("""
             <div style='background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 6px; border-right: 5px solid #1E3A8A; margin-top:15px; margin-bottom:15px; direction: rtl; text-align: center;'>
                 <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>
@@ -403,7 +407,6 @@ def show_maknez_sections_dashboard():
                     if st.button(f"🕌 {name}", key=f"m_sh_btn_{s_id}", use_container_width=True): popup_individual_shrine_card(name)
 
     with tab2:
-        # قسر التوسط الصريح والاتجاه العربي لعناوين رواق المزارات اليهودية
         st.markdown("""
             <div style='background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 6px; border-right: 5px solid #064E3B; margin-top:15px; margin-bottom:15px; direction: rtl; text-align: center;'>
                 <h4 style='color:#064E3B; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>
@@ -419,7 +422,6 @@ def show_maknez_sections_dashboard():
                     if st.button(f"📜 {name}", key=f"j_sh_btn_{s_id}", use_container_width=True): popup_individual_shrine_card(name)
 
     with tab3:
-        # قسر عنوان القاموس المعجمي الأخضر على التوسط التام والاتجاه العربي الصرف وسحق الانحراف الجانبي للأبد
         st.markdown("""
             <div style='background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 6px; border-right: 5px solid #0F5132; margin-top:15px; margin-bottom:15px; direction: rtl; text-align: center;'>
                 <h4 style='color:#0F5132; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>
@@ -446,7 +448,10 @@ def show_shamel_search_engine_page():
     with f_col1: search_query = st.text_input("🔍 اكتب كلمة البحث (اسم الولي، مَعلم، جزء من نص التاريخ...):", placeholder="اكتب أول الحروف هنا للبحث الحي...")
     with f_col2: type_filter = st.selectbox("🗂️ فرز حسب الرواق المعلمي:", ["الكل كحزمة واحدة", "أضرحة المسلمين", "مزارات اليهود"])
     with f_col3:
-        all_provinces = ["كل الأقاليم الترابية"] + [p for p in cursor.execute("SELECT province FROM geography ORDER BY province ASC").fetchall()]
+        # جلب قائمة الأقاليم وتفادي اختفاء الخصائص الجانبية
+        db_provinces = cursor.execute("SELECT province FROM geography ORDER BY province ASC").fetchall()
+        provinces_list = [p[0] for p in db_provinces]
+        all_provinces = ["كل الأقاليم الترابية"] + provinces_list
         province_filter = st.selectbox("📍 فرز حسب الإقليم التاريخي للمملكة:", all_provinces)
         
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 15px 0;'>", unsafe_allow_html=True)
@@ -477,7 +482,7 @@ def show_shamel_search_engine_page():
                 card_html = f"""
                     <div style='background:#FFFFFF; padding:15px; border-radius:8px; border-right: 5px solid {border_color}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom:10px; direction: rtl; text-align: right;'>
                         <span style='font-size:12px; color:#6B7280; font-weight:bold;'>📌 {s_type}</span><br>
-                        <b style='color:#1F2937; font-size:16px;'>  🔑 {s_name}</b><br>
+                        <b style='color:#1F2937; font-size:16px;'>  🕌 {s_name}</b><br>
                         <span style='font-size:13px; color:#4B5563;'>📍 {p_name} | ⏳ {era_name}</span>
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
@@ -544,10 +549,7 @@ def show_maknez_atlas_interactive_map_page():
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
-# ==========================================
 # لوحة المؤشرات الإحصائية وتطهير محرك التغذية وسحق كافّة الأخطاء المرصودة بالمليمتر
-# ==========================================
-
 def show_maknez_statistics_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
