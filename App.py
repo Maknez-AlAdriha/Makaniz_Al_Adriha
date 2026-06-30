@@ -332,19 +332,31 @@ def show_contact_us_popup():
 # استفراد وسم @st.dialog للبطاقات الفردية لتعمل بنجاح عند نقر أزرار لوحة الأقسام أو نتائج البحث أو دبابيس الأطلس
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large")
 def popup_individual_shrine_card(shrine_name):
+    # سحب تفاصيل المزار بالكامل من قاعدة بيانات الأطروحة بالترتيب الصارم للفهارس
     row = cursor.execute("""
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
+        
     if row:
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  :: 🕌 {row}</b></h3>", unsafe_allow_html=True)
+        # تفكيك وعزل عناصر الـ Tuple إلى متغيرات فردية صافية لمنع التكرار العشوائي
+        s_name = row[0]          # اسم الضريح
+        s_history = row[1]       # النبذة والتحقيق الأنثروبولوجي
+        s_location = row[2]      # الموقع الجغرافي الميداني الدقيق
+        s_era = row[3]           # العصر التاريخي المعاصر له
+        s_source = row[4]        # المصدر العلمي المعتمد للأطروحة
+        s_daily = row[5]         # الأنشطة اليومية
+        s_annual = row[6]        # الأنشطة الموسمية
+        s_books = row[7]         # المصادر والكتب البيبليوغرافية للباحثين
+        
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {s_name}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
-            <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {row}</div>
-            <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {row}</div>
-            <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {row}</div>
-            <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية:</b> {row} | {row}</div>
-            <div class='card-shrine-field'><b>📚 المصادر والكتب البيبليوغرافية للباحثين:</b> {row}</div>
-            <div class='card-shrine-field' style='color:#064E3B; font-weight:bold; border-bottom:none;'><b>🔬 المصدر العلمي المعتمد للأطروحة:</b> {row}</div>
+            <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {s_era}</div>
+            <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {s_location}</div>
+            <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {s_history}</div>
+            <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية:</b> {s_daily} | {s_annual}</div>
+            <div class='card-shrine-field'><b>📚 المصادر والكتب البيبليوغرافية للباحثين:</b> {s_books}</div>
+            <div class='card-shrine-field' style='color:#064E3B; font-weight:bold; border-bottom:none;'><b>🔬 المصدر العلمي المعتمد للأطروحة:</b> {s_source}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -352,11 +364,15 @@ def popup_individual_shrine_card(shrine_name):
 def popup_individual_term_card(term_name):
     row = cursor.execute("SELECT term, category, definition FROM thesaurus_terms WHERE term = ?", (term_name,)).fetchone()
     if row:
-        st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'>📖 مصطلح: {row}</h3>", unsafe_allow_html=True)
+        t_term = row[0]
+        t_category = row[1]
+        t_definition = row[2]
+        
+        st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'>📖 مصطلح: {t_term}</h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='border-right-color:#064E3B; direction: rtl; text-align: right;'>
-            <div class='card-shrine-field'><b>🗂️ الفئة الأنثروبولوجية صلب الأطروحة:</b> {row}</div>
-            <div class='card-shrine-field' style='font-size:18px !important; line-height:2; border-bottom:none;'><b>📚 التعريف العلمي المعتمد الأكاديمي:</b><br>{row}</div>
+            <div class='card-shrine-field'><b>🗂️ الفئة الأنثروبولوجية صلب الأطروحة:</b> {t_category}</div>
+            <div class='card-shrine-field' style='font-size:18px !important; line-height:2; border-bottom:none;'><b>📚 التعريف العلمي المعتمد الأكاديمي:</b><br>{t_definition}</div>
         </div>
         """, unsafe_allow_html=True)
 # لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل ومزودة بميزة الـ Popup الفردي لكل زر وتوسط العناوين
@@ -461,7 +477,7 @@ def show_shamel_search_engine_page():
                 card_html = f"""
                     <div style='background:#FFFFFF; padding:15px; border-radius:8px; border-right: 5px solid {border_color}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom:10px; direction: rtl; text-align: right;'>
                         <span style='font-size:12px; color:#6B7280; font-weight:bold;'>📌 {s_type}</span><br>
-                        <b style='color:#1F2937; font-size:16px;'>  🕌 {s_name}</b><br>
+                        <b style='color:#1F2937; font-size:16px;'>  🔑 {s_name}</b><br>
                         <span style='font-size:13px; color:#4B5563;'>📍 {p_name} | ⏳ {era_name}</span>
                     </div>"""
                 st.markdown(card_html, unsafe_allow_html=True)
@@ -503,8 +519,8 @@ def show_maknez_atlas_interactive_map_page():
         df_map = pd.DataFrame(map_list)
         
         if search_query_fixed and not df_map.empty:
-            center_lat = float(df_map.iloc["latitude"])
-            center_lon = float(df_map.iloc["longitude"])
+            center_lat = float(df_map.iloc[0]["latitude"])
+            center_lon = float(df_map.iloc[0]["longitude"])
             map_zoom = 12  
         else:
             center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
@@ -512,20 +528,20 @@ def show_maknez_atlas_interactive_map_page():
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
         if search_query_fixed and len(filtered_data) > 0:
-            target_sh = filtered_data
+            target_sh = filtered_data[0]
             st.markdown(f"""
                 <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
                     <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
-                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh} ({target_sh})</div>
-                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh} | خط الطول: {target_sh}</div>
-                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh}</div>
-                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh}</div>
-                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh}</div>
+                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh[0]} ({target_sh[3]})</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
+                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh[5]}</div>
+                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh[4]}</div>
+                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh[6]}</div>
                 </div>
             """, unsafe_allow_html=True)
             
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v26"):
-                popup_individual_shrine_card(target_sh)
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v26"):
+                popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 # ==========================================
@@ -540,10 +556,10 @@ def show_maknez_statistics_page():
         </div>
     """, unsafe_allow_html=True)
     
-    total_shrines = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-    muslim_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-    jew_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-    total_terms = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
+    total_shrines = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()[0]
+    muslim_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()[0]
+    jew_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()[0]
+    total_terms = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()[0]
     
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
@@ -599,7 +615,7 @@ def show_admin_dashboard_popup():
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            prov_id = int(prov_id_row) 
+                            prov_id = int(prov_id_row[0]) 
                             cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, hist_val, lat_val, lon_val))
                             added_shrines += 1
             conn.commit()
