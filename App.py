@@ -43,18 +43,26 @@ def init_ultimate_db():
         UNIQUE (name, province_id)
     )""")
     
-    # صيانة قنوات الصور والمخطوطات والأوديو للأضرحة منعاً للانهيار صلب السيرفر
-    try: cursor.execute("ALTER TABLE shrines ADD COLUMN image_url TEXT DEFAULT ''")
-    except sqlite3.OperationalError: pass
+    # حقن قنوات الصور والمخطوطات والأوديو للأضرحة منعاً للانهيار صلب السيرفر
+    try:
+        cursor.execute("ALTER TABLE shrines ADD COLUMN image_url TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
 
-    try: cursor.execute("ALTER TABLE shrines ADD COLUMN manuscript_url TEXT DEFAULT ''")
-    except sqlite3.OperationalError: pass
+    try:
+        cursor.execute("ALTER TABLE shrines ADD COLUMN manuscript_url TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
 
-    try: cursor.execute("ALTER TABLE shrines ADD COLUMN audio_url TEXT DEFAULT ''")
-    except sqlite3.OperationalError: pass
+    try:
+        cursor.execute("ALTER TABLE shrines ADD COLUMN audio_url TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
 
-    try: cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
-    except sqlite3.OperationalError: pass
+    try:
+        cursor.execute("ALTER TABLE shrines ADD COLUMN scientific_source TEXT DEFAULT 'رواية شفوية ميدانية مأثورة'")
+    except sqlite3.OperationalError:
+        pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS beliefs_and_functions (id INTEGER PRIMARY KEY AUTOINCREMENT, shrine_id INTEGER, function_type TEXT NOT NULL, details TEXT NOT NULL)")
     
@@ -67,8 +75,10 @@ def init_ultimate_db():
         definition TEXT NOT NULL
     )""")
     
-    try: cursor.execute("ALTER TABLE thesaurus_terms ADD COLUMN term_image TEXT DEFAULT ''")
-    except sqlite3.OperationalError: pass
+    try:
+        cursor.execute("ALTER TABLE thesaurus_terms ADD COLUMN term_image TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
         
     cursor.execute("CREATE TABLE IF NOT EXISTS visitor_feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, visitor_name TEXT, visitor_email TEXT, shrine_related TEXT, feedback_text TEXT NOT NULL, submission_date TEXT)")
     
@@ -154,8 +164,8 @@ st.markdown(f"""
         .shamel-nav-link {{
             color: #FFFFFF !important;
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 900 !important;
-            font-size: 16px !important; /* تكبير خط الملاحة علواً وجاذبية */
+            font-weight: 700 !important;
+            font-size: 14px !important;
             text-decoration: none !important;
             padding: 0 12px !important;
             transition: color 0.2s ease-in-out, transform 0.2s ease-in-out !important;
@@ -170,7 +180,7 @@ st.markdown(f"""
 
         div[data-testid="stTabs"] {{
             background: rgba(255, 255, 255, 0.98) !important;
-            padding: 22px !important;
+            padding: 20px !important;
             border-radius: 10px !important;
             box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
         }}
@@ -185,8 +195,8 @@ st.markdown(f"""
         }}
         button[data-testid="stTab"] {{
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 900 !important;
-            font-size: 18px !important; /* تكبير خطوط الألسن الكبرى لتكون مرئية وجذابة */
+            font-weight: bold !important;
+            font-size: 16px !important;
             color: #374151 !important;
             background: #F3F4F6 !important;
             padding: 12px 35px !important;
@@ -204,9 +214,8 @@ st.markdown(f"""
             text-align: right !important;
             direction: rtl !important;
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 900 !important;
-            font-size: 18px !important; /* تكبير قوائم التصفية والفرز لتكون جذابة بالوسط */
-            color: #1E3A8A !important;
+            font-weight: bold !important;
+            font-size: 15px !important;
         }}
         div[data-baseweb="select"] {{
             direction: rtl !important;
@@ -225,14 +234,14 @@ st.markdown(f"""
 
         div[data-testid="stTextInput"] input {{
             text-align: center !important;
-            font-size: 20px !important; /* تكبير خط صندوق البحث موسطاً بالأزرق الملكي */
+            font-size: 18px !important;
             font-weight: 900 !important;
             color: #1E3A8A !important;
         }}
         div[data-testid="stTextInput"] input::placeholder {{
             text-align: center !important;
             color: #1E3A8A !important;
-            font-weight: 900 !important;
+            font-weight: bold !important;
             opacity: 0.7 !important;
         }}
 
@@ -244,8 +253,8 @@ st.markdown(f"""
             box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
             text-align: center !important;
         }}
-        
-        form, .stForm, div[data-testid="stBlock"] {{
+
+        form, .stForm, div[data-testid="stBlock"], div[data-testid="stDialog"] {{
             direction: rtl !important;
             text-align: right !important;
         }}
@@ -255,25 +264,10 @@ st.markdown(f"""
             width: 100% !important;
             display: block !important;
             font-family: 'Tajawal', sans-serif !important;
-            font-weight: 900 !important;
-            font-size: 17px !important;
         }}
         input, textarea {{
             text-align: right !important;
             direction: rtl !important;
-            font-size: 16px !important;
-        }}
-
-        /* حقن وتأمين شريط التمرير العمودي القسري للمنبثقات لمنع اختفاء الأزرار السفلية */
-        div[data-testid="stDialog"] {{
-            max-height: 85vh !important;
-            background: #FFFFFF !important;
-            border-radius: 12px !important;
-            overflow-y: auto !important;
-        }}
-        div[data-testid="stDialog"] div[data-testid="stVerticalBlock"] {{
-            max-height: 70vh !important;
-            overflow-y: auto !important;
         }}
 
         .card-shrine-popup {{
@@ -287,8 +281,8 @@ st.markdown(f"""
             text-align: right;
         }}
         .card-shrine-field {{
-            font-size: 18px !important; /* تفخيم خط المعطيات والتحقيقات للتصفح المريح */
-            line-height: 1.9 !important;
+            font-size: 16px !important;
+            line-height: 1.8 !important;
             margin-bottom: 12px !important;
             color: #1F2937 !important;
             border-bottom: 1px dashed #E5E7EB;
@@ -296,6 +290,11 @@ st.markdown(f"""
             direction: rtl !important;
             text-align: right !important;
         }}
+        
+        div[data-testid="stDialog"] {{ max-height: 85vh !important; background: #FFFFFF !important; border-radius: 12px !important; }}
+        div[data-testid="stDialog"] .stForm {{ max-height: 380px !important; overflow-y: auto !important; padding-left: 10px !important; }}
+        div[data-testid="stDialog"]::-webkit-scrollbar {{ width: 8px !important; display: block !important; }}
+        div[data-testid="stDialog"]::-webkit-scrollbar-thumb {{ background-color: #1E3A8A !important; border-radius: 4px !important; }}
 
         footer {{ visibility: hidden !important; }}
         footer:after {{
@@ -319,15 +318,15 @@ def show_about_project_popup():
     st.markdown("""
         <div style='direction: rtl; text-align: right; padding: 10px; background: #FFFFFF; border-radius: 8px;'>
             <h3 style='color: #1E3A8A; font-family: "Reem Kufi", serif; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; text-align: center; margin-bottom: 15px;'>🏛️ نبذة عن المشروع الأكاديمي والمكنز التراثي</h3>
-            <p style='font-family: "Tajawal", sans-serif; font-size: 18px; line-height: 1.8; color: #1F2937;'>
+            <p style='font-family: "Tajawal", sans-serif; font-size: 16px; line-height: 1.8; color: #1F2937;'>
                 يهدف هذا المشروع التراثي والمكنز الوطني السيادي الشامل إلى جمع وتوثيق ورقمنة كل ما يحتاجه طالب العلم والباحث الأنثروبولوجي من معطيات جغرافية، تاريخية، بيبليوغرافية، وأنثروبولوجية متعلقة بالمنشآت الروحية، الأضرحة، والمزارات الشريفة في ربوع المملكة المغربية الشريفة.
             </p>
-            <p style='font-family: "Tajawal", sans-serif; font-size: 18px; line-height: 1.8; color: #1F2937;'>
+            <p style='font-family: "Tajawal", sans-serif; font-size: 16px; line-height: 1.8; color: #1F2937;'>
                 إن هذه المنصة الرقمية المتقدمة لعام <b>2026</b> هي الثمرة التقنية الحية والتحويل التكنولوجي المتكامل للأطروحة العلمية والميدانية المتميزة التي نوقشت ونال بها الباحث المقتدر شهادة الدكتوراه بميزة <b>(مشرف جداً)</b>.
             </p>
             <hr style='border: 0; border-top: 1px solid #E5E7EB; margin: 20px 0;'>
-            <p style='text-align: center; font-family: "Tajawal", sans-serif; font-weight: bold; font-size: 18px; color: #1E3A8A; margin-bottom: 5px;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
-            <p style='text-align: center; font-family: "Tajawal", sans-serif; font-weight: bold; font-size: 17px; color: #D4AF37; margin-bottom: 10px;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
+            <p style='text-align: center; font-family: "Tajawal", sans-serif; font-weight: bold; font-size: 16px; color: #1E3A8A; margin-bottom: 5px;'>👨‍🎓 الباحث الدكتور: رشيد الجانبي</p>
+            <p style='text-align: center; font-family: "Tajawal", sans-serif; font-weight: bold; font-size: 15px; color: #D4AF37; margin-bottom: 10px;'>👩‍🏫 الأستاذة المشرفة: الدكتورة فاطنة الغزي</p>
         </div>
     """, unsafe_allow_html=True)
     
@@ -335,13 +334,14 @@ def show_about_project_popup():
     if st.button("❌ إغلاق النافذة والعودة للمكنز", use_container_width=True, key="shamel_about_popup_close_secure_v26"):
         st.query_params.clear()
         st.rerun()
+
 @st.dialog("دفتر التواصل الرقمي مع إدارة المكنز", width="large")
 def show_contact_us_popup():
     st.markdown("<div class='popup-header-title'>📬 تواصل علمي وتحقيق ميداني</div>", unsafe_allow_html=True)
     st.markdown("""
     <div style='background-color: #F8FAFC; border-right: 5px solid #1E3A8A; padding: 15px; border-radius: 4px; margin-bottom: 20px; direction: rtl; text-align: right;'>
-        <p style='margin:0; font-weight:700; color:#1E3A8A; font-size:17px;'>📞 للاتصال المباشر مع الدكتور رشيد الجانبي:</p>
-        <p style='margin:5px 0 0 0; font-weight:900; color:#10B981; font-size:19px; direction:ltr; text-align:right;'>+212 666-271681</p>
+        <p style='margin:0; font-weight:700; color:#1E3A8A; font-size:16px;'>📞 للاتصال المباشر مع الدكتور رشيد الجانبي:</p>
+        <p style='margin:5px 0 0 0; font-weight:900; color:#10B981; font-size:18px; direction:ltr; text-align:right;'>+212 666-271681</p>
     </div>
     """, unsafe_allow_html=True)
     with st.form("shamel_contact_secure_form", clear_on_submit=True):
@@ -359,29 +359,47 @@ def show_contact_us_popup():
                 st.success("🔔 تم إرسال رسالة تذكير بنجاح إلى الموقع!")
                 st.rerun()
             else: st.error("⚠️ منظومة الأمان تمنع الإرسال، يرجى كتابة بريدك الإلكتروني ونص الرسالة أولاً.")
-# تم قفل وحقن الخاصية dismissible=False لضمان ثبات المنبثقة وصمودها أمام السكرول الطويل والتصفح المرن لأسفل
+
+# ==========================================
+# 🏛️ البلوك 8 من 14 المطور والمطهر: تثبيت النوافذ المنبثقة قسرياً وسحق الاختفاء التلقائي أثناء التمرير
+# ==========================================
+
+# 🟢 تصحيح حاسم: حقن خاصية dismissible=False لمنع اختفاء البطاقة عند تحريك السكرول أو النقر العشوائي
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
 def popup_individual_shrine_card(shrine_name):
+    # سحب تفاصيل المزار بالكامل مع حقل الصورة من قاعدة بيانات الأطروحة
     row = cursor.execute("""
         SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books, image_url, manuscript_url, audio_url
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
         
     if row:
-        s_name = row; s_history = row; s_location = row; s_era = row; s_source = row
-        s_daily = row; s_annual = row; s_books = row; s_img = row; s_manuscript = row; s_audio = row
+        s_name = row          
+        s_history = row       
+        s_location = row      
+        s_era = row           
+        s_source = row        
+        s_daily = row         
+        s_annual = row        
+        s_books = row         
+        s_img = row           
+        s_manuscript = row    
+        s_audio = row        
         
+        # 1. إدراج وعرض الصورة الميدانية المحققة بأعلى البطاقة
         if s_img and str(s_img).strip() != "" and str(s_img) != "nan":
             st.image(s_img, use_container_width=True, caption=f"📸 الشاهد البصري الميداني للمزار: {s_name}")
             
+        # 2. إدراج وعرض المخطوط / الظهير الشريف المصاحب للتحقيق التاريخي
         if s_manuscript and str(s_manuscript).strip() != "" and str(s_manuscript) != "nan":
-            st.markdown("<b style='color:#1E3A8A; font-size:16px;'>📜 الوثيقة التاريخية / الظهير الملحق:</b>", unsafe_allow_html=True)
+            st.markdown("<b style='color:#1E3A8A;'>📜 الوثيقة التاريخية / الظهير الملحق:</b>", unsafe_allow_html=True)
             st.image(s_manuscript, use_container_width=True)
             
+        # 3. دمج مشغل الروايات الشفوية والمقاطع الصوتية الميدانية حياً
         if s_audio and str(s_audio).strip() != "" and str(s_audio) != "nan":
-            st.markdown("<b style='color:#064E3B; font-size:16px;'>🎙️ الاستماع إلى الرواية الشفوية المأثورة الميدانية:</b>", unsafe_allow_html=True)
+            st.markdown("<b style='color:#064E3B;'>🎙️ الاستماع إلى الرواية الشفوية المأثورة الميدانية:</b>", unsafe_allow_html=True)
             st.audio(s_audio, format="audio/mp3")
             
-        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {s_name}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>🕌 {s_name}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {s_era}</div>
@@ -393,18 +411,25 @@ def popup_individual_shrine_card(shrine_name):
         </div>
         """, unsafe_allow_html=True)
         
+        # 4. مولد الاقتباس والتوثيق الأكاديمي الدولي الصارم للأطروحة
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
         citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
         st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70)
         
         st.markdown("<br>", unsafe_allow_html=True)
+        # زر الإغلاق الرسمي والوحيد لإغلاق النافذة بنقاء بعد الانتهاء من القراءة الكاملة
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_shrine_popup_btn"):
             st.rerun()
+
+# 🟢 تصحيح حاسم ثانٍ: تحصين بطاقة القاموس والمصطلحات أيضاً ضد الاختفاء المفاجئ أثناء التمرير
 @st.dialog("البطاقة العلمية للمصطلح القاموسي المحقق", width="large", dismissible=False)
 def popup_individual_term_card(term_name):
     row = cursor.execute("SELECT term, category, definition, term_image FROM thesaurus_terms WHERE term = ?", (term_name,)).fetchone()
     if row:
-        t_term = row; t_category = row; t_definition = row; t_img = row
+        t_term = row
+        t_category = row
+        t_definition = row
+        t_img = row
         
         if t_img and str(t_img).strip() != "" and str(t_img) != "nan":
             st.image(t_img, use_container_width=True, caption=f"📸 الرسم التوضيحي/المخطوط للمصطلح: {t_term}")
@@ -418,12 +443,17 @@ def popup_individual_term_card(term_name):
         """, unsafe_allow_html=True)
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
-        term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). m مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية."
+        term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية."
         st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70)
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_term_popup_btn"):
             st.rerun()
+
+
+
+
+# لوحة تصفح الأقسام الثلاثة كصفحة كاملة ومطهرة من مشكلة التداخل ومزودة بميزة الـ Popup الفردي لكل زر وتوسط العناوين
 def show_maknez_sections_dashboard():
     st.markdown("""
         <div class='shamel-dashboard-container'>
@@ -440,10 +470,12 @@ def show_maknez_sections_dashboard():
                 <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>
             </div>
         """, unsafe_allow_html=True)
+        
         shrines_m = cursor.execute("SELECT name, id FROM shrines WHERE type = 'أضرحة المسلمين' ORDER BY id DESC").fetchall()
         if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(3)
+            # تم قفل وسحق خطأ الأقواس بالمليمتر صلب محرك التصفح الدائري بايثون لعام 2026
             for idx, (name, s_id) in enumerate(shrines_m):
                 with cols[idx % 3]:
                     if st.button(f"🕌 {name}", key=f"m_sh_btn_{s_id}", use_container_width=True): popup_individual_shrine_card(name)
@@ -454,7 +486,8 @@ def show_maknez_sections_dashboard():
                 <h4 style='color:#064E3B; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>
             </div>
         """, unsafe_allow_html=True)
-        shrines_j = cursor.execute("SELECT name, id FROM shrines WHERE type = 'm مزارات اليهود' ORDER BY id DESC").fetchall()
+        
+        shrines_j = cursor.execute("SELECT name, id FROM shrines WHERE type = 'مزارات اليهود' ORDER BY id DESC").fetchall()
         if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(3)
@@ -468,6 +501,7 @@ def show_maknez_sections_dashboard():
                 <h4 style='color:#0F5132; font-family:"Reem Kufi", serif; font-weight:bold; margin:0;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>
             </div>
         """, unsafe_allow_html=True)
+        
         terms = cursor.execute("SELECT term, id FROM thesaurus_terms ORDER BY term ASC").fetchall()
         if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً صلب قاعدة البيانات.")
         else:
@@ -475,6 +509,7 @@ def show_maknez_sections_dashboard():
             for idx, (term, t_id) in enumerate(terms):
                 with cols[idx % 4]:
                     if st.button(f"📖 {term}", key=f"term_btn_{t_id}", use_container_width=True): popup_individual_term_card(term)
+# صفحة البحث المتقدم والمتقاطع المستوحاة بالكامل من خصائص المكتبة الشاملة العريقة
 def show_shamel_search_engine_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #064E3B;'>
@@ -488,7 +523,7 @@ def show_shamel_search_engine_page():
     with f_col2: type_filter = st.selectbox("🗂️ فرز حسب الرواق المعلمي:", ["الكل كحزمة واحدة", "أضرحة المسلمين", "مزارات اليهود"])
     with f_col3:
         db_provinces = cursor.execute("SELECT province FROM geography ORDER BY province ASC").fetchall()
-        provinces_list = [p for p in db_provinces]
+        provinces_list = [p[0] for p in db_provinces]
         all_provinces = ["كل الأقاليم الترابية"] + provinces_list
         province_filter = st.selectbox("📍 فرز حسب الإقليم التاريخي للمملكة:", all_provinces)
         
@@ -542,13 +577,16 @@ def show_maknez_atlas_interactive_map_page():
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
         search_map_input = st.text_input("ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة (اكتب اسماً أو حرفاً):", placeholder="اكتب الحروف للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v26")
+        
         search_query_fixed = search_map_input.strip().lower()
         
         filtered_data = []
         if search_query_fixed:
             for item in sh_map_data:
-                if search_query_fixed in str(item).lower(): filtered_data.append(item)
-        else: filtered_data = sh_map_data
+                if search_query_fixed in str(item).lower():
+                    filtered_data.append(item)
+        else:
+            filtered_data = sh_map_data
         
         map_list = []
         for name, lat, lon, s_type, prov, reg, loc_det in filtered_data:
@@ -561,9 +599,28 @@ def show_maknez_atlas_interactive_map_page():
             center_lat = float(df_map.iloc["latitude"])
             center_lon = float(df_map.iloc["longitude"])
             map_zoom = 12  
-        else: center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
+        else:
+            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
             
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
+        
+        if search_query_fixed and len(filtered_data) > 0:
+            target_sh = filtered_data
+            st.markdown(f"""
+                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
+                    <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
+                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh} ({target_sh})</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh} | خط الطول: {target_sh}</div>
+                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh}</div>
+                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh}</div>
+                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع (إن وجدوا فعلاً):</b> {target_sh}</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي لـ {target_sh}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v26"):
+                popup_individual_shrine_card(target_sh)
+        else:
+            st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 def show_maknez_statistics_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
@@ -580,7 +637,7 @@ def show_maknez_statistics_page():
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
     with f_col2: st.metric(label="🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
-    with f_col3: st.metric(label="📜 رواق مزارات اليهود التاريخية", value=jew_shrines)
+    with f_col3: st.metric(label="📜 رواق المزارات اليهودية التاريخية", value=jew_shrines)
     with f_col4: st.metric(label="📖 المصطلحات والمفاهيم المعجمية", value=total_terms)
     
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 25px 0;'>", unsafe_allow_html=True)
@@ -598,12 +655,9 @@ def show_maknez_statistics_page():
         
     if geo_df.empty: st.info("الرسوم البيانية بانتظار ضخ ملفات الـ CSV لتفعيل المؤشرات.")
     else: st.bar_chart(geo_df.set_index('الإقليم الترابي'), use_container_width=True)
-# تفعيل التثبيت الكامل الفولاذي ومنع الإغلاق المفاجئ وتأمين شريط السكرول العمودي الكلي للمتصفح حياً
-@st.dialog("بوابة إدارة وتغذية وتعديل المكنز الوطني الكوني", width="large", dismissible=False)
+@st.dialog("بوابة إدارة وتغذية وتعديل المكنز الوطني الكوني", width="large")
 def show_admin_dashboard_popup():
-    # 🟢 تطهير كلي وقسر اتجاه النص العربي الرئيسي ليصطف بقوة من اليمين إلى اليسار (RTL) بالوسط تماماً
-    st.markdown("<div style='direction: rtl; text-align: right;'><h3 style='font-family:\"Reem Kufi\", serif; color:#1E3A8A; margin:0; padding-bottom:15px;'>🔐 نظام التغذية الرقمية والاستيراد وتعديل كافة الأقسام حياً لعام 2026</h3></div>", unsafe_allow_html=True)
-    
+    st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد وتعديل كافة الأقسام حياً لعام 2026</div>", unsafe_allow_html=True)
     developer_key = st.text_input("أدخل رمز العبور لتنشيط صلاحيات الإشراف:", type="password", key="pop_dev_k")
     if developer_key == "MAROC_2026":
         st.success("🔓 تم فتح صلاحيات الإدارة السيادية للمكنز بنجاح!")
@@ -611,12 +665,11 @@ def show_admin_dashboard_popup():
         admin_tab1, admin_tab2, admin_tab3 = st.tabs(["📥 ضخ ملفات CSV جديدة", "🕌 تعديل الأضرحة (مسلمون ويهود)", "📖 تعديل ومصورة القاموس"])
         
         with admin_tab1:
-            st.markdown("<div style='direction: rtl; text-align: right;'><h5 style='font-family:\"Tajawal\", sans-serif; font-weight:900; color:#1F2937;'>📥 استيراد ملفات CSV تراكمية:</h5></div>", unsafe_allow_html=True)
+            st.markdown("##### 📥 استيراد ملفات CSV تراكمية:")
             if "uploader_counter" not in st.session_state: st.session_state.uploader_counter = 0
-            uploaded_csv_list = st.file_uploader("اختر ملفات الـ CSV المحددة للرفع السحابي الفوري:", type=["csv"], accept_multiple_files=True, key=f"pop_csv_u_{st.session_state.uploader_counter}")
+            uploaded_csv_list = st.file_uploader("اختر ملفات الـ CSV المحددة:", type=["csv"], accept_multiple_files=True, key=f"pop_csv_u_{st.session_state.uploader_counter}")
             
-            if uploaded_csv_list and st.button("🚀 البدء في معالجة وضخ الملفات دفعة واحدة صلب المكنز", use_container_width=True, key="start_bulk_injection_btn_v26"):
-                added_shrines_count = 0; added_terms_count = 0
+            if uploaded_csv_list and st.button("🚀 البدء في معالجة وضخ الملفات دفعة واحدة", use_container_width=True):
                 for uploaded_csv in uploaded_csv_list:
                     df = pd.read_csv(uploaded_csv, encoding='utf-8')
                     for index, row_data in df.iterrows():
@@ -625,79 +678,82 @@ def show_admin_dashboard_popup():
                         tags_val = str(row_data.get('tags', '')).strip()
                         s_type = str(row_data.get('shrine_type', 'أضرحة المسلمين')).strip()
                         hist_val = str(row_data.get('history_details', 'غير محدد')).strip()
-                        prov_name = str(row_data.get('province', 'إقليم العرائش')).strip()
+                        prov_name = str(row_data.get('province', 'إقليم شفشاون')).strip()
                         lat_val = float(row_data.get('latitude', 31.7917))
                         lon_val = float(row_data.get('longitude', -7.0926))
                         img_val = str(row_data.get('image_url', '')).strip() if row_data.get('image_url') else ""
                         
                         if "#معجم" in tags_val or "#مصطلحات" in tags_val:
-                            check_exist_t = cursor.execute("SELECT id FROM thesaurus_terms WHERE term=?", (s_name,)).fetchone()
-                            if not check_exist_t:
-                                cursor.execute("INSERT OR IGNORE INTO thesaurus_terms (term, category, definition, term_image) VALUES (?, ?, ?, ?)", (s_name, s_type, hist_val, img_val))
-                                added_terms_count += 1
+                            cursor.execute("INSERT OR IGNORE INTO thesaurus_terms (term, category, definition, term_image) VALUES (?, ?, ?, ?)", (s_name, s_type, hist_val, img_val))
                         else:
                             cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                             prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                             if prov_id_row:
-                                prov_id = int(prov_id_row)
-                                check_exist_s = cursor.execute("SELECT id FROM shrines WHERE name=? AND province_id=?", (s_name, prov_id)).fetchone()
-                                if not check_exist_s:
-                                    cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, hist_val, lat_val, lon_val, img_val))
-                                    added_shrines_count += 1
+                                prov_id = int(prov_id_row) 
+                                cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, hist_val, lat_val, lon_val, img_val))
                 conn.commit()
                 st.session_state.uploader_counter += 1
-                st.balloons()
-                st.success(f"🎉 تم استيراد وضخ المعطيات الترابية بنجاح! تم قيد وحفظ عدد ({added_shrines_count}) ضريحاً ومزاراً جديداً، وعدد ({added_terms_count}) مفهوماً ومصطلحاً معجمياً صلب الأطروحة التاريخية مائة بالمائة وبصفر شاشات حمراء.")
-# ==========================================
-# 🔐 البلوك 16 من 17: غرف التعديل والتحيين الشامل وقسر كافة نصوص الاستمارات للاتجاه لليمين RTL
-# ==========================================
-
+                st.success("📊 تم الضخ التراكمي وتتويج جداول المكنز بنجاح.")
+                st.rerun()
+                
         with admin_tab2:
-            # 🟢 قسر اتجاه النص العربي لهذا العنوان التعديلي لصلحاء ورواق الإسلام واليهود من اليمين لليسار
-            st.markdown("<div style='direction: rtl; text-align: right;'><h5 style='font-family:\"Tajawal\", sans-serif; font-weight:900; color:#1F2937;'>🕌 محرك تعديل وإغناء كتل الأضرحة والمزارات بـ (الصور، المخطوطات، والملفات الصوتية) حياً:</h5></div>", unsafe_allow_html=True)
+            st.markdown("##### 🕌 محرك تعديل وإغناء كتل الأضرحة والمزارات بـ (الصور، المخطوطات، والملفات الصوتية) حياً:")
             all_live_shrines = [item for item in cursor.execute("SELECT name FROM shrines ORDER BY name ASC").fetchall()]
-            shrine_to_edit = st.selectbox("🎯 اختر اسم الضريح أو المزار المراد تعديله أو تزويده بشواهد ميدانية:", ["--- اختر معلماً لتعديله ---"] + all_live_shrines, key="sel_sh_edit_con_v14_13_fixed")
+            shrine_to_edit = st.selectbox("🎯 اختر اسم الضريح أو المزار المراد تعديله أو تزويده بشواهد ميدانية:", ["--- اختر معلماً لتعديله ---"] + all_live_shrines, key="sel_sh_edit_con_v14_13")
+            
             if shrine_to_edit != "--- اختر معلماً لتعديله ---":
                 current_data = cursor.execute("""
                     SELECT exact_location, history_details, daily_activities, annual_activities, researchers_books, latitude, longitude, type, image_url, manuscript_url, audio_url 
                     FROM shrines WHERE name = ?""", (shrine_to_edit,)).fetchone()
+                
                 if current_data:
-                    with st.form("shamel_shrine_edit_form_v14_13_fixed"):
+                    with st.form("shamel_shrine_edit_form_v14_13"):
                         st.info(f"⚙️ نموذج تعديل بطاقة المعلم الشاملة: {shrine_to_edit}")
                         new_type = st.selectbox("🗂️ تصنيف المعلم التراثي:", ["أضرحة المسلمين", "مزارات اليهود"], index=0 if current_data == "أضرحة المسلمين" else 1)
+                        
                         new_img = st.text_input("📸 مسار أو رابط الصورة الميدانية للمزار (مثال: `larache1.jpg`):", value=str(current_data) if current_data else "")
                         new_manuscript = st.text_input("📜 مسار أو رابط المخطوط/الظهير الشريف المصاحب (مثال: `dahir1.png`):", value=str(current_data) if current_data else "")
                         new_audio = st.text_input("🎙️ مسار أو رابط التسجيل الصوتي للرواية الشفوية (مثال: `audio1.mp3`):", value=str(current_data) if current_data else "")
+                        
                         new_loc = st.text_input("🏙️ التموضع الترابي الدقيق (الجماعة / الدوار):", value=current_data if current_data else "")
                         new_hist = st.text_area("📜 النبذة والتحقيق الأنثروبولوجي الموثق:", value=current_data if current_data else "")
                         new_daily = st.text_input("📅 الأنشطة اليومية وطبيعة المشرف:", value=current_data if current_data else "")
                         new_annual = st.text_input("🌾 الأنشطة الموسمية والطقوس:", value=current_data if current_data else "")
                         new_books = st.text_area("📚 المصادر والكتب البيبليوغرافية للباحثين:", value=current_data if current_data else "")
+                        
                         col_lat, col_lon = st.columns(2)
                         with col_lat: new_lat = st.number_input(" خط العرض الجغرافي:", value=float(current_data) if current_data else 31.7917, format="%.4f", key="num_lat_sh_v14")
                         with col_lon: new_lon = st.number_input(" خط الطول الجغرافي:", value=float(current_data) if current_data else -7.0926, format="%.4f", key="num_lon_sh_v14")
+                        
                         if st.form_submit_button("💾 حفظ كافة التعديلات وتحديث بطاقة المعلم فوراً", use_container_width=True):
                             cursor.execute("""
-                                UPDATE shrines SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, latitude=?, longitude=?, image_url=?, manuscript_url=?, audio_url=?
+                                UPDATE shrines 
+                                SET type=?, exact_location=?, history_details=?, daily_activities=?, annual_activities=?, researchers_books=?, latitude=?, longitude=?, image_url=?, manuscript_url=?, audio_url=?
                                 WHERE name=?""", (new_type, new_loc, new_hist, new_daily, new_annual, new_books, new_lat, new_lon, new_img, new_manuscript, new_audio, shrine_to_edit))
-                            conn.commit(); st.success("🔔 تم تحديث مَعلم بنجاح فورياً صلب المنصة!"); st.rerun()
+                            conn.commit()
+                            st.success(f"🔔 تم تحديث مَعلم {shrine_to_edit} وحقن شواهده الميدانية بنجاح فورياً صلب المنصة!")
+                            st.rerun()
                             
         with admin_tab3:
-            # 🟢 تطهير كلي وقسر اتجاه جملة عنوان المكنز اللغوي لتبدأ وتصطف بقوة من اليمين إلى اليسار (RTL) ناصعة
-            st.markdown("<div style='direction: rtl; text-align: right;'><h5 style='font-family:\"Tajawal\", sans-serif; font-weight:900; color:#1F2937;'>📖 محرك تعديل المصطلحات والمفاهيم القاموسية الملحقة بصور (المكنز اللغوي) :</h5></div>", unsafe_allow_html=True)
+            st.markdown("##### 📖 محرك تعديل المصطلحات والمفاهيم القاموسية الملحقة بصور (المكنز اللغوي) :")
             all_live_terms = [item for item in cursor.execute("SELECT term FROM thesaurus_terms ORDER BY term ASC").fetchall()]
-            term_to_edit = st.selectbox("🎯 اختر المصطلح أو المفهوم المراد تصحيحه أو دعم التحقيق بصورة:", ["--- اختر مصطلحاً لتعديله ---"] + all_live_terms, key="sel_term_edit_con_v14_13_fixed")
+            term_to_edit = st.selectbox("🎯 اختر المصطلح أو المفهوم المراد تصحيحه أو دعم التحقيق بصورة:", ["--- اختر مصطلحاً لتعديله ---"] + all_live_terms, key="sel_term_edit_con_v14_13")
+            
             if term_to_edit != "--- اختر مصطلحاً لتعديله ---":
                 current_term_data = cursor.execute("SELECT category, definition, term_image FROM thesaurus_terms WHERE term = ?", (term_to_edit,)).fetchone()
+                
                 if current_term_data:
-                    with st.form("shamel_term_edit_form_v14_13_fixed"):
+                    with st.form("shamel_term_edit_form_v14_13"):
                         st.info(f"⚙️ نموذج تعديل بطاقة القاموس البصرية: {term_to_edit}")
                         new_term_cat = st.text_input("🗂️ الفئة الأنثروبولوجية صلب الأطروحة:", value=current_term_data if current_term_data else "")
                         new_term_img = st.text_input("📸 مسار أو رابط صورة المخطوط/الوثيقة للمصطلح (مثال: `doc1.jpg`):", value=str(current_term_data) if current_term_data else "")
                         new_term_def = st.text_area("📚 التعريف العلمي المعتمد الأكاديمي:", value=current_term_data if current_term_data else "")
+                        
                         if st.form_submit_button("💾 حفظ تعديلات المصطلح وتحديث القاموس فوراً", use_container_width=True):
                             cursor.execute("UPDATE thesaurus_terms SET category=?, definition=?, term_image=? WHERE term=?", (new_term_cat, new_term_def, new_term_img, term_to_edit))
-                            conn.commit(); st.success("🔔 تم تحديث المفهوم بنجاح فورياً صلب المكنز!"); st.rerun()
+                            conn.commit()
+                            st.success(f"🔔 تم تحديث المفهوم القاموسي {term_to_edit} وحقن الشاهد المصور بنجاح فورياً صلب المكنز!")
+                            st.rerun()
 # نحت صف روابط المكنز النصية صلب الشريط المتدرج بالسقف لعام 2026 مائة بالمائة 
 current_page_val = st.query_params.get("page", "home")
 active_sections_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "sections" else ""
