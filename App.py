@@ -564,15 +564,17 @@ def show_shamel_search_engine_page():
 # ==========================================
 # 📦 البلوك 13 من 18 الأصلي والمطهر: محرك أطلس المكنز والقفز الجغرافي وحاوية التموضع الترابي
 # ==========================================
+# ==========================================
+# 📦 Le Bloc 13 de 18 Corrigé : Atlas du thésaurus et carte interactive avec variable rectifiée
+# ==========================================
 def show_maknez_atlas_interactive_map_page():
     st.markdown("""
         <div class='shamel-dashboard-container' style='border-right: 6px solid #1E3A8A;'>
             <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>🗺️ أطلس المكنز الوطني للأضرحة والمزارات الشريفة</h2>
-            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:18px; font-weight:bold;'>الملاحة الجغرافية الفورية والتركيز التلقائي فوق إحداثيات المعالم والصلحاء</p>
+            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px; font-weight:bold;'>الملاحة الجغرافية الفورية والتركيز التلقائي فوق إحداثيات المعالم والصلحاء</p>
         </div>
     """, unsafe_allow_html=True)
     
-    # استرجاع سداسي موثق لكافة الحقول الجغرافية والميدانية الصافية من قاعدة بيانات الأطروحة
     sh_map_data = cursor.execute("""
         SELECT shrines.name, shrines.latitude, shrines.longitude, shrines.type, geography.province, geography.region, shrines.exact_location 
         FROM shrines 
@@ -581,7 +583,7 @@ def show_maknez_atlas_interactive_map_page():
     if not sh_map_data:
         st.info("💡 الأطلس الجغرافي بانتظار ضخ البيانات؛ يرجى رفع ملفات الأولية من بوابة الإدارة.")
     else:
-        st.markdown("<div style='direction: rtl; text-align: right;'><b style='font-family:\"Tajawal\"; font-size:17px; color:#1E3A8A;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة واستخراج بطاقته الترابية حياً:</b></div>", unsafe_allow_html=True)
+        st.markdown("<div style='direction: rtl; text-align: right;'><b style='font-family:\"Tajawal\"; font-size:16px; color:#1E3A8A;'>🔍 ابحث عن أي ضريح للقفز والتركيز عليه في الخريطة واستخراج بطاقته الترابية حياً:</b></div>", unsafe_allow_html=True)
         search_map_input = st.text_input("", placeholder="اكتب اسم الضريح أو الولي هنا للقفز الجغرافي الفوري صلب الموضوع...", key="shamel_live_map_search_input_v2026")
         
         search_query_fixed = search_map_input.strip().lower()
@@ -594,7 +596,6 @@ def show_maknez_atlas_interactive_map_page():
         else:
             filtered_data = sh_map_data
         
-        # إعادة بناء المصفوفة الرقمية الصافية وتوزيع المتغيرات الجغرافية بدقة متناهية لمنع الانهيار
         map_list = []
         for name, lat, lon, s_type, prov, reg, loc_det in filtered_data:
             p_color = "#1E3A8A" if s_type == "أضرحة المسلمين" else "#064E3B"
@@ -607,35 +608,40 @@ def show_maknez_atlas_interactive_map_page():
             
         df_map = pd.DataFrame(map_list)
         
-        # تشغيل محرك التمركز التلقائي (Auto-Zoom) المجهري فوق المعلم الترابي المستهدف وسحق التشتت الكوني
         if search_query_fixed and not df_map.empty:
             center_lat = float(df_map.iloc[0]["latitude"])
             center_lon = float(df_map.iloc[0]["longitude"])
-            map_zoom = 13  # قفز مجهري فوري فوق الدوار المستهدف مائة بالمائة
+            map_zoom = 13  
         else:
-            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  # التمركز الطبيعي الشامخ فوق خريطة المملكة المغربية الشريفة
+            center_lat, center_lon, map_zoom = 31.7917, -7.0926, 6  
             
         st.map(df_map, latitude=center_lat, longitude=center_lon, zoom=map_zoom, size=60, color="color", use_container_width=True)
         
-        # استرجاع وعرض حاوية البيانات الترابية الحية (الجهة، الإقليم، الجماعة، والدوار) أسفل الخريطة بنقاء كامل
+        # 🟢 Correction de la variable : Utilisation stricte de filtered_data à la place de results
         if search_query_fixed and len(filtered_data) > 0:
-            target_sh = filtered_data[0]  # التقاط المعلم الأول المطابق للفرز الحركي
+            target_sh = filtered_data[0][0]  
+            target_lat = filtered_data[0][1]
+            target_lon = filtered_data[0][2]
+            target_prov = filtered_data[0][4]
+            target_reg = filtered_data[0][5]
+            target_loc = filtered_data[0][6] if filtered_data[0][6] else "غير محدد"
+            
             st.markdown(f"""
-                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 22px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
+                <div style='background: #FFFFFF; border-right: 6px solid #1E3A8A; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; direction: rtl; text-align: right;'>
                     <h4 style='color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom:15px; font-weight:900;'>📍 بطاقة الإحداثيات والمعطيات الترابية الحية للمزار المستهدف:</h4>
-                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh[0]} ({target_sh[3]})</div>
-                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_sh[1]} | خط الطول: {target_sh[2]}</div>
-                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_sh[5]}</div>
-                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_sh[4]}</div>
-                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع الميداني:</b> {target_sh[6]}</div>
+                    <div class='card-shrine-field'><b>🏛️ اسم الضريح / المزار المحقق:</b> {target_sh}</div>
+                    <div class='card-shrine-field'><b>🌐 الإحداثيات الجغرافية بالسيرفر:</b> خط العرض: {target_lat} | خط الطول: {target_lon}</div>
+                    <div class='card-shrine-field'><b>🇲🇦 الجهة الإدارية الشريفة:</b> {target_reg}</div>
+                    <div class='card-shrine-field'><b>📌 العمالة / الإقليم التاريخي:</b> {target_prov}</div>
+                    <div class='card-shrine-field'><b>🏙️ جماعة ترابية / الدوار / تفاصيل التموضع الميداني:</b> {target_loc}</div>
                 </div>
             """, unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي الكامل لـ {target_sh[0]}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v2026"):
-                popup_individual_shrine_card(target_sh[0])
+            if st.button(f"📚 افتح النبذة التاريخية والتحقيق العلمي الكامل لـ {target_sh}", use_container_width=True, key="atlas_sh_popup_btn_fixed_v2026"):
+                popup_individual_shrine_card(target_sh)
         else:
-            st.markdown("<p style='color:#6B7280; font-size:16px; font-weight:bold; margin-top:15px; direction: rtl; text-align: right;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#6B7280; font-size:15px; font-weight:bold; margin-top:15px; direction: rtl; text-align: right;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
 
 
 
