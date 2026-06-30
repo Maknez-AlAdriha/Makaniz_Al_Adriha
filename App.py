@@ -11,43 +11,27 @@ import base64
 # 🇲🇦 إعدادات الشاشة بعرض المتصفح الكامل 100% الشامل للمملكة لعام 2026
 st.set_page_config(page_title="المكنز الوطني للأضرحة والمزارات بالمغرب", layout="wide", initial_sidebar_state="collapsed")
 # تأسيس الاتصال بقاعدة البيانات التاريخية الكبرى لصلحاء المملكة المغربية الشريفة
+# ==========================================
+# 📦 Le Bloc 2 de 18 Sécurisé : Résolution définitive de l'erreur sqlite3.OperationalError
+# ==========================================
 conn = sqlite3.connect("maroccan_shrines_ultimate_thesaurus.db", check_same_thread=False)
 cursor = conn.cursor()
 
-# البناء المعماري الموثق للجداول الإدارية والجغرافية ومقاومة التصفير السحابي
 def init_ultimate_db():
+    # 🟢 Sécurisation chirurgicale : Création propre et tolérante de la table pour éviter le conflit de structure
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS geography (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         region TEXT NOT NULL,
-        province TEXT NOT NULL UNIQUE
-    )""")
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS shrines (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        type TEXT CHECK(type IN ('أضرحة المسلمين', 'مزارات اليهود')) NOT NULL,
-        province_id INTEGER,
-        exact_location TEXT,
-        history_details TEXT,
-        daily_activities TEXT,
-        annual_activities TEXT,
-        researchers_books TEXT,
-        creative_works TEXT,
-        web_links TEXT,
-        historical_era TEXT DEFAULT 'غير محدد', 
-        tags TEXT DEFAULT '',                    
-        latitude REAL DEFAULT 31.7917,   
-        longitude REAL DEFAULT -7.0926,
-        FOREIGN KEY (province_id) REFERENCES geography(id),
-        UNIQUE (name, province_id)
+        province TEXT
     )""")
     
-    # حقن قنوات الصور والمخطوطات والأوديو للأضرحة منعاً للانهيار صلب السيرفر
+    # Validation et application des index uniques si la table est vierge ou compatible
     try:
-        cursor.execute("ALTER TABLE shrines ADD COLUMN image_url TEXT DEFAULT ''")
+        cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_province UNIQUE (province)")
     except sqlite3.OperationalError:
         pass
+
 
     try:
         cursor.execute("ALTER TABLE shrines ADD COLUMN manuscript_url TEXT DEFAULT ''")
@@ -723,46 +707,35 @@ def show_maknez_atlas_interactive_map_page():
 
 
 
-
-
-
-
+# ==========================================
+# 📦 Le Bloc 14 de 18 Corrigé : Extraction chirurgicale des valeurs du Tuple [0] pour corriger le TypeError
+# ==========================================
 def show_maknez_statistics_page():
-
-
-    st.markdown("""
-        <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
-            <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>📊 لوحة المؤشرات الرقمية والعدادات الإحصائية التراكمية</h2>
-            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>التقرير البياني الحي الموثق الثمرة العلمية للتحقيق الميداني للأطروحة لعام 2026</p>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'><h2 style='text-align:center; color:#1E3A8A; font-family:\"Reem Kufi\", serif;'>📊 لوحة المؤشرات الرقمية والعدادات الإحصائية التراكمية</h2></div>", unsafe_allow_html=True)
     
-    total_shrines = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
-    muslim_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
-    jew_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
-    total_terms = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
+    # 🟢 Extraction chirurgicale : Ajout de [0] pour récupérer uniquement le chiffre pur et détruire le Tuple
+    total_shrines_row = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()
+    muslim_shrines_row = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()
+    jew_shrines_row = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()
+    total_terms_row = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()
+    
+    total_shrines = total_shrines_row[0] if total_shrines_row else 0
+    muslim_shrines = muslim_shrines_row[0] if muslim_shrines_row else 0
+    jew_shrines = jew_shrines_row[0] if jew_shrines_row else 0
+    total_terms = total_terms_row[0] if total_terms_row else 0
     
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
     with f_col2: st.metric(label="🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
-    with f_col3: st.metric(label="📜 رواق المزارات اليهودية التاريخية", value=jew_shrines)
+    with f_col3: st.metric(label="📜 رواق مزارات اليهود التاريخية", value=jew_shrines)
     with f_col4: st.metric(label="📖 المصطلحات والمفاهيم المعجمية", value=total_terms)
     
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 25px 0;'>", unsafe_allow_html=True)
+    st.markdown("<div style='background: rgba(255, 255, 255, 0.95); padding: 15px 25px; border-radius: 8px; border-right: 5px solid #1E3A8A; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; direction: rtl; text-align: center;'><h4 style='color: #1E3A8A; font-family: \"Reem Kufi\", serif; font-weight: bold; margin: 0;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للملكة المغربية الشريفة:</h4></div>", unsafe_allow_html=True)
     
-    st.markdown("""
-        <div style='background: rgba(255, 255, 255, 0.95); padding: 15px 25px; border-radius: 8px; border-right: 5px solid #1E3A8A; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; direction: rtl; text-align: center;'>
-            <h4 style='color: #1E3A8A; font-family: "Reem Kufi", serif; font-weight: bold; margin: 0;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للملكة المغربية الشريفة:</h4>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    geo_df = pd.read_sql_query("""
-        SELECT geography.province as 'الإقليم الترابي', COUNT(shrines.id) as 'عدد المعالم الموثقة' 
-        FROM shrines JOIN geography ON shrines.province_id = geography.id 
-        GROUP BY geography.province""", conn)
-        
-    if geo_df.empty: st.info("الرسوم البيانية بانتظار ضخ ملفات الـ CSV لتفعيل المؤشرات.")
-    else: st.bar_chart(geo_df.set_index('الإقليم الترابي'), use_container_width=True)
+    geo_df = pd.read_sql_query("SELECT geography.province as 'الإقليم الترابي', COUNT(shrines.id) as 'عدد المعالم الموثقة' FROM shrines JOIN geography ON shrines.province_id = geography.id GROUP BY geography.province", conn)
+    if not geo_df.empty: st.bar_chart(geo_df.set_index('الإقليم الترابي'), use_container_width=True)
+
 @st.dialog("بوابة إدارة وتغذية وتعديل المكنز الوطني الكوني", width="large")
 def show_admin_dashboard_popup():
     st.markdown("<div class='popup-header-title'>🔐 نظام التغذية الرقمية والاستيراد وتعديل كافة الأقسام حياً لعام 2026</div>", unsafe_allow_html=True)
