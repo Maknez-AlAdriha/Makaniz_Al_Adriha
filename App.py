@@ -368,12 +368,15 @@ def show_contact_us_popup():
 # 📦 البلوك 9 و 10 الملحم والمطهر: تفكيك كتل الـ Tuple للوسائط وسحق الانهيار بالسطر 401
 # ==========================================
 
+# ==========================================
+# 📦 Le Bloc 9 et 10 Fusionné et Nettoyé : Résolution définitive de l'alerte à la ligne 398
+# ==========================================
+
 @st.dialog("البطاقة العلمية للمصطلح القاموسي المحقق", width="large", dismissible=False)
 def popup_individual_term_card(term_name):
-    # سحب تفاصيل المفهوم اللغوي من قاعدة البيانات
+    # سحب تفاصيل المفهوم اللغوي من قاعدة البيانات بنقاء كامل
     row = cursor.execute("SELECT term, category, definition, term_image FROM thesaurus_terms WHERE term = ?", (term_name,)).fetchone()
     if row:
-        # 🟢 تفكيك جراحي للمصفوفة لضمان استخراج نصوص حرة ونظيفة مائة بالمائة
         t_term = str(row[0])
         t_category = str(row[1])
         t_definition = str(row[2])
@@ -382,7 +385,7 @@ def popup_individual_term_card(term_name):
         if t_img and t_img != "nan" and t_img != "":
             st.image(t_img, use_container_width=True, caption=f"📸 الرسم التوضيحي/المخطوط للمصطلح: {t_term}")
             
-        st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>📖 مصطلح: {t_term}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>Kit 📖 مصطلح: {t_term}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='border-right-color:#064E3B; direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>🗂️ الفئة الأنثروبولوجية صلب الأطروحة:</b> {t_category}</div>
@@ -391,12 +394,61 @@ def popup_individual_term_card(term_name):
         """, unsafe_allow_html=True)
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
-        term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). m مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية الشريفة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_v18_final")
+        term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية الشريفة."
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_term_popup_btn"):
             st.rerun()
+
+@st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
+def popup_individual_shrine_card(shrine_name):
+    # سحب تفاصيل المزار بالكامل من قاعدة بيانات الأطروحة التاريخية
+    row = cursor.execute("""
+        SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books, image_url, manuscript_url, audio_url
+        FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
+    if row:
+        s_name = str(row[0])
+        s_history = str(row[1])
+        s_location = str(row[2])
+        s_era = str(row[3])
+        s_source = str(row[4])
+        s_daily = str(row[5])
+        s_annual = str(row[6])
+        s_books = str(row[7])
+        s_img = str(row[8]).strip() if row[8] else ""
+        s_manuscript = str(row[9]).strip() if row[9] else ""
+        s_audio = str(row[10]).strip() if row[10] else ""
+        
+        if s_img and s_img != "nan" and s_img != "":
+            st.image(s_img, use_container_width=True, caption=f"📸 الشاهد البصري الميداني للمزار: {s_name}")
+            
+        if s_manuscript and s_manuscript != "nan" and s_manuscript != "":
+            st.image(s_manuscript, use_container_width=True, caption=f"📜 الوثيقة التاريخية / الظهير الملحق الشريف لـ {s_name}")
+            
+        if s_audio and s_audio != "nan" and s_audio != "":
+            st.audio(s_audio, format="audio/mp3")
+            
+        st.markdown(f"<h3 style='color:#1E3A8A; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>  🕌 {s_name}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class='card-shrine-popup' style='direction: rtl; text-align: right;'>
+            <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {s_era}</div>
+            <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {s_location}</div>
+            <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {s_history}</div>
+            <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية وطبيعة الإشراف:</b> {s_daily} | {s_annual}</div>
+            <div class='card-shrine-field'><b>📚 المصادر والكتب البيبليوغرافية للباحثين والمؤرخين:</b> {s_books}</div>
+            <div class='card-shrine-field' style='color:#064E3B; font-weight:bold; border-bottom:none;'><b>🔬 المصدر العلمي المعتمد للأطروحة:</b> {s_source}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
+        citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_shrine_popup_btn"):
+            st.rerun()
+
 
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
 def popup_individual_shrine_card(shrine_name):
