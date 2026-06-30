@@ -510,25 +510,40 @@ def popup_individual_shrine_card(shrine_name):
 
 
 
-@st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
+@st.dialog("البطاقة العلمية الكاملة للمَعلم T التراثي المحقق", width="large", dismissible=False)
 def popup_individual_shrine_card(shrine_name):
     # سحب تفاصيل المزار بالكامل من قاعدة بيانات الأطروحة التاريخية
     row = cursor.execute("""
-        SELECT name, history_details, exact_location, historical_era, scientific_source, daily_activities, annual_activities, researchers_books, image_url, manuscript_url, audio_url
+        SELECT name, history_details, exact_location, historical_era, scientific_source,
+        daily_activities, annual_activities, researchers_books, image_url, manuscript_url, audio_url
         FROM shrines WHERE name = ?""", (shrine_name,)).fetchone()
     if row:
-        # 🟢 تفكيك جراحي شامل وصارم للمصفوفة لمنع تمرير الـ Tuple إلى دالة st.image وسحق الخطأ بالسطر 401
-        s_name = str(row[0])
-        s_history = str(row[1])
-        s_location = str(row[2])
-        s_era = str(row[3])
-        s_source = str(row[4])
-        s_daily = str(row[5])
-        s_annual = str(row[6])
-        s_books = str(row[7])
-        s_img = str(row[8]).strip() if row[8] else ""
-        s_manuscript = str(row[9]).strip() if row[9] else ""
-        s_audio = str(row[10]).strip() if row[10] else ""
+        # 🟢 التفكيك الصارم بالفهارس الرقمية مع الغسيل النصي الفوري لمنع تسلل كلمة None نهائياً
+        s_name = str(row[0]).strip() if row[0] else "غير محدد"
+        s_history = str(row[1]).strip() if row[1] and str(row[1]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        s_location = str(row[2]).strip() if row[2] and str(row[2]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        s_era = str(row[3]).strip() if row[3] and str(row[3]).strip() != "None" else "غير محدد"
+        s_source = str(row[4]).strip() if row[4] and str(row[4]).strip() != "None" else "رواية شفوية ميدانية مأثورة"
+        
+        daily_text = str(row[5]).strip() if row[5] and str(row[5]).strip() != "None" else ""
+        annual_text = str(row[6]).strip() if row[6] and str(row[6]).strip() != "None" else ""
+        s_books = str(row[7]).strip() if row[7] and str(row[7]).strip() != "None" else "لازالت المعطيات غير متوفرة"
+        
+        s_img = str(row[8]).strip() if row[8] and str(row[8]).strip() != "None" else ""
+        s_manuscript = str(row[9]).strip() if row[9] and str(row[9]).strip() != "None" else ""
+        s_audio = str(row[10]).strip() if row[10] and str(row[10]).strip() != "None" else ""
+        
+        # 🟢 بناء وتأمين متغير s_activities لمنع ظهور الخطأ Pylance
+        if not daily_text and not annual_text:
+            s_activities = "لازالت المعطيات غير متوفرة"
+        else:
+            s_activities = f"{daily_text} | {annual_text}" if daily_text and annual_text else (daily_text if daily_text else annual_text)
+            
+        # الخط الدفاعي الجراحي الأخير ضد أي résidu de None
+        if s_history == "" or s_history == "None": s_history = "لازالت المعطيات غير متوفرة"
+        if s_location == "" or s_location == "None": s_location = "لازالت المعطيات غير متوفرة"
+        if s_books == "" or s_books == "None": s_books = "لازالت المعطيات غير متوفرة"
+        if s_activities == "" or "None" in s_activities: s_activities = "لازالت المعطيات غير متوفرة"
         
         if s_img and s_img != "nan" and s_img != "":
             st.image(s_img, use_container_width=True, caption=f"📸 الشاهد البصري الميداني للمزار: {s_name}")
@@ -545,19 +560,22 @@ def popup_individual_shrine_card(shrine_name):
             <div class='card-shrine-field'><b>⏳ العصر التاريخي المعاصر له:</b> {s_era}</div>
             <div class='card-shrine-field'><b>🗺️ الموقع الجغرافي الميداني الدقيق:</b> {s_location}</div>
             <div class='card-shrine-field'><b>📜 النبذة والتحقيق الأنثروبولوجي الموثق:</b> {s_history}</div>
-            <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية وطبيعة الإشراف:</b> {s_daily} | {s_annual}</div>
+            <div class='card-shrine-field'><b>📅 الأنشطة اليومية والموسمية وطبيعة الإشراف:</b> {s_activities}</div>
             <div class='card-shrine-field'><b>📚 المصادر والكتب البيبليوغرافية للباحثين والمؤرخين:</b> {s_books}</div>
             <div class='card-shrine-field' style='color:#064E3B; font-weight:bold; border-bottom:none;'><b>🔬 المصدر العلمي المعتمد للأطروحة:</b> {s_source}</div>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
-        citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_v18_final")
+        citation_location = s_location if s_location != "لازالت المعطيات غير متوفرة" else "الموقع غير محدد بدقة"
+        citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({citation_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18_ultimate_secure_fixed_last_v4_restored_final")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_shrine_popup_btn"):
             st.rerun()
+
+
 
 
 
