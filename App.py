@@ -148,6 +148,7 @@ st.markdown(f"""
             transform: translateY(-1px) !important;
         }}
 
+        /* 🟢 تصحيح الصورة 2 و 3 و 7: إجبار علامات التبويب وكافة القوائم المنسدلة (Dropdowns) على الاتجاه العربي الموسط والتكبير */
         div[data-testid="stTabs"] {{
             background: rgba(255, 255, 255, 0.98) !important;
             padding: 20px !important;
@@ -180,6 +181,16 @@ st.markdown(f"""
             font-weight: 900 !important;
         }}
         
+        /* 🟢 قسر القوائم المنسدلة وصناديق التصفية على التوسط الصريح لمنع انجرافها لليسار */
+        div[data-testid="stSelectbox"] div[role="button"] {{
+            text-align: center !important;
+            direction: rtl !important;
+            font-family: 'Tajawal', sans-serif !important;
+            font-weight: bold !important;
+            font-size: 16px !important;
+            color: #1E3A8A !important;
+        }}
+        
         .shamel-dashboard-container {{
             background: rgba(255, 255, 255, 0.96) !important; 
             padding: 25px !important; 
@@ -190,7 +201,6 @@ st.markdown(f"""
             direction: rtl !important;
         }}
 
-        /* حقن وتفخيم صندوق البحث: جعل الخط المكتوب والنص الافتراضي بالوسط مائة بالمائة وبلون أزرق غليظ ملكي مصون */
         div[data-testid="stTextInput"] input {{
             text-align: center !important;
             font-size: 18px !important;
@@ -204,7 +214,6 @@ st.markdown(f"""
             opacity: 0.7 !important;
         }}
 
-        /* تخصيص مظهر مؤشرات العدادات الإحصائية (Metrics) لتظهر كبطاقات ذهبية فخمة */
         div[data-testid="stMetric"] {{
             background: #FFFFFF !important;
             border-top: 4px solid #D4AF37 !important;
@@ -343,7 +352,7 @@ def show_maknez_sections_dashboard():
     with tab1:
         st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #1E3A8A; padding-right:10px;'>🕌 الأولياء والصلحاء المسلمون بالمملكة الشريفة:</h4>", unsafe_allow_html=True)
         shrines_m = cursor.execute("SELECT name, id FROM shrines WHERE type = 'أضرحة المسلمين' ORDER BY id DESC").fetchall()
-        if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً.")
+        if not shrines_m: st.info("لا توجد معطيات للأضرحة الإسلامية حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(3)
             for idx, (name, s_id) in enumerate(shrines_m):
@@ -353,7 +362,7 @@ def show_maknez_sections_dashboard():
     with tab2:
         st.markdown("<h4 style='color:#064E3B; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #064E3B; padding-right:10px;'>📜 مزارات ومعالم اليهود المغاربة التراثية التاريخية:</h4>", unsafe_allow_html=True)
         shrines_j = cursor.execute("SELECT name, id FROM shrines WHERE type = 'مزارات اليهود' ORDER BY id DESC").fetchall()
-        if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً.")
+        if not shrines_j: st.info("لا توجد معطيات لمزارات اليهود حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(3)
             for idx, (name, s_id) in enumerate(shrines_j):
@@ -363,7 +372,7 @@ def show_maknez_sections_dashboard():
     with tab3:
         st.markdown("<h4 style='color:#0F5132; font-weight:bold; margin-top:20px; margin-bottom:20px; border-right: 5px solid #0F5132; padding-right:10px;'>📖 قاموس المكنز اللغوي والمفاهيم الأنثروبولوجية المحققة:</h4>", unsafe_allow_html=True)
         terms = cursor.execute("SELECT term, id FROM thesaurus_terms ORDER BY term ASC").fetchall()
-        if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً.")
+        if not terms: st.info("المعجم اللغوي القاموسي فارغ حالياً صلب قاعدة البيانات.")
         else:
             cols = st.columns(4)
             for idx, (term, t_id) in enumerate(terms):
@@ -480,38 +489,39 @@ def show_maknez_atlas_interactive_map_page():
                 popup_individual_shrine_card(target_sh[0])
         else:
             st.markdown("<p style='color:#6B7280; font-size:14px; margin-top:15px;'>💡 اكتب اسم المعلم صلب خانة البحث بالأعلى لتفعيل القفز الجغرافي الفوري واستخراج بطاقة (الجهة، الجماعة، والدوار) حياً صلب الأطلس.</p>", unsafe_allow_html=True)
-# 🟢 المكون السيادي المبتكر الفاخر: لوحة العدادات والمؤشرات الإحصائية الرقمية التراكمية وسداسية شريط روابط الشاملة بالسقف
+# ==========================================
+# 🟢 البلوك 12 من 12 المطور: لوحة المؤشرات الإحصائية وتطهير محرك التغذية وسحق كافّة الأخطاء المرصودة بالمليمتر
+# ==========================================
+
 def show_maknez_statistics_page():
+    # 🟢 تصحيح الصورة 1: عزل وحماية كتلة العنوان لمنع التداخل والتشويه البصري مع الـ Banner
     st.markdown("""
-        <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37;'>
+        <div class='shamel-dashboard-container' style='border-right: 6px solid #D4AF37; margin-top: 10px !important;'>
             <h2 style='text-align:center; color:#1E3A8A; font-family:"Reem Kufi", serif; margin-bottom: 5px;'>📊 لوحة المؤشرات الرقمية والعدادات الإحصائية التراكمية</h2>
-            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>التقرير البياني الحي والموثق الثمرة العلمية للتحقيق الميداني للأطروحة</p>
+            <p style='text-align:center; color:#4B5563; font-family:"Tajawal", sans-serif; font-size:16px;'>التقرير البياني الحي الموثق الثمرة العلمية للتحقيق الميداني للأطروحة لعام 2026</p>
         </div>
     """, unsafe_allow_html=True)
     
-    # حساب الأرقام حياً من الجداول لقفل اللحام الإحصائي
     total_shrines = cursor.execute("SELECT COUNT(*) FROM shrines").fetchone()[0]
     muslim_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='أضرحة المسلمين'").fetchone()[0]
     jew_shrines = cursor.execute("SELECT COUNT(*) FROM shrines WHERE type='مزارات اليهود'").fetchone()[0]
     total_terms = cursor.execute("SELECT COUNT(*) FROM thesaurus_terms").fetchone()[0]
     
-    # توزيع العدادات الأربعة الشامخة في صف أفقي أنيق ببطاقات ذهبية جذابة
     m_col1, f_col2, f_col3, f_col4 = st.columns(4)
     with m_col1: st.metric(label="🏛️ إجمالي المنشآت الروحية المحققة", value=total_shrines)
-    with f_col2: st.metric(label="🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
+    with f_col2: st.metric(label="%" "🕌 رواق أولياء وصلحاء الإسلام", value=muslim_shrines)
     with f_col3: st.metric(label="📜 رواق المزارات اليهودية التاريخية", value=jew_shrines)
     with f_col4: st.metric(label="📖 المصطلحات والمفاهيم المعجمية", value=total_terms)
     
     st.markdown("<hr style='border-top: 2px solid #D4AF37; margin: 25px 0;'>", unsafe_allow_html=True)
     
-    # توليد رسم بياني حركي وتفاعلي يوضح للجنة الفرز كفاءة التوزيع الجغرافي للأطروحة لعام 2026
-    st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-bottom:15px;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للمملكة:</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 style='color:#1E3A8A; font-weight:bold; margin-bottom:15px;'>📈 التوزيع البياني التراكمي للمعالم حسب الأقاليم التاريخية للملكة المغربية الشريفة:</h4>", unsafe_allow_html=True)
     geo_df = pd.read_sql_query("""
         SELECT geography.province as 'الإقليم الترابي', COUNT(shrines.id) as 'عدد المعالم الموثقة' 
         FROM shrines JOIN geography ON shrines.province_id = geography.id 
         GROUP BY geography.province""", conn)
         
-    if geo_df.empty: st.info("الرسوم البيانية بانتظار ضخ ملفات الـ CSV من بوابة الإدارة لتفعيل المؤشرات.")
+    if geo_df.empty: st.info("الرسوم البيانية بانتظار ضخ ملفات الـ CSV لتفعيل المؤشرات.")
     else: st.bar_chart(geo_df.set_index('الإقليم الترابي'), use_container_width=True)
 
 # بوابة إدارة وتغذية المكنز الوطني ودعم الاستيراد التراكمي الشامل للمشرف
@@ -525,6 +535,8 @@ def show_admin_dashboard_popup():
         st.markdown("<h5>📥 بوابة ضخ ملفات الـ CSV التراكمية:</h5>", unsafe_allow_html=True)
         if "uploader_counter" not in st.session_state: st.session_state.uploader_counter = 0
         uploaded_csv_list = st.file_uploader("اختر ملفات الـ CSV المحددة:", type=["csv"], accept_multiple_files=True, key=f"pop_csv_u_{st.session_state.uploader_counter}")
+        
+        # 🟢 تصحيح الصورة 11 و 13: سحق معضلات الـ Tuple وعلامات الاستفهام الميتة في لغة SQLite نهائياً
         if uploaded_csv_list and st.button("🚀 البدء في معالجة وضخ الملفات دفعة واحدة", use_container_width=True):
             added_shrines, added_terms = 0, 0
             for uploaded_csv in uploaded_csv_list:
@@ -538,18 +550,22 @@ def show_admin_dashboard_popup():
                     prov_name = str(row.get('province', 'إقليم شفشاون')).strip()
                     lat_val = float(row.get('latitude', 31.7917))
                     lon_val = float(row.get('longitude', -7.0926))
+                    
                     if "#معجم" in tags_val or "#مصطلحات" in tags_val:
                         cursor.execute("INSERT OR IGNORE INTO thesaurus_terms (term, category, definition) VALUES (?, ?, ?)", (s_name, s_type, hist_val))
+                        added_terms += 1
                     else:
                         cursor.execute("INSERT OR IGNORE INTO geography (region, province) VALUES (?, ?)", ("جهة طنجة - تطوان - الحسيمة", prov_name))
                         prov_id_row = cursor.execute("SELECT id FROM geography WHERE province=?", (prov_name,)).fetchone()
                         if prov_id_row:
-                            cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)", (s_name, s_type, int(prov_id_row), hist_val, lat_val, lon_val))
+                            prov_id = int(prov_id_row[0]) # 🟢 فك الـ Tuple الصافي بنجاح تام منعاً للـ TypeError
+                            cursor.execute("INSERT OR IGNORE INTO shrines (name, type, province_id, history_details, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)", (s_name, s_type, prov_id, hist_val, lat_val, lon_val))
+                            added_shrines += 1
             conn.commit()
             st.session_state.uploader_counter += 1
-            st.success("📊 تم الضخ التراكمي بنجاح صلب قاعدة البيانات.")
+            st.success("📊 تم الضخ التراكمي وتحديث جداول المكنز بنجاح تام وبصفر شاشات حمراء.")
 
-# نحت صف روابط المكنز النصية صلب الشريط المتدرج بالسقف لعام 2026 مائة بالمائة (إدماج تبويب الإحصائيات)
+# نحت صف روابط المكنز النصية صلب الشريط المتدرج بالسقف لعام 2026 مائة بالمائة 
 current_page_val = st.query_params.get("page", "home")
 active_sections_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "sections" else ""
 active_about_style = "color: #10B981 !important; font-weight:900;" if current_page_val == "about" else ""
