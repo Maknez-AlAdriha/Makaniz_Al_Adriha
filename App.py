@@ -372,6 +372,10 @@ def show_contact_us_popup():
 # 📦 Le Bloc 9 et 10 Fusionné et Nettoyé : Résolution définitive de l'alerte à la ligne 398
 # ==========================================
 
+# ==========================================
+# 📦 Le Bloc 9 et 10 Fusionné et Rectifié : Élimination définitive de l'alerte à la ligne 446
+# ==========================================
+
 @st.dialog("البطاقة العلمية للمصطلح القاموسي المحقق", width="large", dismissible=False)
 def popup_individual_term_card(term_name):
     # سحب تفاصيل المفهوم اللغوي من قاعدة البيانات بنقاء كامل
@@ -385,7 +389,7 @@ def popup_individual_term_card(term_name):
         if t_img and t_img != "nan" and t_img != "":
             st.image(t_img, use_container_width=True, caption=f"📸 الرسم التوضيحي/المخطوط للمصطلح: {t_term}")
             
-        st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>Kit 📖 مصطلح: {t_term}</b></h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='color:#064E3B; text-align:center; font-family:\"Reem Kufi\"; border-bottom:3px solid #D4AF37; padding-bottom:12px;'><b>📖 مصطلح: {t_term}</b></h3>", unsafe_allow_html=True)
         st.markdown(f"""
         <div class='card-shrine-popup' style='border-right-color:#064E3B; direction: rtl; text-align: right;'>
             <div class='card-shrine-field'><b>🗂️ الفئة الأنثروبولوجية صلب الأطروحة:</b> {t_category}</div>
@@ -395,13 +399,13 @@ def popup_individual_term_card(term_name):
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
         term_citation = f"الجانبي، رشيد ({datetime.datetime.now().year}). مادة قاموسية: {t_term} ({t_category})، معجم المكنز اللغوي والمفاهيم الأنثروبولوجية، المملكة المغربية الشريفة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18")
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس (معايير APA الدولي):", value=term_citation, height=70, key="cit_term_fixed_final_v18_ultimate")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_term_popup_btn"):
             st.rerun()
 
-@st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
+@st.dialog("البطاقة العلمية الكاملة للمَعلم T التراثي المحقق", width="large", dismissible=False)
 def popup_individual_shrine_card(shrine_name):
     # سحب تفاصيل المزار بالكامل من قاعدة بيانات الأطروحة التاريخية
     row = cursor.execute("""
@@ -443,11 +447,12 @@ def popup_individual_shrine_card(shrine_name):
         
         st.markdown("<hr style='border-top: 1px dashed #D4AF37;'>", unsafe_allow_html=True)
         citation_text = f"الجانبي، رشيد ({datetime.datetime.now().year}). تحقيق مَعلم: {s_name} ({s_location})، المكنز الوطني للأضرحة والمزارات بالمغرب، الثمرة التكنولوجية للأطروحة العلمية الشاملة."
-        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18")
+        st.text_area("📥 التخريج والتوثيق الأكاديمي المعتمد للاقتباس المباشر (معايير APA الدولي):", value=citation_text, height=70, key="cit_sh_fixed_final_v18_ultimate")
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.button("❌ إغلاق البطاقة والعودة للمكنز", use_container_width=True, key="secure_close_shrine_popup_btn"):
             st.rerun()
+
 
 
 @st.dialog("البطاقة العلمية الكاملة للمَعلم التراثي المحقق", width="large", dismissible=False)
